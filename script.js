@@ -65,14 +65,66 @@ function showToast(message) {
 }
 
 function goTo(id) {
-  document.getElementById(id)?.scrollIntoView({behavior: reduceMotion ? 'instant' : 'smooth', block: 'start'});
+  document.getElementById(id)?.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
   requestFrame();
 }
 
-$('#enterStory').addEventListener('click', () => {
+/* The invitation stays closed until a real tap/click. No video autoplay or scroll entry. */
+const gate = $('#invitationGate');
+const tapToOpen = $('#tapToOpen');
+let invitationOpened = false;
+let introFallbackTimer = null;
+const gateTransitionMs = 960;
+
+function unlockGate() {
+  if (!document.body.classList.contains('invitation-locked')) return;
+  gate.hidden = true;
+  document.body.classList.remove('invitation-locked');
+  document.documentElement.classList.remove('invitation-locked');
+  document.querySelector('main')?.removeAttribute('inert');
+  window.scrollTo(0, 0);
+  buildTrail();
+  requestFrame();
+}
+
+function finishIntro() {
+  if (!invitationOpened || introFinished) return;
+  introFinished = true;
+  if (introFallbackTimer !== null) window.clearTimeout(introFallbackTimer);
+  unlockGate();
   video.pause();
   goTo('chapter-1');
-});
+}
+
+function openInvitation() {
+  if (invitationOpened) return;
+  invitationOpened = true;
+  tapToOpen.disabled = true;
+  gate.classList.add('is-opening');
+  if (reduceMotion) {
+    window.setTimeout(finishIntro, gateTransitionMs);
+    return;
+  }
+  try { video.currentTime = 0; } catch (e) { /* Some mobile browsers defer seeking. */ }
+  // Starting the video directly inside the tap handler permits playback on iOS/Android.
+  try {
+    const playback = video.play();
+    if (playback && typeof playback.catch === 'function') {
+      playback.catch(() => window.setTimeout(finishIntro, gateTransitionMs));
+    }
+  } catch (e) {
+    window.setTimeout(finishIntro, gateTransitionMs);
+  }
+  window.setTimeout(unlockGate, gateTransitionMs);
+  // Network/codec fallback: guests are never trapped on an unplayable intro.
+  introFallbackTimer = window.setTimeout(finishIntro, 17000);
+}
+
+document.documentElement.classList.add('invitation-locked');
+history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+tapToOpen.addEventListener('click', openInvitation);
+
 $('#skipToInvite').addEventListener('click', () => {
   video.pause();
   goTo('chapter-8');
@@ -82,15 +134,10 @@ $('#replayStory').addEventListener('click', () => {
   goTo('chapter-1');
 });
 progressDots.forEach((dot) => dot.addEventListener('click', () => goTo(dot.dataset.go)));
-video.addEventListener('ended', () => {
-  introFinished = true;
-  if (CONFIG.autoAdvanceAfterIntro && window.scrollY < window.innerHeight * .45) goTo('chapter-1');
-});
+video.addEventListener('ended', finishIntro);
 video.addEventListener('error', () => {
-  // An opening-poster image and Enter button remain visible if the video cannot play.
-  console.info('The original opening video could not load; poster fallback is in place.');
+  if (invitationOpened) window.setTimeout(finishIntro, gateTransitionMs);
 });
-video.play().catch(() => { /* autoplay may be blocked; Enter button remains functional */ });
 
 function fillEventDetails() {
   const wed = CONFIG.wedding;

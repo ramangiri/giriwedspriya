@@ -14,7 +14,22 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="invitation-locked">
+  <!-- Tap-to-open gate. This is the only visible text before guests open the invitation. -->
+  <div id="invitationGate" class="invitation-gate" role="dialog" aria-modal="true" aria-label="Closed invitation">
+    <span class="gate-florals" aria-hidden="true"></span>
+    <button type="button" id="tapToOpen" class="gate-tap" aria-label="Tap to open invitation">
+      <span class="gate-envelope" aria-hidden="true">
+        <span class="gate-envelope-back"></span>
+        <span class="gate-envelope-letter"></span>
+        <span class="gate-envelope-front"></span>
+        <span class="gate-envelope-flap"></span>
+        <span class="gate-envelope-seal">♥</span>
+      </span>
+      <span class="gate-label">Tap to Open</span>
+    </button>
+  </div>
+
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
       <symbol id="icon-plane" viewBox="0 0 64 64">
@@ -53,21 +68,12 @@
     <button class="progress-dot" data-go="chapter-8" title="You're invited" aria-label="Go to Your Invitation"></button>
   </div>
 
-  <main>
+  <main inert>
     <section class="opening" id="opening" aria-label="Opening envelope animation">
-      <video id="openingVideo" autoplay muted playsinline preload="metadata" poster="assets/opening-poster.webp">
+      <video id="openingVideo" muted playsinline preload="metadata" poster="assets/opening-poster.webp">
         <source src="assets/opening.mp4" type="video/mp4">
       </video>
       <div class="opening-gradient"></div>
-      <div class="opening-copy">
-        <p class="eyebrow light">A LITTLE STORY ABOUT TWO HEARTS</p>
-        <h1>Giridharan <em>&</em><br>Padma Priya</h1>
-        <p class="opening-subtitle">From friends to forever</p>
-      </div>
-      <div class="opening-bottom">
-        <button type="button" class="opening-enter" id="enterStory">Open our story <svg><use href="#icon-arrow"></use></svg></button>
-        <p>Scroll to follow our paper plane</p>
-      </div>
     </section>
 
     <div class="story-book" id="storyBook">

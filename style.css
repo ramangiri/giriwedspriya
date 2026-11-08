@@ -163,3 +163,37 @@
 @media(prefers-reduced-motion:reduce) {
   .stage-six .reveal-background { transform: none !important; transition: none !important; opacity: 1 !important; will-change: auto; }
 }
+
+
+/* Invitation gate: exactly one visible prompt, then the original opening video and scroll story. */
+body.invitation-locked{position:fixed;inset:0;width:100%;height:100svh;overflow:hidden;overscroll-behavior:none}
+html.invitation-locked{overflow:hidden;overscroll-behavior:none}
+body.invitation-locked .site-chrome,body.invitation-locked .side-progress{visibility:hidden}
+.invitation-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;isolation:isolate;background:radial-gradient(ellipse at 50% 55%,#fff8e9 3%,#f9e8d4 69%,#ebc9a8 120%);overflow:hidden}
+.invitation-gate[hidden]{display:none!important}
+.invitation-gate::before{content:"";position:absolute;inset:0;background:url('assets/paper.webp') center/650px repeat;mix-blend-mode:multiply;opacity:.55;pointer-events:none}
+.invitation-gate::after{content:"";position:absolute;inset:clamp(10px,2.6vw,25px);border:1px solid #b8855a70;border-radius:clamp(13px,3vw,25px);box-shadow:inset 0 0 0 6px #fff8e44a;pointer-events:none}
+.gate-florals{position:absolute;inset:0;pointer-events:none;background-image:url('assets/floral-corner.svg'),url('assets/floral-corner.svg');background-repeat:no-repeat;background-size:clamp(155px,33vw,285px),clamp(155px,33vw,285px);background-position:left -20px top -16px,right -25px bottom -20px;opacity:.8}
+.gate-tap{appearance:none;border:0;background:transparent;position:relative;z-index:1;width:100%;height:100%;min-height:100%;padding:calc(32px + env(safe-area-inset-top)) 20px calc(42px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(28px,5vh,50px);color:var(--red-dark);cursor:pointer;touch-action:manipulation}
+.gate-tap:focus-visible{outline:4px solid var(--red);outline-offset:-14px}
+.gate-tap:disabled{cursor:default}
+.gate-envelope{position:relative;display:block;width:min(81vw,430px);aspect-ratio:1.55;perspective:900px;filter:drop-shadow(0 17px 18px #6c40385b);transition:transform .8s ease}
+.gate-envelope-back{position:absolute;inset:0;border-radius:5px;background:linear-gradient(145deg,#f7d9aa,#d9a672);border:3px solid #c3925e;box-shadow:inset 0 0 0 8px #ffedcf}
+.gate-envelope-letter{position:absolute;top:13%;left:12%;width:76%;height:72%;background:linear-gradient(160deg,#fff7e8,#f6e3c6);border:2px solid #d8b787;box-shadow:0 7px 10px #85533e38;z-index:2;transition:transform .85s cubic-bezier(.21,.75,.23,1)}
+.gate-envelope-letter::after{content:"♥";position:absolute;inset:0;display:grid;place-items:center;font:clamp(28px,7vw,43px) var(--display);color:#b94451}
+.gate-envelope-front{position:absolute;inset:0;clip-path:polygon(0 26%,50% 73%,100% 26%,100% 100%,0 100%);background:linear-gradient(160deg,#f8e3c7,#eac49a 50%,#d8a577);z-index:3;border-radius:0 0 5px 5px;box-shadow:inset 0 -5px 0 #c595675c}
+.gate-envelope-front::after{content:"";position:absolute;inset:0;background:linear-gradient(36deg,transparent 49.6%,#b7825b70 50%,transparent 50.5%),linear-gradient(-36deg,transparent 49.6%,#b7825b70 50%,transparent 50.5%);opacity:.6}
+.gate-envelope-flap{position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 56%);background:linear-gradient(175deg,#fff1d9,#e3b887 95%);z-index:4;transform-origin:top center;backface-visibility:hidden;transition:transform .78s cubic-bezier(.33,.02,.45,1)}
+.gate-envelope-seal{position:absolute;z-index:5;top:42%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:clamp(45px,10vw,62px);height:clamp(45px,10vw,62px);background:radial-gradient(circle at 32% 24%,#cb5f69,#a52c42 61%,#7d1e30);border:3px double #edbc74;border-radius:50%;color:#fce4bc;font-size:clamp(20px,5vw,29px);box-shadow:0 5px 14px #74403970;transition:opacity .23s,transform .4s}
+.gate-label{font:600 clamp(17px,3.4vw,22px)/1.2 var(--display);letter-spacing:.13em;text-transform:uppercase;color:#762d38;text-shadow:0 2px 0 #fff8e999;animation:gate-label-breathe 2.25s ease-in-out infinite;white-space:nowrap}
+@keyframes gate-label-breathe{50%{opacity:.55;transform:translateY(-3px)}}
+.gate-tap:hover .gate-envelope,.gate-tap:focus-visible .gate-envelope{transform:translateY(-5px) scale(1.012)}
+.invitation-gate.is-opening .gate-envelope-flap{transform:rotateX(172deg)}
+.invitation-gate.is-opening .gate-envelope-letter{transform:translateY(-49%)}
+.invitation-gate.is-opening .gate-envelope-seal{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+.invitation-gate.is-opening .gate-label{animation:none;opacity:0;transition:opacity .2s}
+.invitation-gate.is-opening{animation:gate-dismiss .58s ease .38s forwards;pointer-events:none}
+@keyframes gate-dismiss{to{opacity:0;visibility:hidden}}
+@media(max-width:480px){.gate-envelope{width:min(83vw,360px)}.gate-florals{background-size:150px,150px}.invitation-gate::after{inset:12px;border-radius:15px}}
+@media(prefers-reduced-motion:reduce){.gate-label{animation:none}.gate-envelope,.gate-envelope-letter,.gate-envelope-flap,.gate-envelope-seal{transition:none!important}.invitation-gate.is-opening{animation:none}}
+
