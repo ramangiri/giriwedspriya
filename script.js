@@ -94,10 +94,12 @@ const openingTap = $('#openingTap');
 const openingSound = $('#openingSound');
 let openingStarted = false;
 let openingFallbackTimer = null;
+let openingRevealFrame = null;
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
   openingSound.pause();
+  openingSound.loop = false;
   try { openingSound.currentTime = 0; openingSound.volume = 1; } catch (_) {}
 }
 
@@ -107,9 +109,19 @@ function revealOpeningText() {
   if (openingFallbackTimer !== null) window.clearTimeout(openingFallbackTimer);
   // Stop the soundtrack as soon as the envelope-opening video finishes.
   stopOpeningSound();
+  video.pause();
   opening.classList.remove('is-playing');
   opening.classList.add('is-revealed');
   openingTap.hidden = true;
+  // iOS Safari can batch video-end style changes into one frame. A distinct
+  // class on the next paint guarantees each text line animates independently.
+  if (openingRevealFrame !== null) cancelAnimationFrame(openingRevealFrame);
+  openingRevealFrame = requestAnimationFrame(() => {
+    openingRevealFrame = requestAnimationFrame(() => {
+      opening.classList.add('is-text-sequence');
+      openingRevealFrame = null;
+    });
+  });
   document.body.classList.remove('intro-locked');
   document.documentElement.classList.remove('intro-locked');
   requestFrame();
@@ -123,6 +135,8 @@ function startEnvelopeVideo() {
   // The new soundtrack starts in the SAME user gesture as the envelope animation.
   // Using an <audio> element keeps your existing 8-second envelope video unchanged.
   if (openingSound) {
+    // Repeat only if the track is shorter than the video; stop at its ending.
+    openingSound.loop = true;
     try { openingSound.volume = 1; openingSound.currentTime = 0; } catch (_) {}
     try {
       const audioStart = openingSound.play();
