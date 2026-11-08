@@ -191,3 +191,113 @@ body.intro-locked .opening{min-height:100svh}
   .opening-tap-label{animation:none}
   .opening.is-revealed .opening-copy .eyebrow,.opening.is-revealed .opening-copy .name-first,.opening.is-revealed .opening-copy .name-and,.opening.is-revealed .opening-copy .name-second,.opening.is-revealed .opening-subtitle,.opening.is-revealed .opening-enter,.opening.is-revealed .opening-bottom p{animation:none;opacity:1;transform:none;filter:none}
 }
+
+
+/* Properly aligned opening screen, including very narrow phones.
+   The staggered reveal remains hidden until the envelope video finishes. */
+.opening .opening-copy {
+  top: 45%;
+  left: 50%;
+  right: auto;
+  width: min(92vw, 660px);
+  padding: 16px 12px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.5vh, 12px);
+  text-align: center;
+  text-shadow: 0 3px 16px rgba(29, 10, 15, .95), 0 1px 3px rgba(26, 8, 9, .85);
+}
+.opening .opening-copy .eyebrow {
+  max-width: 100%;
+  line-height: 1.4;
+  margin: 0;
+  font-size: clamp(9px, 2.2vw, 13px);
+  letter-spacing: .16em;
+  text-wrap: balance;
+}
+.opening .opening-copy .opening-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+  margin: 0;
+  font-size: clamp(39px, 10vw, 85px);
+  line-height: 1;
+  font-weight: 400;
+}
+.opening .opening-names .name-first,
+.opening .opening-names .name-second,
+.opening .opening-names .name-and {
+  display: block;
+  flex-shrink: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0 auto;
+}
+.opening .opening-names .name-and {
+  font-size: .58em;
+  line-height: .85;
+  padding: .02em 0;
+}
+.opening .opening-copy .opening-subtitle {
+  max-width: 100%;
+  margin: 2px 0 0;
+  line-height: 1.1;
+  font-size: clamp(22px, 4.5vw, 35px);
+  text-wrap: balance;
+}
+.opening.is-revealed .opening-gradient {
+  background: linear-gradient(180deg,
+    rgba(35, 11, 20, .60),
+    rgba(45, 18, 24, .47) 42%,
+    rgba(38, 9, 17, .58) 100%);
+}
+.opening .opening-bottom {
+  left: 0;
+  right: 0;
+  bottom: calc(26px + env(safe-area-inset-bottom));
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+}
+.opening .opening-bottom p {
+  margin: 0;
+  font-size: clamp(18px, 4.2vw, 23px);
+  line-height: 1.1;
+}
+.opening .opening-enter { min-height: 46px; justify-content: center; }
+@media (max-width: 430px) {
+  .opening .opening-copy { top: 43%; width: calc(100% - 30px); padding: 10px 8px; }
+  .opening .opening-copy .opening-names { font-size: clamp(36px, 10.1vw, 47px); }
+  .opening .opening-copy .opening-subtitle { font-size: clamp(22px, 5.2vw, 27px); }
+  .opening .opening-bottom { bottom: calc(20px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 350px) {
+  .opening .opening-copy { top: 42%; }
+  .opening .opening-copy .opening-names { font-size: 35px; }
+  .opening .opening-copy .eyebrow { letter-spacing: .07em; }
+}
+@media (max-height: 620px) {
+  .opening .opening-copy { top: 42%; gap: 3px; padding-block: 5px; }
+  .opening .opening-copy .opening-names { font-size: clamp(33px, 8.5vw, 56px); }
+  .opening .opening-copy .opening-subtitle { font-size: 21px; }
+  .opening .opening-bottom { bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .opening .opening-bottom p { font-size: 17px; }
+}
+@media (max-height: 460px) and (orientation: landscape) {
+  .opening .opening-copy { top: 43%; gap: 1px; }
+  .opening .opening-copy .opening-names { font-size: clamp(24px, 8vh, 41px); }
+  .opening .opening-copy .eyebrow { font-size: 9px; }
+  .opening .opening-copy .opening-subtitle { font-size: 18px; }
+  .opening .opening-enter { min-height: 36px; padding: 8px 14px; }
+  .opening .opening-bottom p { display: none; }
+}
+
