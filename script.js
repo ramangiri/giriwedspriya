@@ -45,6 +45,7 @@ const chapters = $$('.chapter');
 const path = $('#trailDots');
 const maskLine = $('#trailReveal');
 const plane = $('#travellingPlane');
+const openingPlanePrompt = $('#openingPlanePrompt');
 const planeSvg = $('#trailSvg');
 const video = $('#openingVideo');
 const chapterName = $('#chapterName');
@@ -338,10 +339,11 @@ function animateChapter(chapter, p) {
   }
 }
 function updatePlane(scrollY) {
-  if(!pathLength || !introFinished) { plane.style.opacity='0'; return; }
+  if(!pathLength || !introFinished) { plane.style.opacity='0'; openingPlanePrompt.classList.remove('is-visible'); return; }
   if(reduceMotion) {
     maskLine.style.strokeDashoffset='0';
     plane.style.opacity='0';
+    openingPlanePrompt.classList.toggle('is-visible', scrollY < opening.offsetHeight*.65);
     return;
   }
   // At the end of the opening screen the plane simply keeps flying into Chapter 1.
@@ -363,6 +365,18 @@ function updatePlane(scrollY) {
   plane.style.left=here.x+'px';plane.style.top=here.y+'px';
   plane.style.transform=`translate(-50%,-50%) rotate(${degrees}deg)`;
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
+  // Show this line only on the first opening screen and POSITION IT ABOVE
+  // the same flying paper plane; no duplicated decorative plane.
+  const width=invitationMain.clientWidth;
+  const margin=Math.min(120, width*.34);
+  openingPlanePrompt.style.left=clamp(here.x,margin,width-margin)+'px';
+  openingPlanePrompt.style.top=Math.min(
+    opening.offsetHeight-112,
+    Math.max(opening.offsetHeight*.55,here.y-Math.max(75,window.innerHeight*.13))
+  )+'px';
+  openingPlanePrompt.classList.toggle('is-visible',
+    scrollY<opening.offsetHeight*.70 && plane.style.opacity==='1');
+
 }
 function update() {
   rafPending=false;

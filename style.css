@@ -890,3 +890,113 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
 @media(prefers-reduced-motion:reduce){
   .story-event-details .story-map-link{transition:none}
 }
+
+
+/* FIRST-SCREEN RESPONSIVENESS: one moving plane + caption, no duplicate paper plane.
+   Move the names slightly higher, so the instruction sits ABOVE the real flight path. */
+.opening .opening-plane-prompt{
+  position:absolute;top:58%;left:70%;z-index:19;
+  transform:translateX(-50%);
+  width:min(230px,65vw);max-width:calc(100% - 22px);
+  padding:7px 12px;margin:0;
+  color:#fff5e6;background:rgba(53,25,30,.68);
+  border:1px solid rgba(255,235,198,.5);border-radius:22px;
+  box-shadow:0 5px 20px rgba(32,12,15,.3);
+  font:600 clamp(18px,3.7vw,23px)/1.07 var(--hand);
+  text-align:center;text-wrap:balance;
+  text-shadow:0 2px 7px rgba(20,5,8,.75);
+  pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity .35s ease,visibility .35s ease;
+}
+.opening.is-revealed .opening-plane-prompt.is-visible{
+  opacity:1;visibility:visible;
+}
+.opening.is-revealed .opening-copy{
+  top:38%;
+  gap:clamp(10px,1.9svh,18px);
+}
+.opening .opening-copy .opening-names{
+  line-height:1.02;
+  gap:clamp(2px,.5svh,6px);
+}
+.opening .opening-copy .opening-subtitle{margin-top:4px}
+@media(max-width:760px){
+  .opening.is-revealed .opening-copy{top:36%;gap:clamp(8px,1.7svh,14px)}
+  .opening .opening-copy .opening-names{font-size:clamp(36px,9.8vw,58px)}
+  .opening .opening-plane-prompt{font-size:clamp(18px,4.6vw,21px)}
+}
+@media(max-height:620px){
+  .opening.is-revealed .opening-copy{top:35%;gap:6px}
+  .opening .opening-copy .opening-names{font-size:clamp(33px,8vw,52px)}
+  .opening .opening-plane-prompt{font-size:17px;padding:5px 9px}
+}
+@media(max-height:460px) and (orientation:landscape){
+  .opening.is-revealed .opening-copy{top:37%;gap:3px}
+  .opening .opening-copy .opening-names{font-size:clamp(27px,8vh,43px)}
+  .opening .opening-plane-prompt{font-size:15px;width:min(230px,46vw)}
+}
+/* Chapter One: controlled vertical rhythm on desktop and on small/short phones.
+   The book, heading, and paragraphs stay fully readable inside the sticky screen. */
+.stage-one .chapter-one-content{
+  width:min(91vw,680px);max-width:100%;
+  padding:clamp(14px,3svh,38px) 4px 0;
+  gap:clamp(9px,1.7svh,17px);
+}
+.stage-one .chapter-one-content .eyebrow{
+  margin:0;line-height:1.4;letter-spacing:.15em;
+}
+.stage-one .chapter-one-content .book-object{
+  width:clamp(155px,20vw,265px);
+  height:clamp(96px,12.5vw,154px);
+  margin:3px auto;
+  flex:none;
+}
+.stage-one .chapter-one-content .display-title{
+  margin:0;
+  font-size:clamp(35px,4.7vw,74px);
+  line-height:1.1;
+  text-wrap:balance;
+}
+.stage-one .chapter-one-content .script-statement{
+  margin:0;
+  font-size:clamp(30px,3.8vw,51px);
+  line-height:1.16;
+  text-wrap:balance;
+}
+.stage-one .chapter-one-content .story-caption{
+  max-width:min(480px,90%);
+  margin:0 auto;
+  font-size:clamp(21px,2.4vw,29px);
+  line-height:1.22;
+  text-wrap:balance;
+}
+@media(max-width:760px){
+  .stage-one .chapter-one-content{
+    padding:clamp(12px,3.3svh,28px) 2px 0;
+    gap:clamp(10px,1.9svh,16px);
+    width:min(90vw,460px);
+  }
+  .stage-one .chapter-one-content .book-object{
+    width:clamp(143px,40vw,206px);
+    height:clamp(85px,23vw,120px);
+    margin:3px auto;
+  }
+  .stage-one .chapter-one-content .display-title{font-size:clamp(35px,8.2vw,53px);line-height:1.11}
+  .stage-one .chapter-one-content .script-statement{font-size:clamp(29px,7vw,39px);line-height:1.17}
+  .stage-one .chapter-one-content .story-caption{font-size:clamp(21px,5.1vw,27px);line-height:1.22;max-width:95%}
+}
+@media(max-height:650px){
+  .stage-one .chapter-one-content{gap:clamp(6px,1.3svh,10px);padding-top:12px}
+  .stage-one .chapter-one-content .book-object{width:140px;height:82px;margin:0}
+  .stage-one .chapter-one-content .display-title{font-size:clamp(30px,7.6vw,42px)}
+  .stage-one .chapter-one-content .script-statement{font-size:clamp(26px,6.5vw,34px)}
+  .stage-one .chapter-one-content .story-caption{font-size:clamp(18px,4.7vw,23px)}
+}
+@media(max-height:440px) and (orientation:landscape){
+  .stage-one .chapter-one-content{padding:3px 0;gap:3px}
+  .stage-one .chapter-one-content .book-object{width:105px;height:60px;margin:0}
+  .stage-one .chapter-one-content .display-title{font-size:clamp(25px,5.3vh,37px)}
+  .stage-one .chapter-one-content .script-statement{font-size:clamp(23px,5vh,30px)}
+  .stage-one .chapter-one-content .story-caption{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){.opening .opening-plane-prompt{transition:none}}
