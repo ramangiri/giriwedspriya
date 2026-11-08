@@ -422,3 +422,37 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
   .next-event-link{transition:none}
 }
 
+
+
+/* A small paper-plane prompt appears on the NEXT screen, not on the envelope opening. */
+.chapter-one-content .scroll-plane-cue{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;margin:clamp(10px,2vh,18px) auto 0;padding:0 8px;
+  color:var(--ink-soft);max-width:100%;
+}
+.scroll-plane-cue-icon{
+  display:block;width:clamp(34px,4vw,44px);height:clamp(34px,4vw,44px);
+  color:var(--red-dark);filter:drop-shadow(1px 3px 2px #876b5555);
+  transform:rotate(18deg);animation:plane-cue-float 2.7s ease-in-out infinite alternate;
+}
+.chapter-one-content .scroll-plane-cue p{
+  font:600 clamp(19px,2.6vw,26px)/1.15 var(--hand);
+  color:var(--ink-soft);text-align:center;text-wrap:balance;
+  margin:0;white-space:normal;
+}
+.scroll-cue-arrow{display:block;color:var(--red);font-size:20px;line-height:1;animation:scroll-arrow-bob 2s ease-in-out infinite}
+@keyframes plane-cue-float{to{transform:translateY(-6px) rotate(24deg)}}
+@keyframes scroll-arrow-bob{50%{transform:translateY(5px)}}
+@media (max-width:760px){
+  .chapter-one-content .scroll-plane-cue{margin-top:10px}
+  .scroll-plane-cue-icon{width:35px;height:35px}
+  .chapter-one-content .scroll-plane-cue p{font-size:clamp(18px,5.1vw,23px);max-width:270px}
+}
+@media (max-height:680px){
+  .chapter-one-content .scroll-plane-cue{margin-top:4px;gap:0}
+  .scroll-plane-cue-icon{width:29px;height:29px}
+  .chapter-one-content .scroll-plane-cue p{font-size:19px}
+  .scroll-cue-arrow{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){.scroll-plane-cue-icon,.scroll-cue-arrow{animation:none}}
+
