@@ -1167,3 +1167,25 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
 @media(prefers-reduced-motion:reduce){
   .opening.is-revealed .opening-plane-prompt{animation:none}
 }
+
+
+/* Keep the mobile animation experience without excessive full-page repaints. */
+@media(max-width:820px),(pointer:coarse){
+  .trail-overlay #travellingPlane{left:0;top:0;will-change:transform;filter:none}
+  .trail-overlay #trailDots{opacity:.24}
+  body.mobile-lite .chapter:not(.in-view) .falling-petal,
+  body.mobile-lite .chapter:not(.in-view) .image-float{
+    animation-play-state:paused !important;
+  }
+  .site-chrome{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+    background:linear-gradient(180deg,rgba(255,249,237,.96),rgba(255,246,231,.94) 80%,transparent);
+  }
+  .opening-tap-label{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .stage-six .reveal-background{will-change:auto;transform:none !important}
+  .love-glow{filter:blur(23px)}
+  .mandapam-halo{filter:blur(14px)}
+  .story-event-illustration.venue-art > img{filter:none}
+}
+@media(prefers-reduced-motion:reduce){.trail-overlay #travellingPlane{will-change:auto}}

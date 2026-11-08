@@ -40,6 +40,7 @@ const clamp = (n, min = 0, max = 1) => Math.min(max, Math.max(min, n));
 const ease = (n) => { const p=clamp(n); return p*p*(3-2*p); };
 const lerp = (a, b, t) => a+(b-a)*t;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobileOptimized=window.matchMedia('(max-width: 820px), (pointer: coarse)');
 const storyBook = $('#storyBook');
 const chapters = $$('.chapter');
 const path = $('#trailDots');
@@ -53,6 +54,11 @@ const progressDots = $$('.progress-dot');
 const toast = $('#toast');
 let pathLength = 0;
 let rafPending = false;
+let lastPaintTime=0;
+let chapterMetrics=[];
+const chapterProgress=new Array(chapters.length).fill(-1);
+const journeySketchPaths=$$('.path-sketch');
+const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
 let toastTimeout;
 let introFinished = false;
 let musicOn = false;
@@ -227,22 +233,40 @@ function buildTrail() {
   path.setAttribute('d',d);
   maskLine.setAttribute('d',d);
   pathLength=path.getTotalLength();
-  maskLine.style.strokeDasharray=`${pathLength} ${pathLength}`;
-  maskLine.style.strokeDashoffset=String(pathLength);
+  chapterMetrics=chapters.map(chapter=>({
+    top:storyBook.offsetTop+chapter.offsetTop,
+    height:chapter.offsetHeight
+  }));
+  chapterProgress.fill(-1);
+  // Mobile: skip repainting the enormous animated SVG reveal mask.
+  // The dotted trail remains continuous and the paper plane still flies along it.
+  if(mobileOptimized.matches){
+    path.removeAttribute('mask');
+    maskLine.style.display='none';
+  }else{
+    path.setAttribute('mask','url(#trailMask)');
+    maskLine.style.display='';
+    maskLine.style.strokeDasharray=`${pathLength} ${pathLength}`;
+    maskLine.style.strokeDashoffset=String(pathLength);
+  }
   trailSamples=[];
-  // Cache path samples so the plane tracks vertical scrolling smoothly, including phones.
-  const samples=Math.max(350,Math.min(1400,Math.ceil(pathLength/28)));
-  for(let i=0;i<=samples;i++) {
+  const samples=Math.max(280,Math.min(mobileOptimized.matches?440:1200,
+    Math.ceil(pathLength/(mobileOptimized.matches?65:30))));
+  for(let i=0;i<=samples;i++){
     const length=pathLength*i/samples;
-    trailSamples.push({y:path.getPointAtLength(length).y,length});
+    const point=path.getPointAtLength(length);
+    trailSamples.push({x:point.x,y:point.y,length});
   }
   requestFrame();
 }
 
 function currentChapterIndex(scrollY) {
-  const center = scrollY + window.innerHeight*.50;
+  const center=scrollY+window.innerHeight*.50;
   let idx=0;
-  chapters.forEach((chapter,i) => {const top=storyBook.offsetTop+chapter.offsetTop;if(center>=top) idx=i;});
+  for(let i=0;i<chapterMetrics.length;i++){
+    if(center>=chapterMetrics[i].top) idx=i;
+    else break;
+  }
   return idx;
 }
 function animateChapter(chapter, p) {
@@ -280,8 +304,9 @@ function animateChapter(chapter, p) {
     }
     case 4: {
       const f=ease((reducedP-.01)*1.7);
-      $$('.path-sketch',chapter).forEach((line,i)=>{
-        const len=line.getTotalLength();line.style.strokeDasharray=`${len} ${len}`;
+      journeySketchPaths.forEach((line,i)=>{
+        const len=journeySketchLengths[i];
+        line.style.strokeDasharray=`${len} ${len}`;
         line.style.strokeDashoffset=String((1-f)*len);
       });
       const heart=$('.meeting-heart',chapter),g=ease((reducedP-.41)*3.2);
@@ -318,7 +343,7 @@ function animateChapter(chapter, p) {
       const backdrop=$('.reveal-background',chapter);
       if(backdrop && !reduceMotion){
         backdrop.style.opacity=String(lerp(.7,1,f));
-        backdrop.style.transform=`translate3d(0,${lerp(16,0,f)}px,0) scale(${lerp(1.055,1.015,f)})`;
+        if(!mobileOptimized.matches)backdrop.style.transform=`translate3d(0,${lerp(16,0,f)}px,0) scale(${lerp(1.055,1.015,f)})`;
       }
       $('#petalField').style.opacity=String(f);
       break;
@@ -359,13 +384,14 @@ function updatePlane(scrollY) {
   const lower=trailSamples[Math.max(0,low-1)]||upper;
   const fraction=clamp((targetY-lower.y)/Math.max(.001,upper.y-lower.y));
   const length=lerp(lower.length,upper.length,fraction);
-  maskLine.style.strokeDashoffset=String(pathLength-length);
-  const here=path.getPointAtLength(length);
-  const before=path.getPointAtLength(Math.max(0,length-10));
-  const after=path.getPointAtLength(Math.min(pathLength,length+10));
+  if(!mobileOptimized.matches)maskLine.style.strokeDashoffset=String(pathLength-length);
+  const x=lerp(lower.x,upper.x,fraction);
+  const y=lerp(lower.y,upper.y,fraction);
+  const before=trailSamples[Math.max(0,low-1)]||lower;
+  const after=trailSamples[Math.min(trailSamples.length-1,low+1)]||upper;
   const degrees=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
-  plane.style.left=here.x+'px';plane.style.top=here.y+'px';
-  plane.style.transform=`translate(-50%,-50%) rotate(${degrees}deg)`;
+  // GPU transforms avoid mobile layout/paint work caused by left/top updates.
+  plane.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${degrees}deg)`;
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
 
 }
@@ -379,12 +405,18 @@ function update() {
   chapterName.textContent=chapters[idx]?.dataset.name||'OUR STORY';
   chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — ${String(chapters.length).padStart(2,'0')}`;
   progressDots.forEach((dot,i)=>dot.classList.toggle('active',i===idx));
-  chapters.forEach((chapter)=>{
-    if (chapter.classList.contains('last-chapter')) return;
-    const top=storyTop+chapter.offsetTop;
-    const range=Math.max(1,chapter.offsetHeight-window.innerHeight);
-    const p=clamp((y-top)/range);
-    if (y>top-window.innerHeight*1.4 && y<top+chapter.offsetHeight+window.innerHeight*.5) animateChapter(chapter,p);
+  chapters.forEach((chapter,i)=>{
+    if(chapter.classList.contains('last-chapter'))return;
+    const metric=chapterMetrics[i];
+    if(!metric)return;
+    const range=Math.max(1,metric.height-window.innerHeight);
+    const p=clamp((y-metric.top)/range);
+    if(y>metric.top-window.innerHeight*1.4 &&
+       y<metric.top+metric.height+window.innerHeight*.5 &&
+       Math.abs(p-chapterProgress[i])>=(mobileOptimized.matches?.009:.003)){
+      chapterProgress[i]=p;
+      animateChapter(chapter,p);
+    }
   });
   const finalChapter=chapters[chapters.length-1];
   const finalTop=storyTop+finalChapter.offsetTop;
@@ -392,15 +424,44 @@ function update() {
   $('#endHeart').style.transform=`scale(${lerp(.65,1.2,finalP)})`;
   updatePlane(y);
 }
-function requestFrame(){if(rafPending)return;rafPending=true;requestAnimationFrame(update)}
+function requestFrame(){
+  if(rafPending)return;
+  rafPending=true;
+  requestAnimationFrame(function paint(now){
+    if(mobileOptimized.matches && now-lastPaintTime<30){
+      requestAnimationFrame(paint);
+      return;
+    }
+    lastPaintTime=now;
+    update();
+  });
+}
 window.addEventListener('scroll',requestFrame,{passive:true});
-window.addEventListener('resize',()=>{buildTrail();requestFrame()},{passive:true});
+let resizeDebounce=null,layoutWidth=window.innerWidth,layoutHeight=window.innerHeight;
+function scheduleTrailRebuild(force=false){
+  requestFrame();
+  // Phone address-bar movement fires resize repeatedly; rebuild only when
+  // the actual page layout changes enough to matter.
+  if(!force&&mobileOptimized.matches&&
+     Math.abs(window.innerWidth-layoutWidth)<3 &&
+     Math.abs(window.innerHeight-layoutHeight)<160)return;
+  clearTimeout(resizeDebounce);
+  resizeDebounce=setTimeout(()=>{
+    layoutWidth=window.innerWidth;
+    layoutHeight=window.innerHeight;
+    buildTrail();
+    requestFrame();
+  },180);
+}
+window.addEventListener('resize',()=>scheduleTrailRebuild(false),{passive:true});
+window.addEventListener('orientationchange',()=>scheduleTrailRebuild(true),{passive:true});
 window.addEventListener('pageshow',()=>{buildTrail();requestFrame()});
 
 function createPetals() {
   const field=$('#petalField');
   // Seeded positions make the effect stable and don't shift around between page views.
-  for(let i=0;i<27;i++) {
+  const count=mobileOptimized.matches?10:27;
+  for(let i=0;i<count;i++) {
     const petal=document.createElement('span');petal.className='falling-petal';
     petal.style.setProperty('--x',((i*73+17)%94+3)+'%');
     petal.style.setProperty('--drift',((i*17)%170-80)+'px');
@@ -491,7 +552,7 @@ createPetals();
 requestAnimationFrame(()=>requestAnimationFrame(()=>{buildTrail();update();}));
 if(document.fonts?.ready) document.fonts.ready.then(()=>{buildTrail();requestFrame();});
 // Keep the single continuous trail aligned after venue images load.
-$('.venue-art img').forEach(img => {
+$$('.venue-art img').forEach(img => {
   if (!img.complete) img.addEventListener('load', () => { buildTrail(); requestFrame(); }, {once:true});
 });
 
@@ -517,4 +578,17 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
   });
 } else {
   venueIllustrations.forEach(illustration => illustration.classList.add('in-view'));
+}
+
+
+// Decorative particles and floating illustrations pause when their chapter
+// is outside the phone's viewport, then resume as it returns.
+if(mobileOptimized.matches && 'IntersectionObserver' in window){
+  document.body.classList.add('mobile-lite');
+  const chapterObserver=new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      entry.target.classList.toggle('in-view',entry.isIntersecting);
+    }
+  },{rootMargin:'130px 0px 130px 0px',threshold:0});
+  chapters.forEach(chapter=>chapterObserver.observe(chapter));
 }
