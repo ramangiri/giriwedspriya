@@ -1651,3 +1651,73 @@ body > #travellingPlane.mobile-plane svg{
   .stage-six .curtain{transition:none;will-change:auto}
 }
 
+
+
+/* CHAPTER 06 FULL-VIEW / NO EMPTY SCROLL TAIL
+   Screen 6 previously inherited 165–185svh from all story chapters, leaving
+   a long blank exit after the curtain had already opened. Keep enough scroll
+   distance for its existing reveal animation, but remove that dead space. */
+#chapter-6 {
+  height:132svh;
+  min-height:0;
+}
+#chapter-6 > .stage-six {
+  height:100svh;
+  min-height:0;
+  box-sizing:border-box;
+  padding:clamp(94px,11svh,124px) 14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#chapter-6 .mandapam-stage {
+  flex:0 1 auto;
+  width:min(calc(100vw - 28px),570px);
+  height:min(790px,calc(100svh - clamp(94px,11svh,124px) - 20px));
+  aspect-ratio:auto;
+  min-height:0;
+  max-height:none;
+  margin:0 auto;
+}
+/* Use nearly the whole usable phone screen for the rich curtain artwork,
+   while leaving the Chapter 06 heading and safe-area controls unobstructed. */
+@media(max-width:760px){
+  #chapter-6{
+    height:124svh;
+    min-height:0;
+  }
+  #chapter-6 > .stage-six{
+    padding:calc(105px + env(safe-area-inset-top)) 12px
+            calc(16px + env(safe-area-inset-bottom));
+  }
+  #chapter-6 .mandapam-stage{
+    width:min(calc(100vw - 24px),490px);
+    height:min(820px,calc(100svh - 130px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+    min-height:0;
+    max-height:none;
+    aspect-ratio:auto;
+    margin:0 auto;
+  }
+}
+@media(max-height:640px) and (max-width:760px){
+  #chapter-6 > .stage-six{
+    padding:calc(88px + env(safe-area-inset-top)) 10px
+            calc(11px + env(safe-area-inset-bottom));
+  }
+  #chapter-6 .mandapam-stage{
+    height:calc(100svh - 105px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    width:min(calc(100vw - 20px),490px);
+  }
+  #chapter-6 .reveal-copy{gap:3px;padding:8px 7px}
+  #chapter-6 .reveal-copy h2{font-size:clamp(26px,7.3vw,37px)}
+  #chapter-6 .reveal-copy .couple-names{font-size:clamp(30px,8.3vw,44px)}
+}
+@media(max-height:470px) and (orientation:landscape){
+  #chapter-6 > .stage-six{
+    padding:calc(60px + env(safe-area-inset-top)) 10px 8px;
+  }
+  #chapter-6 .mandapam-stage{
+    width:min(70vw,400px);
+    height:calc(100svh - 73px - env(safe-area-inset-top));
+  }
+}
