@@ -53,7 +53,15 @@
     <button class="progress-dot" data-go="chapter-8" title="You're invited" aria-label="Go to Your Invitation"></button>
   </div>
 
-  <main>
+  <main class="invitation-main">
+      <div class="trail-overlay" id="trailOverlay" aria-hidden="true">
+        <svg id="trailSvg" viewBox="0 0 400 800" preserveAspectRatio="none">
+          <defs><mask id="trailMask"><path id="trailReveal" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/></mask></defs>
+          <path id="trailDots" fill="none" stroke="#47372e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 11" mask="url(#trailMask)"/>
+        </svg>
+        <div id="travellingPlane"><svg><use href="#icon-plane"></use></svg></div>
+      </div>
+
     <section class="opening" id="opening" aria-label="Tap to open the wedding invitation">
       <video id="openingVideo" muted playsinline preload="metadata" poster="assets/opening-poster.webp">
         <source src="assets/opening.mp4" type="video/mp4">
@@ -68,24 +76,12 @@
         <h1 class="opening-names"><span class="name-first">Giridharan</span><em class="name-and">&</em><span class="name-second">Padma Priya</span></h1>
         <p class="opening-subtitle">From friends to forever</p>
       </div>
-      <div class="opening-bottom">
-        <button type="button" class="opening-enter" id="enterStory">Open our story <svg><use href="#icon-arrow"></use></svg></button>
-        <p>Scroll to follow our paper plane</p>
-      </div>
       <button type="button" class="opening-tap" id="openingTap" aria-label="Tap anywhere to open the invitation">
         <span class="opening-tap-label">Tap to Open <span aria-hidden="true">♡</span></span>
       </button>
     </section>
 
     <div class="story-book" id="storyBook">
-      <div class="trail-overlay" id="trailOverlay" aria-hidden="true">
-        <svg id="trailSvg" viewBox="0 0 400 800" preserveAspectRatio="none">
-          <defs><mask id="trailMask"><path id="trailReveal" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/></mask></defs>
-          <path id="trailDots" fill="none" stroke="#47372e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 11" mask="url(#trailMask)"/>
-        </svg>
-        <div id="travellingPlane"><svg><use href="#icon-plane"></use></svg></div>
-      </div>
-
       <!-- 1. STORYBOOK OPENS -->
       <section class="chapter" id="chapter-1" data-name="THE BEGINNING" data-number="1">
         <div class="stage stage-one">

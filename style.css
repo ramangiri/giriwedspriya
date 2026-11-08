@@ -301,3 +301,16 @@ body.intro-locked .opening{min-height:100svh}
   .opening .opening-bottom p { display: none; }
 }
 
+
+
+/* The paper plane and dashed heart trail now use ONE SVG covering intro + story. */
+.invitation-main{position:relative;isolation:isolate}
+.invitation-main > .trail-overlay{opacity:0;transition:opacity .8s ease;z-index:18}
+body:not(.intro-locked) .opening.is-revealed ~ .trail-overlay{opacity:1}
+body:not(.intro-locked) .invitation-main > .trail-overlay{opacity:1}
+body.intro-locked .invitation-main > .trail-overlay{opacity:0}
+.opening .opening-bottom{display:none!important}
+.opening.is-revealed .opening-bottom{display:none!important}
+@media(prefers-reduced-motion:reduce){
+  .invitation-main > .trail-overlay{transition:none}
+}

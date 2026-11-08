@@ -139,10 +139,6 @@ video.addEventListener('error', () => {
   if (openingStarted) revealOpeningText();
 });
 
-$('#enterStory').addEventListener('click', () => {
-  video.pause();
-  goTo('chapter-1');
-});
 $('#skipToInvite').addEventListener('click', () => {
   video.pause();
   goTo('chapter-8');
@@ -190,34 +186,53 @@ function buildCalendar() {
 }
 
 /** A single continuous SVG path across every chapter, not eight disconnected lines. */
+// One continuous path, beginning on the opened envelope and flowing into every chapter.
+const invitationMain = document.querySelector('.invitation-main');
+let trailSamples = [];
+
 function buildTrail() {
-  const w = Math.max(300, storyBook.clientWidth);
-  const h = Math.max(1000, storyBook.scrollHeight);
+  const w = Math.max(300, invitationMain.clientWidth);
+  const h = Math.max(1000, invitationMain.scrollHeight);
   planeSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  const positions=[];
+  const storyStart = storyBook.getBoundingClientRect().top - invitationMain.getBoundingClientRect().top;
+  const openingHeight = opening.offsetHeight;
+  const positions = [
+    // Visible only after the envelope opens; the trailing curve crosses the next screen.
+    {x:w*.76, y:openingHeight*.57},
+    {x:w*.82, y:openingHeight*.82},
+    {x:w*.68, y:storyStart+25}
+  ];
   chapters.forEach((chapter,i) => {
-    const y = chapter.offsetTop;
+    const y = storyStart + chapter.offsetTop;
     const sectionH = chapter.offsetHeight;
     const left = i%2===0;
     positions.push({x:w*(left?.20:.80),y:y+Math.min(170,sectionH*.16)});
     positions.push({x:w*(left?.83:.17),y:y+sectionH*.69});
   });
   const endH = $('#endHeart');
-  const box = endH.getBoundingClientRect();
-  const parent = storyBook.getBoundingClientRect();
-  positions.push({x: w*.51, y: box.top - parent.top + box.height*.5});
+  const endBox = endH.getBoundingClientRect();
+  const mainBox = invitationMain.getBoundingClientRect();
+  positions.push({x:w*.51,y:endBox.top-mainBox.top+endBox.height*.5});
   positions.sort((a,b)=>a.y-b.y);
   let d=`M ${positions[0].x.toFixed(1)} ${positions[0].y.toFixed(1)}`;
   for(let i=0;i<positions.length-1;i++) {
-    const p0 = positions[Math.max(i-1,0)],p1=positions[i],p2=positions[i+1],p3=positions[Math.min(i+2,positions.length-1)];
-    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
-    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    const p0=positions[Math.max(i-1,0)],p1=positions[i],p2=positions[i+1],p3=positions[Math.min(i+2,positions.length-1)];
+    const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;
     d+=` C ${c1x.toFixed(1)} ${c1y.toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
   }
   path.setAttribute('d',d);
   maskLine.setAttribute('d',d);
   pathLength=path.getTotalLength();
-  maskLine.style.strokeDasharray = `${pathLength} ${pathLength}`;
+  maskLine.style.strokeDasharray=`${pathLength} ${pathLength}`;
+  maskLine.style.strokeDashoffset=String(pathLength);
+  trailSamples=[];
+  // Cache path samples so the plane tracks vertical scrolling smoothly, including phones.
+  const samples=Math.max(350,Math.min(1400,Math.ceil(pathLength/28)));
+  for(let i=0;i<=samples;i++) {
+    const length=pathLength*i/samples;
+    trailSamples.push({y:path.getPointAtLength(length).y,length});
+  }
   requestFrame();
 }
 
@@ -320,11 +335,23 @@ function animateChapter(chapter, p) {
   }
 }
 function updatePlane(scrollY) {
-  if(!pathLength || reduceMotion) { plane.style.opacity='0'; return; }
-  const relative = scrollY - storyBook.offsetTop;
-  const remaining = storyBook.offsetHeight-window.innerHeight*.4;
-  const t=clamp((relative+window.innerHeight*.56)/remaining);
-  const length=pathLength*t;
+  if(!pathLength || !introFinished) { plane.style.opacity='0'; return; }
+  if(reduceMotion) {
+    maskLine.style.strokeDashoffset='0';
+    plane.style.opacity='0';
+    return;
+  }
+  // At the end of the opening screen the plane simply keeps flying into Chapter 1.
+  const targetY=-invitationMain.getBoundingClientRect().top+window.innerHeight*.68;
+  let low=0,high=trailSamples.length-1;
+  while(low<high) {
+    const mid=(low+high)>>1;
+    if(trailSamples[mid].y<targetY) low=mid+1; else high=mid;
+  }
+  const upper=trailSamples[low]||{y:0,length:0};
+  const lower=trailSamples[Math.max(0,low-1)]||upper;
+  const fraction=clamp((targetY-lower.y)/Math.max(.001,upper.y-lower.y));
+  const length=lerp(lower.length,upper.length,fraction);
   maskLine.style.strokeDashoffset=String(pathLength-length);
   const here=path.getPointAtLength(length);
   const before=path.getPointAtLength(Math.max(0,length-10));
@@ -332,14 +359,14 @@ function updatePlane(scrollY) {
   const degrees=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
   plane.style.left=here.x+'px';plane.style.top=here.y+'px';
   plane.style.transform=`translate(-50%,-50%) rotate(${degrees}deg)`;
-  plane.style.opacity=(relative > -window.innerHeight*.4 && relative < storyBook.offsetHeight-180) ? '1' : '0';
+  plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
 }
 function update() {
   rafPending=false;
   const y=window.scrollY;
   const storyTop=storyBook.offsetTop;
   document.body.classList.toggle('story-started',y+window.innerHeight*.32>=storyTop);
-  if(y < storyTop-window.innerHeight) return;
+  if(y < storyTop-window.innerHeight) { updatePlane(y); return; }
   const idx=currentChapterIndex(y);
   chapterName.textContent=chapters[idx]?.dataset.name||'OUR STORY';
   chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — 08`;
