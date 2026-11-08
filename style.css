@@ -1000,3 +1000,19 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
   .stage-one .chapter-one-content .story-caption{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){.opening .opening-plane-prompt{transition:none}}
+
+
+/* FIX: decorative corner markup must not form a phantom grid row.
+   Center Chapter 1 as a single flex column so typography remains evenly spaced
+   on 320px phones, compact landscape phones, tablets and desktop. */
+.stage-one{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+@media(max-height:520px){
+  /* Short landscape phone: let the closed envelope fit the actual viewport. */
+  .opening{min-height:100svh}
+}
+
