@@ -239,6 +239,11 @@ function animateChapter(chapter, p) {
       $('.reveal-copy',chapter).style.opacity=String(f);
       $('.reveal-copy',chapter).style.transform=`translateY(${lerp(38,0,f)}px) scale(${lerp(.90,1,f)})`;
       $('.mandapam-art',chapter).style.opacity=String(.12+.72*f);
+      const backdrop=$('.reveal-background',chapter);
+      if(backdrop && !reduceMotion){
+        backdrop.style.opacity=String(lerp(.7,1,f));
+        backdrop.style.transform=`translate3d(0,${lerp(16,0,f)}px,0) scale(${lerp(1.055,1.015,f)})`;
+      }
       $('#petalField').style.opacity=String(f);
       break;
     }

@@ -62,3 +62,104 @@
 @media(max-width:760px){.venue-art{width:100%;max-width:440px;margin:2px auto 16px;border-radius:10px}.venue-art-image{height:clamp(250px,83vw,360px)}.venue-art-caption{padding:11px 12px;font-size:12px}.event-card{max-width:100%}}
 @media(max-width:380px){.venue-art-image{height:clamp(220px,80vw,295px)}.venue-art-caption{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.venue-art,.venue-art.animated-venue,.venue-art.animated-venue.in-view,.venue-art-image img{opacity:1!important;transform:none!important;transition:none!important}}
+
+
+/* Chapter 06: illustrated wedding reveal. Keep names as live HTML text.
+   Background illustration is deliberately text-free and sized for mobile/desktop. */
+.stage-six {
+  background: radial-gradient(ellipse at 50% 37%, #fff8e9 0%, #f6e2c7 67%, #e6b995 100%);
+  isolation: isolate;
+}
+.stage-six .mandapam-stage {
+  width: min(1030px, 96%);
+  height: min(800px, 90svh);
+  background: #fbecd5;
+  overflow: hidden;
+  border: 1px solid #c6a277;
+  border-radius: clamp(12px, 2vw, 24px);
+  box-shadow: 0 22px 45px #6034272b, 0 0 0 6px #fff6e6af;
+}
+.stage-six .reveal-background {
+  position: absolute;
+  inset: -3%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+  opacity: 1;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+.stage-six .reveal-background img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.stage-six .reveal-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 52% 55% at 50% 39%, #fff8e8dd 0%, #fff5e4bb 45%, #fff4e100 83%);
+}
+.stage-six .mandapam-halo {
+  z-index: 1;
+  top: 14%;
+  background: radial-gradient(ellipse, #fff8e7cf, #fff4dc62 40%, transparent 75%);
+  filter: blur(22px);
+}
+.stage-six .mandapam-art { display: none; }
+.stage-six .reveal-copy {
+  z-index: 3;
+  width: min(800px, 92%);
+  max-width: 92%;
+  padding: 12px 12px clamp(90px, 13vh, 140px);
+  text-shadow: 0 2px 5px #fff5e3ad;
+}
+.stage-six .reveal-copy h2 {
+  font-size: clamp(36px, 5.1vw, 68px);
+  letter-spacing: -.032em;
+  line-height: 1.04;
+  color: #813143;
+  margin: 12px 0 8px;
+}
+.stage-six .reveal-copy .you-invited {
+  color: #6d483f;
+  font-size: clamp(21px, 2.6vw, 30px);
+  margin: 10px 0;
+}
+.stage-six .reveal-copy .couple-names {
+  font-size: clamp(56px, 7.8vw, 102px);
+  line-height: .91;
+  color: #a02037;
+  margin: 17px auto;
+  text-shadow: 0 3px 4px #fff8ebdf;
+}
+.stage-six .reveal-copy .couple-names em { margin: 10px 0; }
+.stage-six .ring-doodle { color: #b33951; }
+@media(max-width:760px) {
+  .stage-six .mandapam-stage {
+    height: min(720px, 91svh);
+    width: min(520px, 96vw);
+    border-radius: 16px;
+    margin-top: 20px;
+  }
+  .stage-six .reveal-background img { object-position: center 53%; }
+  .stage-six .reveal-copy { width: 94%; max-width: 94%; padding: 8px 4px clamp(110px, 18svh, 150px); }
+  .stage-six .reveal-copy h2 { font-size: clamp(34px, 8vw, 47px); margin: 7px 0; }
+  .stage-six .reveal-copy .you-invited { font-size: clamp(19px, 5.2vw, 26px); margin: 8px auto; }
+  .stage-six .reveal-copy .couple-names { font-size: clamp(55px, 12.7vw, 73px); line-height: .84; margin: 13px 0; }
+  .stage-six .reveal-copy .couple-names em { margin: 9px 0; }
+  .stage-six .ring-doodle { font-size: 32px; }
+}
+@media(max-height:700px) and (max-width:760px) {
+  .stage-six .mandapam-stage { height: min(600px, 91svh); margin-top: 10px; }
+  .stage-six .reveal-copy { padding-bottom: 54px; }
+  .stage-six .reveal-copy h2 { font-size: clamp(30px, 7vw, 38px); }
+  .stage-six .reveal-copy .you-invited { font-size: clamp(18px, 5vw, 22px); }
+  .stage-six .reveal-copy .couple-names { font-size: clamp(48px, 11vw, 59px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .stage-six .reveal-background { transform: none !important; transition: none !important; opacity: 1 !important; will-change: auto; }
+}
