@@ -99,7 +99,7 @@ let openingFallbackTimer = null;
 let openingRevealSteps = 0;
 let lastOpeningRevealAt = 0;
 let openingRevealTimer = null;
-const openingScrollThresholds = [.08, .29, .52, .76];
+const openingScrollThresholds = [.10, .31, .54, .76];
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
@@ -272,12 +272,14 @@ function buildTrail() {
   const openingHeight = opening.offsetHeight;
   const viewportHeight = openingViewport.offsetHeight;
   const positions = [
-    // The plane waits at the bottom centre when the video ends. As guests
-    // scroll, it flies across the still-visible opening and into Chapter 01.
-    {x:w*.50, y:viewportHeight*.79},
-    {x:w*.43, y:viewportHeight*1.04},
-    {x:w*.76, y:viewportHeight*1.42},
-    {x:w*.26, y:Math.max(viewportHeight*1.79,openingHeight-viewportHeight*.20)},
+    // The plane is FIRST visible in the upper-left after the envelope opens.
+    // While guests scroll the sticky opening, it flies diagonally downward,
+    // arcs around the centered text, reaches the bottom and enters Chapter 01.
+    {x:w*.11, y:viewportHeight*.13},
+    {x:w*.18, y:viewportHeight*.53},
+    {x:w*.74, y:viewportHeight*1.06},
+    {x:w*.69, y:viewportHeight*1.50},
+    {x:w*.49, y:Math.max(viewportHeight*1.93,openingHeight-viewportHeight*.19)},
     {x:w*.62, y:storyStart+25}
   ];
   chapters.forEach((chapter,i) => {
@@ -453,11 +455,12 @@ function updatePlane(scrollY) {
   const relativeScroll=scrollY-mainTopOnPage;
   const openingRunway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
   const openingProgress=clamp(relativeScroll/openingRunway);
-  // Keep the paper plane below the main names while the opening is sticky,
-  // then gently guide it upward as Chapter 01 comes into view.
+  // The opening starts in the upper-left at 14% of the viewport, NOT 84%.
+  // The scroll drives the plane from top to bottom while text is revealed
+  // at its four checkpoints. Past the opening, the same trail continues.
   const viewportGuide=relativeScroll<=openingRunway
-    ? lerp(.84,.79,ease(openingProgress))
-    : lerp(.79,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
+    ? lerp(.14,.77,ease(openingProgress))
+    : lerp(.77,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
   // Follow scrolling directly: the old sine-wave offset temporarily opposed
   // the finger's movement and made the plane appear stuck.
   const targetY=relativeScroll+window.innerHeight*viewportGuide;
