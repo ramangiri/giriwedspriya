@@ -63,6 +63,9 @@ const progressDots = $$('.progress-dot');
 const toast = $('#toast');
 let pathLength = 0;
 let rafPending = false;
+let lastSceneUpdate=0;
+let lastChapterIndex=-1;
+let lastStoryVisibility=false;
 // The browser's native display refresh rate drives mobile plane updates.
 let chapterMetrics=[];
 const chapterProgress=new Array(chapters.length).fill(-1);
@@ -269,13 +272,21 @@ function buildTrail() {
     maskLine.style.strokeDashoffset=String(pathLength);
   }
   trailSamples=[];
-  const samples=Math.max(280,Math.min(mobileOptimized.matches?440:1200,
-    Math.ceil(pathLength/(mobileOptimized.matches?65:30))));
+  const samples=Math.max(360,Math.min(mobileOptimized.matches?800:1200,
+    Math.ceil(pathLength/(mobileOptimized.matches?32:30))));
   for(let i=0;i<=samples;i++){
     const length=pathLength*i/samples;
     const point=path.getPointAtLength(length);
     trailSamples.push({x:point.x,y:point.y,length});
   }
+  // Interpolate cached path tangents for smooth rotations even on slow phones.
+  trailSamples.forEach((sample,i)=>{
+    const before=trailSamples[Math.max(0,i-1)]||sample;
+    const after=trailSamples[Math.min(trailSamples.length-1,i+1)]||sample;
+    sample.angle=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
+  });
+  lastChapterIndex=-1;
+  lastSceneUpdate=0;
   requestFrame();
 }
 
@@ -394,13 +405,9 @@ function updatePlane(scrollY) {
   const openingProgress=clamp(scrollY/Math.max(1,opening.offsetHeight));
   const viewportGuide=lerp(.83,.68,ease(openingProgress));
   const relativeScroll=scrollY-mainTopOnPage;
-  // The previous plane looked almost stationary vertically. This small,
-  // continuous flight arc adds visible motion along the SAME dotted trail.
-  // It remains scroll-controlled, with no auto-scrolling or artificial delay.
-  const flightArc=useMobilePlane
-    ? Math.sin(relativeScroll*Math.PI*2/Math.max(400,window.innerHeight*.85))*window.innerHeight*.085
-    : 0;
-  const targetY=relativeScroll+window.innerHeight*viewportGuide+flightArc;
+  // Follow scrolling directly: the old sine-wave offset temporarily opposed
+  // the finger's movement and made the plane appear stuck.
+  const targetY=relativeScroll+window.innerHeight*viewportGuide;
   let low=0,high=trailSamples.length-1;
   while(low<high) {
     const mid=(low+high)>>1;
@@ -413,9 +420,8 @@ function updatePlane(scrollY) {
   if(!mobileOptimized.matches)maskLine.style.strokeDashoffset=String(pathLength-length);
   const x=lerp(lower.x,upper.x,fraction);
   const y=lerp(lower.y,upper.y,fraction);
-  const before=trailSamples[Math.max(0,low-1)]||lower;
-  const after=trailSamples[Math.min(trailSamples.length-1,low+1)]||upper;
-  const degrees=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
+  const angleDelta=((upper.angle-lower.angle+540)%360)-180;
+  const degrees=lower.angle+angleDelta*fraction;
   // The mobile plane is viewport-fixed: map the same trail point to screen
   // coordinates, then move only its compositor transform at display refresh.
   // Desktop retains the original absolute plane positioning.
@@ -425,34 +431,51 @@ function updatePlane(scrollY) {
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
 
 }
-function update() {
+function update(now=performance.now()) {
   rafPending=false;
   const y=window.scrollY;
+  // Always update the plane BEFORE other expensive scene animations.
+  updatePlane(y);
+
   const storyTop=storyBook.offsetTop;
-  document.body.classList.toggle('story-started',y+window.innerHeight*.32>=storyTop);
-  if(y < storyTop-window.innerHeight) { updatePlane(y); return; }
+  const isStoryVisible=y+window.innerHeight*.32>=storyTop;
+  if(isStoryVisible!==lastStoryVisibility){
+    document.body.classList.toggle('story-started',isStoryVisible);
+    lastStoryVisibility=isStoryVisible;
+  }
+  if(y<storyTop-window.innerHeight)return;
+
+  // The plane paints at native refresh. Decorative chapter motions update
+  // less often on phones to leave frame budget for a fluid plane.
+  if(mobileOptimized.matches&&now-lastSceneUpdate<37)return;
+  lastSceneUpdate=now;
+
   const idx=currentChapterIndex(y);
-  chapterName.textContent=chapters[idx]?.dataset.name||'OUR STORY';
-  chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — ${String(chapters.length).padStart(2,'0')}`;
-  progressDots.forEach((dot,i)=>dot.classList.toggle('active',i===idx));
+  if(idx!==lastChapterIndex){
+    chapterName.textContent=chapters[idx]?.dataset.name||'OUR STORY';
+    chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — ${String(chapters.length).padStart(2,'0')}`;
+    progressDots.forEach((dot,i)=>dot.classList.toggle('active',i===idx));
+    lastChapterIndex=idx;
+  }
   chapters.forEach((chapter,i)=>{
     if(chapter.classList.contains('last-chapter'))return;
+    if(mobileOptimized.matches&&Math.abs(i-idx)>1)return;
     const metric=chapterMetrics[i];
     if(!metric)return;
     const range=Math.max(1,metric.height-window.innerHeight);
     const p=clamp((y-metric.top)/range);
     if(y>metric.top-window.innerHeight*1.4 &&
        y<metric.top+metric.height+window.innerHeight*.5 &&
-       Math.abs(p-chapterProgress[i])>=(mobileOptimized.matches?.009:.003)){
+       Math.abs(p-chapterProgress[i])>=(mobileOptimized.matches?.008:.003)){
       chapterProgress[i]=p;
       animateChapter(chapter,p);
     }
   });
-  const finalChapter=chapters[chapters.length-1];
-  const finalTop=storyTop+finalChapter.offsetTop;
-  const finalP=ease((y-finalTop)/Math.max(1,finalChapter.offsetHeight*.6));
-  $('#endHeart').style.transform=`scale(${lerp(.65,1.2,finalP)})`;
-  updatePlane(y);
+  const finalMetric=chapterMetrics[chapters.length-1];
+  if(finalMetric&&y>finalMetric.top-window.innerHeight){
+    const finalP=ease((y-finalMetric.top)/Math.max(1,finalMetric.height*.6));
+    $('#endHeart').style.transform=`scale(${lerp(.65,1.2,finalP)})`;
+  }
 }
 function requestFrame(){
   if(rafPending)return;

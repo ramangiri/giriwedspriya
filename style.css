@@ -1214,3 +1214,21 @@ body > #travellingPlane.mobile-plane svg{
 @media(prefers-reduced-motion:reduce){
   body > #travellingPlane.mobile-plane{will-change:auto}
 }
+
+
+/* Mobile plane motion: small compositor-only wing flutter, independent
+   of scroll calculations, without introducing slow spring delays. */
+@media(max-width:820px),(pointer:coarse){
+  body > #travellingPlane.mobile-plane svg{
+    transform-origin:50% 50%;
+    animation:mobile-plane-flutter 1.05s ease-in-out infinite alternate;
+    will-change:transform;
+  }
+  @keyframes mobile-plane-flutter{
+    from{transform:translate3d(0,1.5px,0) rotate(-2deg)}
+    to{transform:translate3d(0,-2px,0) rotate(2deg)}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body > #travellingPlane.mobile-plane svg{animation:none;will-change:auto}
+}
