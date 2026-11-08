@@ -456,3 +456,16 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
 }
 @media(prefers-reduced-motion:reduce){.scroll-plane-cue-icon,.scroll-cue-arrow{animation:none}}
 
+
+/* Credit is part of the invitation closing card, just below Relive our story. */
+.closing-card .maker-credit{
+  max-width:100%;
+  margin:12px auto calc(6px + env(safe-area-inset-bottom));
+  padding:12px 12px 0;
+  border-top:1px solid rgba(157,117,91,.28);
+  font:500 clamp(11px,2.7vw,13px)/1.5 var(--sans);
+  color:#806657;
+  letter-spacing:.02em;
+  text-align:center;
+}
+.closing-card .maker-credit strong{font-weight:700;color:#694a41}
