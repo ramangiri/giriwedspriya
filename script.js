@@ -76,48 +76,19 @@ const openingTap = $('#openingTap');
 const openingSound = $('#openingSound');
 let openingStarted = false;
 let openingFallbackTimer = null;
-let openingAudioTailTimer = null;
-let openingAudioFadeTimer = null;
-let openingAudioFadeFrame = null;
-const EXTRA_INTRO_MUSIC_MS = 20_000;
-const INTRO_MUSIC_FADE_MS = 1_400;
-
-/* Keep the chosen soundtrack playing for 20 seconds after the envelope opens.
-   If it is shorter than the total duration, the audio loops rather than stopping. */
+// Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
-  if (openingAudioTailTimer !== null) window.clearTimeout(openingAudioTailTimer);
-  if (openingAudioFadeTimer !== null) window.clearTimeout(openingAudioFadeTimer);
-  if (openingAudioFadeFrame !== null) window.cancelAnimationFrame(openingAudioFadeFrame);
-  openingAudioTailTimer = openingAudioFadeTimer = openingAudioFadeFrame = null;
   if (!openingSound) return;
   openingSound.pause();
-  openingSound.loop = false;
-  try { openingSound.volume = 1; } catch (_) { /* iOS may lock media volume. */ }
-}
-
-function playOpeningAudioTail() {
-  if (!openingSound || openingSound.paused) return;
-  if (openingAudioTailTimer !== null) window.clearTimeout(openingAudioTailTimer);
-  if (openingAudioFadeTimer !== null) window.clearTimeout(openingAudioFadeTimer);
-  // Fade out gently for the last 1.4 seconds (where the browser supports volume).
-  openingAudioFadeTimer = window.setTimeout(() => {
-    const fadeStart = performance.now();
-    const fade = now => {
-      const t = Math.min(1, (now - fadeStart) / INTRO_MUSIC_FADE_MS);
-      try { openingSound.volume = Math.max(0, 1-t); } catch (_) {}
-      if (t < 1 && !openingSound.paused) openingAudioFadeFrame = window.requestAnimationFrame(fade);
-    };
-    openingAudioFadeFrame = window.requestAnimationFrame(fade);
-  }, EXTRA_INTRO_MUSIC_MS - INTRO_MUSIC_FADE_MS);
-  openingAudioTailTimer = window.setTimeout(stopOpeningSound, EXTRA_INTRO_MUSIC_MS);
+  try { openingSound.currentTime = 0; openingSound.volume = 1; } catch (_) {}
 }
 
 function revealOpeningText() {
   if (!openingStarted || introFinished) return;
   introFinished = true;
   if (openingFallbackTimer !== null) window.clearTimeout(openingFallbackTimer);
-  // Text appears now; soundtrack continues for another 20 seconds.
-  playOpeningAudioTail();
+  // Stop the soundtrack as soon as the envelope-opening video finishes.
+  stopOpeningSound();
   opening.classList.remove('is-playing');
   opening.classList.add('is-revealed');
   openingTap.hidden = true;
@@ -134,7 +105,6 @@ function startEnvelopeVideo() {
   // The new soundtrack starts in the SAME user gesture as the envelope animation.
   // Using an <audio> element keeps your existing 8-second envelope video unchanged.
   if (openingSound) {
-    openingSound.loop = true;
     try { openingSound.volume = 1; openingSound.currentTime = 0; } catch (_) {}
     try {
       const audioStart = openingSound.play();
