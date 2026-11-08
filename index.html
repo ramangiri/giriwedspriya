@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f9ecd4">
+  <meta name="description" content="From childhood friendship to forever. Celebrate the wedding of Giridharan and Padma Priya.">
+  <meta property="og:title" content="Giridharan & Padma Priya — From Friends to Forever">
+  <meta property="og:description" content="A little friendship, a lot of love, and a lifetime ahead. You're invited!">
+  <title>Giridharan & Padma Priya | From Friends to Forever</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="icon-plane" viewBox="0 0 64 64">
+        <path d="M5 23 59 5 43 58 28 36 16 47l2-18Z" fill="#fff2de" stroke="#5a392d" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="m18 29 41-24L28 36l-12 11" fill="none" stroke="#5a392d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m28 36 15 22" stroke="#5a392d" stroke-width="2"/>
+      </symbol>
+      <symbol id="icon-heart" viewBox="0 0 48 48">
+        <path d="M24 41C17 35 5 27 5 17 5 6 18 4 24 13 30 4 43 6 43 17 43 27 31 35 24 41Z" fill="currentColor" stroke="#a62133" stroke-width="2" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 9l11-2M9 18c0 3-6 3-6 0s6-3 6 0Zm11-2c0 3-6 3-6 0s6-3 6 0Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 2v6M17 2v6M3 10h18M8 15h2M14 15h2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="icon-map" viewBox="0 0 24 24"><path d="M12 22s8-7 8-13a8 8 0 0 0-16 0c0 6 8 13 8 13Z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2.8" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+      <symbol id="icon-share" viewBox="0 0 24 24"><path d="M12 3v12m0-12L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M12 3v18m0 0-6-6m6 6 6-6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="icon-flower" viewBox="0 0 100 100"><g stroke="#b26647" stroke-width="1.5" fill="#f4b8a6"><ellipse cx="50" cy="28" rx="13" ry="24"/><ellipse cx="50" cy="72" rx="13" ry="24"/><ellipse cx="28" cy="50" rx="24" ry="13"/><ellipse cx="72" cy="50" rx="24" ry="13"/><ellipse cx="34" cy="34" rx="12" ry="22" transform="rotate(-45 34 34)"/><ellipse cx="66" cy="66" rx="12" ry="22" transform="rotate(-45 66 66)"/><ellipse cx="34" cy="66" rx="12" ry="22" transform="rotate(45 34 66)"/><ellipse cx="66" cy="34" rx="12" ry="22" transform="rotate(45 66 34)"/><circle cx="50" cy="50" r="11" fill="#f9dd79"/></g></symbol>
+    </defs>
+  </svg>
+
+  <div class="site-chrome" id="siteChrome">
+    <a href="#chapter-1" class="brand" aria-label="Giridharan and Padma Priya home">G <span>♥</span> P</a>
+    <div class="chapter-status" aria-live="polite"><span id="chapterName">OUR STORY</span><span class="status-separator">/</span><span id="chapterCounter">01 — 08</span></div>
+    <div class="top-actions">
+      <button type="button" id="musicToggle" aria-pressed="false" title="Play gentle instrumental music" aria-label="Turn background music on"><svg><use href="#icon-music"></use></svg><span class="sound-wave">●</span></button>
+      <button type="button" id="skipToInvite" class="skip-button">Skip to invite <span aria-hidden="true">↗</span></button>
+    </div>
+  </div>
+  <div class="side-progress" aria-label="Story chapters" id="sideProgress">
+    <button class="progress-dot active" data-go="chapter-1" title="The beginning" aria-label="Go to The Beginning"></button>
+    <button class="progress-dot" data-go="chapter-2" title="Childhood friendship" aria-label="Go to Childhood Friendship"></button>
+    <button class="progress-dot" data-go="chapter-3" title="Family bond" aria-label="Go to Family Bond"></button>
+    <button class="progress-dot" data-go="chapter-4" title="Different paths" aria-label="Go to Different Paths"></button>
+    <button class="progress-dot" data-go="chapter-5" title="Friendship to love" aria-label="Go to Friendship to Love"></button>
+    <button class="progress-dot" data-go="chapter-6" title="Forever" aria-label="Go to Forever"></button>
+    <button class="progress-dot" data-go="chapter-7" title="Mark the calendar" aria-label="Go to Mark the Calendar"></button>
+    <button class="progress-dot" data-go="chapter-8" title="You're invited" aria-label="Go to Your Invitation"></button>
+  </div>
+
+  <main>
+    <section class="opening" id="opening" aria-label="Opening envelope animation">
+      <video id="openingVideo" autoplay muted playsinline preload="metadata" poster="assets/opening-poster.webp">
+        <source src="assets/opening.mp4" type="video/mp4">
+      </video>
+      <div class="opening-gradient"></div>
+      <div class="opening-copy">
+        <p class="eyebrow light">A LITTLE STORY ABOUT TWO HEARTS</p>
+        <h1>Giridharan <em>&</em><br>Padma Priya</h1>
+        <p class="opening-subtitle">From friends to forever</p>
+      </div>
+      <div class="opening-bottom">
+        <button type="button" class="opening-enter" id="enterStory">Open our story <svg><use href="#icon-arrow"></use></svg></button>
+        <p>Scroll to follow our paper plane</p>
+      </div>
+    </section>
+
+    <div class="story-book" id="storyBook">
+      <div class="trail-overlay" id="trailOverlay" aria-hidden="true">
+        <svg id="trailSvg" viewBox="0 0 400 800" preserveAspectRatio="none">
+          <defs><mask id="trailMask"><path id="trailReveal" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/></mask></defs>
+          <path id="trailDots" fill="none" stroke="#47372e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 11" mask="url(#trailMask)"/>
+        </svg>
+        <div id="travellingPlane"><svg><use href="#icon-plane"></use></svg></div>
+      </div>
+
+      <!-- 1. STORYBOOK OPENS -->
+      <section class="chapter" id="chapter-1" data-name="THE BEGINNING" data-number="1">
+        <div class="stage stage-one">
+          <div class="paper-corners" aria-hidden="true"><span class="sprig top-left"></span><span class="sprig bottom-right"></span></div>
+          <span class="stage-number">CHAPTER 01 <span>—</span> THE BEGINNING</span>
+          <div class="chapter-one-content">
+            <p class="eyebrow ink pop-word">Once upon a friendship</p>
+            <div class="book-object" id="bookObject" aria-hidden="true"><div class="book-shadow"></div><div class="book-half left"><div class="book-inside">G</div></div><div class="book-half right"><div class="book-inside">P</div></div><div class="book-spine"></div><svg class="book-heart"><use href="#icon-heart"></use></svg></div>
+            <h2 class="display-title">Every love story<br><span>is special...</span></h2>
+            <p class="script-statement">but this one is <em>ours.</em></p>
+            <p class="story-caption">A little friendship, a million memories, and a forever yet to unfold.</p>
+            <p class="handwritten-mini">Follow the little paper plane <span>↘</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CHILDHOOD -->
+      <section class="chapter" id="chapter-2" data-name="CHILDHOOD FRIENDSHIP" data-number="2">
+        <div class="stage stage-two">
+          <div class="chapter-stamp">02 / 08 · THE FIRST CHAPTER</div>
+          <span class="doodle-star dstar-1" aria-hidden="true">✳</span><span class="doodle-star dstar-2" aria-hidden="true">✦</span>
+          <div class="scene-composition scene-childhood">
+            <div class="illustration-wrap childhood-image image-float">
+              <span class="illustration-scribble">little us ♥</span>
+              <img src="assets/childhood.webp" loading="lazy" alt="Illustration of a little boy and girl as childhood friends">
+              <svg class="tiny-plane"><use href="#icon-plane"></use></svg>
+            </div>
+            <div class="copy-block childhood-copy">
+              <p class="eyebrow">It started with a hello</p>
+              <h2 class="display-title">A journey that<br>began with <span class="red-script">friendship.</span></h2>
+              <p>Two hearts connected through our families. A simple friendship that slowly became something beautiful.</p>
+              <span class="handdrawn-underline"></span>
+              <p class="margin-note">The best stories start unexpectedly.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. FAMILY CONNECTION -->
+      <section class="chapter" id="chapter-3" data-name="FAMILY BOND" data-number="3">
+        <div class="stage stage-three">
+          <span class="stage-number">CHAPTER 03 <span>—</span> HOW WE MET</span>
+          <h2 class="display-title headline-top">Two families.<br><span>One beautiful connection.</span></h2>
+          <div class="family-sketch" aria-hidden="true">
+            <svg viewBox="0 0 430 180" role="img"><g fill="none" stroke="#665042" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 98 83 43l65 55v54H17Z" fill="#fff3df"/><path d="M43 95V70h25v25m35 54v-40H70v40m-53-51h131"/><path d="m286 98 65-55 63 55v54H286Z" fill="#fff3df"/><path d="M313 93V72h24v21m34 56v-40h-31v40m-54-51h128"/>
+              <path d="M151 111c38-42 96-45 132 0" stroke="#c74c55" stroke-width="3" stroke-dasharray="4 9"/>
+              <path d="M16 153h400m-310 0V132m245 21v-21" stroke="#c7a57e"/><path d="m205 91-13-10c-17-16-30 6-5 26l18 14 18-14c25-20 12-42-5-26Z" fill="#db5261" stroke="#9c3740"/>
+              <path d="M22 58Q10 43 29 21m110 43q20-30-1-52M291 55q-14-22 0-39m110 41q20-25 6-45" stroke="#a28a61"/>
+              <path d="M9 30q13 0 20-13M22 53q-15-4-15-17M136 25q-13-3-14-17M292 27q17-1 24-15M410 30q-15-1-20-18" fill="#a4ac73" stroke="#667a50"/>
+            </g></svg>
+            <span class="sketch-caption">Where it all began</span>
+          </div>
+          <div class="sticky-note note-family" id="familyNote">
+            <span class="pin" aria-hidden="true"></span><span class="note-heart">♡</span>
+            <p>Our paths first crossed through our families, where a simple friendship began...</p>
+          </div>
+          <p class="chapter-micro">Family bond <span>♥</span> Friendship <span>♥</span> Something more</p>
+        </div>
+      </section>
+
+      <!-- 4. TWO PATHS -->
+      <section class="chapter" id="chapter-4" data-name="DIFFERENT PATHS" data-number="4">
+        <div class="stage stage-four">
+          <span class="stage-number">CHAPTER 04 <span>—</span> THROUGH THE YEARS</span>
+          <div class="paths-copy">
+            <p class="eyebrow">No matter the distance</p>
+            <h2 class="display-title">Different paths.<br><span>Still connected.</span></h2>
+          </div>
+          <svg class="paths-art" viewBox="0 0 520 440" aria-hidden="true">
+            <path class="path-sketch path-sketch-1" d="M60 36C20 118 180 125 132 188c-43 57-68 116 76 197" fill="none" stroke="#7e9181" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 17"/>
+            <path class="path-sketch path-sketch-2" d="M458 36c48 85-124 114-70 182 41 54 32 98-102 167" fill="none" stroke="#b95c55" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 17"/>
+            <g class="paths-symbols" font-family="serif"><text x="44" y="38" font-size="50">♡</text><text x="449" y="40" font-size="50">♡</text></g>
+            <g class="meeting-heart"><path d="M257 358C228 324 181 349 198 390c13 29 48 49 62 59 15-10 49-30 62-59 17-41-30-66-59-32Z" transform="translate(0 -16) scale(1 .85)" fill="#d95462" stroke="#a33b46" stroke-width="3"/></g>
+          </svg>
+          <div class="two-notes"><div class="tiny-note tn1">Life took us on different journeys...</div><div class="tiny-note tn2">...but our bond only grew stronger.</div></div>
+        </div>
+      </section>
+
+      <!-- 5. BECAME LOVE -->
+      <section class="chapter" id="chapter-5" data-name="FRIENDSHIP TO LOVE" data-number="5">
+        <div class="stage stage-five">
+          <span class="stage-number">CHAPTER 05 <span>—</span> SOMETHING BEAUTIFUL</span>
+          <div class="love-glow"></div>
+          <div class="love-bloom" aria-hidden="true"><span>♥</span><span>♡</span><span>♥</span><span>♡</span><span>♥</span></div>
+          <div class="love-layout">
+            <div class="love-photo image-float"><img src="assets/couple.webp" alt="Illustration of the grown-up couple sitting close together, seen from behind" loading="lazy"></div>
+            <div class="love-copy copy-block">
+              <p class="eyebrow">And somewhere along the way...</p>
+              <h2 class="display-title">Friendship became <span class="red-script">love.</span></h2>
+              <p>With time, that special bond turned into love. And somehow, we both knew it was meant to be.</p>
+              <span class="heart-rule"><span>♡</span></span>
+              <p class="handwritten-mini">From a beautiful friendship to a forever filled with love.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. THE REVEAL -->
+      <section class="chapter" id="chapter-6" data-name="FOREVER BEGINS" data-number="6">
+        <div class="stage stage-six">
+          <span class="stage-number">CHAPTER 06 <span>—</span> THE BIG REVEAL</span>
+          <div class="mandapam-stage">
+            <div class="mandapam-halo"></div>
+            <svg class="mandapam-art" viewBox="0 0 520 280" aria-label="Hand-drawn South Indian wedding mandapam illustration" role="img">
+              <g stroke="#805a39" fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.7">
+                <path d="M62 241h396m-373 0V106h350v135M91 106l169-73 169 73" stroke-width="5"/>
+                <path d="M124 100h272l-136-52Z" fill="#f2d79b"/><path d="m260 33-17 15h34Z" fill="#c8a06b"/>
+                <path d="M103 115v126h32V115Zm140 0v126h32V115Zm140 0v126h32V115Z" fill="#f1deb8"/>
+                <path d="M83 104h353M93 125h343M99 133q44 47 86 0 44 47 87 0 43 47 87 0 45 47 85 0" stroke="#bf5754" stroke-width="5"/>
+                <path d="M101 100q17 34 29 11q17 34 28 8q17 36 32 8q18 31 29 2q19 30 31-4q14 39 29 3q19 31 31 0q15 31 28-2q18 36 32-9q19 36 34-8" stroke="#6f8b58" stroke-width="5"/>
+                <path d="M220 240h80l-9-46h-65Z" fill="#e7c79d"/><path d="M232 192q30-16 56 0" fill="#ba7b61"/><path d="M257 193v-28m0-6q-13-12-1-23q12 11 1 23" stroke="#ac6a39"/>
+                <path d="M52 242h419M70 251h376M75 110q185-20 369 0" stroke="#aa825e"/>
+              </g>
+              <g fill="#d25665"><circle cx="131" cy="147" r="4"/><circle cx="184" cy="146" r="4"/><circle cx="262" cy="145" r="4"/><circle cx="354" cy="148" r="4"/></g>
+              <g fill="#d7ac5d"><ellipse cx="61" cy="236" rx="11" ry="5"/><path d="M61 230v-30m-10 11h20M61 190q-15 13 0 17 15-4 0-17"/><ellipse cx="458" cy="236" rx="11" ry="5"/><path d="M458 230v-30m-10 11h20m-10-21q-15 13 0 17 15-4 0-17"/></g>
+            </svg>
+            <div class="reveal-copy">
+              <p class="eyebrow">And now...</p>
+              <h2>Our forever begins.</h2>
+              <p class="you-invited">With love, we invite you to celebrate</p>
+              <p class="couple-names"><span>Giridharan</span><em>&</em><span>Padma Priya</span></p>
+              <div class="ring-doodle" aria-hidden="true">♡</div>
+            </div>
+            <div class="curtain left-curtain" aria-hidden="true"><span></span></div><div class="curtain right-curtain" aria-hidden="true"><span></span></div>
+          </div>
+          <div id="petalField" class="petal-field" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- 7. CALENDAR -->
+      <section class="chapter" id="chapter-7" data-name="MARK THE CALENDAR" data-number="7">
+        <div class="stage stage-seven">
+          <span class="stage-number">CHAPTER 07 <span>—</span> THE DATE</span>
+          <div class="calendar-scene">
+            <p class="eyebrow">Mark the calendar ♡</p>
+            <h2 class="display-title">A day worth <span class="red-script">remembering.</span></h2>
+            <div class="calendar-perspective"><div class="calendar-card" id="calendarCard"><span class="cal-tape tape-left"></span><span class="cal-tape tape-right"></span><p class="cal-year">2027</p><h3>February</h3><div class="calendar-grid" id="calendarGrid" aria-label="February 2027 calendar with Monday the eighth highlighted"></div></div></div>
+            <p class="save-date-caption">Monday · <strong>8 February 2027</strong></p>
+            <div class="signpost" id="signpost" aria-label="Our journey: Family Bond, Friendship, Love, Wedding"><div class="sign-shaft"></div><span class="sign sign-1">Family bond</span><span class="sign sign-2">Friendship</span><span class="sign sign-3">Love</span><span class="sign sign-4">Wedding ♥</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. INVITATION -->
+      <section class="chapter last-chapter" id="chapter-8" data-name="YOUR INVITATION" data-number="8">
+        <div class="stage stage-eight">
+          <span class="stage-number">CHAPTER 08 <span>—</span> THE CELEBRATION</span>
+          <div class="final-splash">
+            <p class="eyebrow">Two hearts · Two families · One celebration</p>
+            <h2 class="big-script">You're invited!</h2>
+            <p class="final-intro">With the blessings of God and our beloved families, we are delighted to invite you to the wedding celebrations of</p>
+            <h3 class="final-names">Giridharan <span>♥</span> Padma Priya</h3>
+            <div class="events-grid">
+              <article class="event-card marriage-card"><div class="card-corner">♡</div><div class="event-type">The wedding</div><h4>Marriage</h4><p class="event-date"><svg><use href="#icon-calendar"></use></svg><span id="weddingDateText">Monday, 8 February 2027</span></p><p class="event-time" id="weddingTimeText">4:30 AM – 6:00 AM</p><p class="event-venue" id="weddingVenueText">Arulmigu Sri Selvamuthukumaraswamy Temple<br>Maraimalai Nagar</p><a class="card-link" id="weddingMap" href="#" target="_blank" rel="noopener noreferrer"><svg><use href="#icon-map"></use></svg> Temple directions <span>↗</span></a></article>
+              <article class="event-card reception-card"><div class="card-corner">♥</div><div class="event-type">The celebration</div><h4>Reception</h4><p class="event-date"><svg><use href="#icon-calendar"></use></svg><span id="receptionDateText">Monday, 8 February 2027</span></p><p class="event-time" id="receptionTimeText">6:30 PM onwards</p><p class="event-venue" id="receptionVenueText">Sri Alwaar Palace<br>Kattankulathur</p><a class="card-link" id="receptionMap" href="#" target="_blank" rel="noopener noreferrer"><svg><use href="#icon-map"></use></svg> Reception directions <span>↗</span></a></article>
+            </div>
+            <div class="invitation-buttons">
+              <button type="button" id="calendarDownload" class="action-pill primary"><svg><use href="#icon-calendar"></use></svg> Add to calendar</button>
+              <button type="button" id="shareInvite" class="action-pill"><svg><use href="#icon-share"></use></svg> Share invitation</button>
+            </div>
+            <p class="attendance-note">Together with our families, we await your gracious presence.</p>
+            <div class="end-heart" id="endHeart" aria-hidden="true">♥</div>
+            <p class="signature">With love, <strong>Giri & Priya</strong></p>
+            <button type="button" id="replayStory" class="replay-btn">↶ &nbsp; Relive our story</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">This invitation uses JavaScript for the scroll animations. Please enable JavaScript to experience the story.</p></noscript>
+  <script src="script.js" defer></script>
+</body>
+</html>
