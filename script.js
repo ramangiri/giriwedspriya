@@ -29,7 +29,7 @@ const CONFIG = {
     locality: 'Kattankulathur',
     mapQuery: 'Sri Alwaar Palace, Kattankulathur'
   },
-  autoAdvanceAfterIntro: true,
+  autoAdvanceAfterIntro: false,
   introSource: 'assets/opening.mp4',
   musicInitiallyOn: false
 };
@@ -69,6 +69,55 @@ function goTo(id) {
   requestFrame();
 }
 
+/* Tap anywhere on the original closed-envelope video to begin.
+   Only after the video finishes do words reveal one after another. */
+const opening = $('#opening');
+const openingTap = $('#openingTap');
+let openingStarted = false;
+let openingFallbackTimer = null;
+
+function revealOpeningText() {
+  if (!openingStarted || introFinished) return;
+  introFinished = true;
+  if (openingFallbackTimer !== null) window.clearTimeout(openingFallbackTimer);
+  opening.classList.remove('is-playing');
+  opening.classList.add('is-revealed');
+  openingTap.hidden = true;
+  document.body.classList.remove('intro-locked');
+  document.documentElement.classList.remove('intro-locked');
+  requestFrame();
+}
+
+function startEnvelopeVideo() {
+  if (openingStarted) return;
+  openingStarted = true;
+  openingTap.hidden = true;
+  opening.classList.add('is-playing');
+  // Start playback directly inside the tap interaction for mobile Safari.
+  try {
+    video.currentTime = 0;
+  } catch (_) { /* Seek may be unavailable before media metadata arrives. */ }
+  try {
+    const playback = video.play();
+    if (playback && typeof playback.catch === 'function') {
+      playback.catch(() => revealOpeningText());
+    }
+  } catch (_) {
+    revealOpeningText();
+  }
+  // If video playback stalls or its end event is unavailable, do not trap guests.
+  openingFallbackTimer = window.setTimeout(revealOpeningText, 18000);
+}
+
+document.documentElement.classList.add('intro-locked');
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+openingTap.addEventListener('click', startEnvelopeVideo);
+video.addEventListener('ended', revealOpeningText);
+video.addEventListener('error', () => {
+  if (openingStarted) revealOpeningText();
+});
+
 $('#enterStory').addEventListener('click', () => {
   video.pause();
   goTo('chapter-1');
@@ -77,20 +126,8 @@ $('#skipToInvite').addEventListener('click', () => {
   video.pause();
   goTo('chapter-8');
 });
-$('#replayStory').addEventListener('click', () => {
-  introFinished = true;
-  goTo('chapter-1');
-});
+$('#replayStory').addEventListener('click', () => goTo('chapter-1'));
 progressDots.forEach((dot) => dot.addEventListener('click', () => goTo(dot.dataset.go)));
-video.addEventListener('ended', () => {
-  introFinished = true;
-  if (CONFIG.autoAdvanceAfterIntro && window.scrollY < window.innerHeight * .45) goTo('chapter-1');
-});
-video.addEventListener('error', () => {
-  // An opening-poster image and Enter button remain visible if the video cannot play.
-  console.info('The original opening video could not load; poster fallback is in place.');
-});
-video.play().catch(() => { /* autoplay may be blocked; Enter button remains functional */ });
 
 function fillEventDetails() {
   const wed = CONFIG.wedding;
@@ -394,7 +431,8 @@ buildCalendar();
 createPetals();
 requestAnimationFrame(()=>requestAnimationFrame(()=>{buildTrail();update();}));
 if(document.fonts?.ready) document.fonts.ready.then(()=>{buildTrail();requestFrame();});
-if(reduceMotion) {video.pause();video.setAttribute('poster','assets/opening-poster.webp');}
+// Keep the opening video paused on its poster until the guest taps; on reduced-motion
+// devices the text remains legible without revealing it before the tap.
 
 
 /* Reveal the temple and reception illustrations when visitors scroll to them.

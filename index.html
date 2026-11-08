@@ -14,7 +14,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="intro-locked">
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
       <symbol id="icon-plane" viewBox="0 0 64 64">
@@ -54,20 +54,23 @@
   </div>
 
   <main>
-    <section class="opening" id="opening" aria-label="Opening envelope animation">
-      <video id="openingVideo" autoplay muted playsinline preload="metadata" poster="assets/opening-poster.webp">
+    <section class="opening" id="opening" aria-label="Tap to open the wedding invitation">
+      <video id="openingVideo" muted playsinline preload="metadata" poster="assets/opening-poster.webp">
         <source src="assets/opening.mp4" type="video/mp4">
       </video>
       <div class="opening-gradient"></div>
       <div class="opening-copy">
         <p class="eyebrow light">A LITTLE STORY ABOUT TWO HEARTS</p>
-        <h1>Giridharan <em>&</em><br>Padma Priya</h1>
+        <h1><span class="name-first">Giridharan</span> <em class="name-and">&</em><br><span class="name-second">Padma Priya</span></h1>
         <p class="opening-subtitle">From friends to forever</p>
       </div>
       <div class="opening-bottom">
         <button type="button" class="opening-enter" id="enterStory">Open our story <svg><use href="#icon-arrow"></use></svg></button>
         <p>Scroll to follow our paper plane</p>
       </div>
+      <button type="button" class="opening-tap" id="openingTap" aria-label="Tap anywhere to open the invitation">
+        <span class="opening-tap-label">Tap to Open <span aria-hidden="true">♡</span></span>
+      </button>
     </section>
 
     <div class="story-book" id="storyBook">

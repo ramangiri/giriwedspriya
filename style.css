@@ -163,3 +163,31 @@
 @media(prefers-reduced-motion:reduce) {
   .stage-six .reveal-background { transform: none !important; transition: none !important; opacity: 1 !important; will-change: auto; }
 }
+
+
+/* CLOSED ENVELOPE → TAP → VIDEO → STAGGERED REVEAL
+   Use the existing envelope poster/video, not a replacement envelope illustration. */
+html.intro-locked,body.intro-locked{overflow:hidden;overscroll-behavior:none}
+body.intro-locked{max-height:100svh;touch-action:manipulation}
+body.intro-locked .opening{min-height:100svh}
+.opening .opening-copy,.opening .opening-bottom{opacity:0;visibility:hidden;pointer-events:none}
+.opening-tap{position:absolute;inset:0;width:100%;height:100%;z-index:7;border:0;background:transparent;color:#fff6e3;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:0 18px calc(max(50px,8vh) + env(safe-area-inset-bottom));touch-action:manipulation}
+.opening-tap[hidden]{display:none!important}
+.opening-tap:focus-visible{outline:3px solid #fff2da;outline-offset:-15px}
+.opening-tap-label{display:inline-flex;align-items:center;gap:12px;background:rgba(51,22,29,.76);border:1px solid #efd3ae9c;border-radius:40px;padding:13px 24px;font:600 clamp(15px,3.5vw,19px)/1.2 var(--sans);letter-spacing:.09em;box-shadow:0 8px 30px #17081180;backdrop-filter:blur(6px);animation:opening-tap-pulse 2s ease-in-out infinite}
+.opening-tap-label span{color:#ffd5b9;font-size:1.45em;line-height:.7}
+@keyframes opening-tap-pulse{50%{transform:translateY(-4px);box-shadow:0 13px 38px #170811aa}}
+.opening.is-revealed .opening-copy,.opening.is-revealed .opening-bottom{opacity:1;visibility:visible;pointer-events:auto}
+.opening.is-revealed .opening-copy .eyebrow{animation:opening-word-rise .7s .10s both}
+.opening.is-revealed .opening-copy .name-first{animation:opening-word-rise .85s .66s both}
+.opening.is-revealed .opening-copy .name-and{animation:opening-word-rise .55s 1.20s both}
+.opening.is-revealed .opening-copy .name-second{animation:opening-word-rise .85s 1.57s both}
+.opening.is-revealed .opening-subtitle{animation:opening-word-rise .8s 2.19s both}
+.opening.is-revealed .opening-enter{animation:opening-word-rise .7s 2.83s both}
+.opening.is-revealed .opening-bottom p{animation:opening-word-rise .65s 3.19s both}
+.opening-copy h1 .name-first,.opening-copy h1 .name-second,.opening-copy h1 .name-and{display:inline-block}
+@keyframes opening-word-rise{from{opacity:0;transform:translateY(28px) scale(.96);filter:blur(5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@media (prefers-reduced-motion:reduce){
+  .opening-tap-label{animation:none}
+  .opening.is-revealed .opening-copy .eyebrow,.opening.is-revealed .opening-copy .name-first,.opening.is-revealed .opening-copy .name-and,.opening.is-revealed .opening-copy .name-second,.opening.is-revealed .opening-subtitle,.opening.is-revealed .opening-enter,.opening.is-revealed .opening-bottom p{animation:none;opacity:1;transform:none;filter:none}
+}
