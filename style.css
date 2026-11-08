@@ -1724,74 +1724,84 @@ body > #travellingPlane.mobile-plane svg{
 
 
 
-/* ENVELOPE FINISH -> MUSIC STOPS -> SEPARATE TEXT SCENE.
-   Keep the existing golden temple video background, add a soft veil at the end.
-   Each actual text line receives its own lightweight (opacity/transform) entry. */
-.opening-message-veil {
+/* ENVELOPE VIDEO ENDS + MUSIC STOPS, THEN FOUR TEXT GROUPS REVEAL
+   1. LITTLE STORY ABOUT TWO HEARTS
+   2. Giridharan & Padma Priya (one group, even when stacked on mobile)
+   3. From friends to forever
+   4. Scroll to follow our paper plane
+   Only opacity and small transform changes are animated to keep mobile smooth. */
+.opening-message-veil{
   position:absolute;
   inset:0;
   z-index:2;
   pointer-events:none;
   opacity:0;
-  background:linear-gradient(180deg,
-    rgba(34,13,19,.34) 0%,
-    rgba(38,16,20,.17) 40%,
-    rgba(26,9,15,.29) 100%);
+  background:linear-gradient(180deg,rgba(34,13,19,.34),rgba(38,16,20,.17) 40%,rgba(26,9,15,.29));
   transition:opacity .55s ease;
 }
 .opening.is-revealed .opening-message-veil{opacity:1}
 
-/* No text leaks into the video or flashes together on its last frame. */
+/* Prevent the old per-name animations from firing. The whole h1 now animates
+   as one heading, even when CSS stacks its names on a narrow phone. */
+.opening.is-revealed .opening-copy .name-first,
+.opening.is-revealed .opening-copy .name-and,
+.opening.is-revealed .opening-copy .name-second{
+  animation:none!important;
+  opacity:1!important;
+  transform:none!important;
+}
+
+/* Nothing should flash on the last frame of the envelope video. */
 .opening.is-revealed:not(.is-text-sequence) .opening-copy .eyebrow,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .name-first,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .name-and,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .name-second,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .opening-subtitle{
-  opacity:0;
-  animation:none;
-}
-.opening.is-revealed:not(.is-text-sequence) .opening-plane-prompt {
-  opacity:0;
+.opening.is-revealed:not(.is-text-sequence) .opening-copy .opening-names,
+.opening.is-revealed:not(.is-text-sequence) .opening-copy .opening-subtitle,
+.opening.is-revealed:not(.is-text-sequence) .opening-plane-prompt{
+  animation:none!important;
+  opacity:0!important;
   visibility:hidden;
-  animation:none;
 }
-@keyframes opening-reveal-one-by-one {
-  from{opacity:0;transform:translate3d(0,19px,0)}
+
+@keyframes invitation-line-rise {
+  from{opacity:0;transform:translate3d(0,16px,0)}
   to{opacity:1;transform:translate3d(0,0,0)}
 }
-@keyframes opening-cue-one-by-one {
-  from{opacity:0;transform:translateX(-50%) translate3d(0,14px,0)}
-  to{opacity:1;transform:translateX(-50%) translate3d(0,0,0)}
+/* Preserve h1's centering translate so it never shifts off-center. */
+@keyframes invitation-names-rise {
+  from{opacity:0;transform:translate(-50%,calc(-50% + 18px))}
+  to{opacity:1;transform:translate(-50%,-50%)}
+}
+/* The cue is positioned at the bottom with translateX(-50%). */
+@keyframes invitation-scroll-cue-rise {
+  from{opacity:0;transform:translate(-50%,14px)}
+  to{opacity:1;transform:translate(-50%,0)}
 }
 .opening.is-revealed.is-text-sequence .opening-copy .eyebrow{
-  animation:opening-reveal-one-by-one .65s .10s ease-out both;
+  visibility:visible;
+  animation:invitation-line-rise .7s .12s cubic-bezier(.2,.75,.3,1) both;
 }
-.opening.is-revealed.is-text-sequence .opening-copy .name-first{
-  animation:opening-reveal-one-by-one .8s .72s ease-out both;
-}
-.opening.is-revealed.is-text-sequence .opening-copy .name-and{
-  animation:opening-reveal-one-by-one .58s 1.35s ease-out both;
-}
-.opening.is-revealed.is-text-sequence .opening-copy .name-second{
-  animation:opening-reveal-one-by-one .82s 1.78s ease-out both;
+.opening.is-revealed.is-text-sequence .opening-copy .opening-names{
+  visibility:visible;
+  animation:invitation-names-rise .88s 1.03s cubic-bezier(.18,.78,.25,1) both;
 }
 .opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle{
-  animation:opening-reveal-one-by-one .82s 2.55s ease-out both;
+  visibility:visible;
+  animation:invitation-line-rise .78s 2.12s cubic-bezier(.2,.75,.3,1) both;
 }
 .opening.is-revealed.is-text-sequence .opening-plane-prompt{
   visibility:visible;
-  animation:opening-cue-one-by-one .68s 3.3s ease-out both;
+  animation:invitation-scroll-cue-rise .74s 3.12s cubic-bezier(.2,.75,.3,1) both;
 }
 @media(prefers-reduced-motion:reduce){
   .opening-message-veil{transition:none}
   .opening.is-revealed.is-text-sequence .opening-copy .eyebrow,
-  .opening.is-revealed.is-text-sequence .opening-copy .name-first,
-  .opening.is-revealed.is-text-sequence .opening-copy .name-and,
-  .opening.is-revealed.is-text-sequence .opening-copy .name-second,
+  .opening.is-revealed.is-text-sequence .opening-copy .opening-names,
   .opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle,
   .opening.is-revealed.is-text-sequence .opening-plane-prompt{
     animation:none;
     opacity:1;
+    visibility:visible;
   }
+  .opening.is-revealed.is-text-sequence .opening-copy .opening-names{transform:translate(-50%,-50%)}
+  .opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle{transform:none}
   .opening.is-revealed.is-text-sequence .opening-plane-prompt{transform:translateX(-50%)}
 }
