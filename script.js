@@ -69,6 +69,26 @@ let lastStoryVisibility=false;
 // The browser's native display refresh rate drives mobile plane updates.
 let chapterMetrics=[];
 const chapterProgress=new Array(chapters.length).fill(-1);
+// One small text reveal per story screen, synchronized to the actual plane
+// position. Avoid overriding each chapter's existing illustration animation.
+const mobileStoryTextSelectors=[
+  '.chapter-one-content .story-caption',
+  '.childhood-copy .margin-note',
+  '.stage-three .headline-top',
+  '.paths-copy .display-title',
+  '.love-copy .handwritten-mini',
+  '.reveal-copy .you-invited',
+  '.save-date-caption',
+  '.story-event-heading',
+  '.story-event-heading'
+];
+let nextPlaneChapter=0;
+if(useMobilePlane && !reduceMotion){
+  chapters.forEach((chapter,i)=>{
+    const selector=mobileStoryTextSelectors[i];
+    if(selector)$(selector,chapter)?.classList.add('plane-synced-text');
+  });
+}
 const journeySketchPaths=$$('.path-sketch');
 const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
 let toastTimeout;
@@ -97,13 +117,12 @@ let openingStarted = false;
 let openingFallbackTimer = null;
 // Scroll-driven, one-by-one reveal: no text appears just because the video ended.
 let openingRevealSteps = 0;
-let lastOpeningRevealAt = 0;
-let openingRevealTimer = null;
-// Shorter mobile scroll runway: reveal the four texts while the plane flies.
+// Four reveal thresholds correspond to the SAME scroll-controlled plane flight.
+// By 82% of the mobile flight, all messages are fully triggered before the
+// plane arrives at the bottom. No separate timer can lag behind the plane.
 const openingScrollThresholds = mobileOptimized.matches
-  ? [.07, .23, .42, .62]
+  ? [.14, .36, .58, .82]
   : [.10, .31, .54, .76];
-const openingRevealGapMs = mobileOptimized.matches ? 260 : 640;
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
@@ -125,43 +144,30 @@ function revealOpeningText() {
   // Show the real moving plane first. The visitor now scrolls to reveal
   // the message, with each text group following their paper-plane journey.
   opening.classList.add('plane-ready');
+  // On phones, later story headings fade in once the same travelling plane
+  // reaches their chapter. The existing illustration animations stay intact.
+  if(useMobilePlane && !reduceMotion) document.body.classList.add('mobile-plane-sync');
   document.body.classList.remove('intro-locked');
   document.documentElement.classList.remove('intro-locked');
   requestFrame();
 }
 
-function updateOpeningScrollReveal(scrollY, now = performance.now()) {
-  if (!introFinished || openingRevealSteps >= openingScrollThresholds.length) return;
-  const runway = Math.max(1, opening.offsetHeight - openingViewport.offsetHeight);
-  const progress = clamp((scrollY - mainTopOnPage) / runway);
-  if(progress < openingScrollThresholds[openingRevealSteps]) return;
-
-  // A fast swipe must not make four pieces of text appear at once. Each reveal
-  // gets its own moment while the plane continues to follow the finger.
-  const wait = openingRevealSteps === 0 ? 0 : Math.max(0, openingRevealGapMs - (now - lastOpeningRevealAt));
-  if(wait > 0) {
-    if(openingRevealTimer === null){
-      openingRevealTimer = window.setTimeout(() => {
-        openingRevealTimer = null;
-        requestFrame();
-      }, wait);
-    }
-    return;
+function updateOpeningScrollReveal(scrollY) {
+  if(!introFinished)return;
+  const runway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
+  const progress=clamp((scrollY-mainTopOnPage)/runway);
+  // Each text group appears only after the plane has travelled far enough.
+  // Removing the old time queue means even a fast mobile swipe cannot reach
+  // the bottom while the final sentence is still waiting for a timer.
+  let reached=0;
+  for(const threshold of openingScrollThresholds){
+    if(progress>=threshold)reached++;
   }
-
-  openingRevealSteps += 1;
-  lastOpeningRevealAt = now;
-  opening.classList.add('intro-step-' + openingRevealSteps);
-  // If the user has already swiped past multiple thresholds, preserve the
-  // order using one timed check per step, never an automatic start.
-  if(openingRevealSteps < openingScrollThresholds.length &&
-     progress >= openingScrollThresholds[openingRevealSteps] &&
-     openingRevealTimer === null) {
-    openingRevealTimer = window.setTimeout(() => {
-      openingRevealTimer = null;
-      requestFrame();
-    }, openingRevealGapMs + 15);
+  while(openingRevealSteps<reached){
+    openingRevealSteps++;
+    opening.classList.add('intro-step-'+openingRevealSteps);
   }
+  if(progress>=.965)opening.classList.add('intro-all-visible');
 }
 
 function startEnvelopeVideo() {
@@ -449,11 +455,11 @@ function animateChapter(chapter, p) {
   }
 }
 function updatePlane(scrollY) {
-  if(!pathLength || !introFinished) { plane.style.opacity='0'; return; }
+  if(!pathLength || !introFinished) { plane.style.opacity='0'; return null; }
   if(reduceMotion) {
     maskLine.style.strokeDashoffset='0';
     plane.style.opacity='0';
-    return;
+    return null;
   }
   // At the end of the opening screen the plane simply keeps flying into Chapter 1.
   // Start the paper plane at the bottom CENTRE of the opening.
@@ -468,7 +474,12 @@ function updatePlane(scrollY) {
     : lerp(.77,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
   // Follow scrolling directly: the old sine-wave offset temporarily opposed
   // the finger's movement and made the plane appear stuck.
-  const targetY=relativeScroll+window.innerHeight*viewportGuide;
+  // Use the same stable 100svh height as the sticky opening artwork.
+  // Mobile browser chrome expanding/collapsing must not jerk the plane.
+  const stableViewport=openingViewport.offsetHeight;
+  const heightBlend=ease(clamp((relativeScroll-openingRunway)/Math.max(1,stableViewport*.35)));
+  const flightViewport=lerp(stableViewport,window.innerHeight,heightBlend);
+  const targetY=relativeScroll+flightViewport*viewportGuide;
   let low=0,high=trailSamples.length-1;
   while(low<high) {
     const mid=(low+high)>>1;
@@ -490,14 +501,25 @@ function updatePlane(scrollY) {
   const drawY=useMobilePlane?y-relativeScroll:y;
   plane.style.transform=`translate3d(${drawX.toFixed(1)}px,${drawY.toFixed(1)}px,0) translate(-50%,-50%) rotate(${degrees.toFixed(1)}deg)`;
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
-
+  return targetY;
 }
 function update(now=performance.now()) {
   rafPending=false;
   const y=window.scrollY;
-  // The plane moves first. Separate scroll thresholds reveal each line.
-  updatePlane(y);
-  updateOpeningScrollReveal(y,now);
+  // The plane moves first. Text follows ITS scroll progress, never a timer.
+  const planeWorldY=updatePlane(y);
+  updateOpeningScrollReveal(y);
+
+  // Across all nine mobile story screens, reveal each selected text block
+  // when the travelling plane reaches its section. Only new chapters update.
+  if(useMobilePlane && !reduceMotion && planeWorldY!==null && Number.isFinite(planeWorldY)){
+    while(nextPlaneChapter<chapters.length){
+      const metric=chapterMetrics[nextPlaneChapter];
+      if(!metric || planeWorldY < metric.top+Math.min(metric.height*.12,openingViewport.offsetHeight*.15))break;
+      chapters[nextPlaneChapter].classList.add('plane-text-arrived');
+      nextPlaneChapter++;
+    }
+  }
 
   const storyTop=storyBook.offsetTop;
   const isStoryVisible=y+window.innerHeight*.32>=storyTop;
