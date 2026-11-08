@@ -206,9 +206,12 @@ function buildTrail() {
     const y = storyStart + chapter.offsetTop;
     const sectionH = chapter.offsetHeight;
     const left = i%2===0;
-    const eventPage = chapter.classList.contains('event-chapter');
-    positions.push({x:w*(eventPage ? (left ? .07 : .93) : (left?.20:.80)),y:y+Math.min(170,sectionH*.16)});
-    positions.push({x:w*(eventPage ? (left ? .91 : .09) : (left?.83:.17)),y:y+sectionH*.69});
+    const eventPage = chapter.classList.contains('story-event-chapter');
+    // On the wedding and reception scenes, the travelling plane stays along the
+    // outer paper margin instead of slicing through the text or illustrations.
+    const edge = left ? .085 : .915;
+    positions.push({x:w*(eventPage ? edge : (left ? .20 : .80)),y:y+Math.min(170,sectionH*.16)});
+    positions.push({x:w*(eventPage ? edge : (left ? .83 : .17)),y:y+sectionH*.69});
   });
   const endH = $('#endHeart');
   const endBox = endH.getBoundingClientRect();
