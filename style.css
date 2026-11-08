@@ -314,3 +314,111 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
 @media(prefers-reduced-motion:reduce){
   .invitation-main > .trail-overlay{transition:none}
 }
+
+
+/* FINAL INVITATION REDESIGN — two calm event screens and a true closing footer. */
+.event-chapter,
+.last-chapter.event-chapter{height:auto;min-height:100svh}
+.event-chapter > .event-stage,
+.last-chapter.event-chapter > .event-stage{
+  position:relative;top:auto;height:auto;min-height:100svh;overflow:visible;
+  padding:clamp(104px,11vh,138px) clamp(16px,4vw,42px) 64px;
+}
+.event-chapter .event-stage::after{display:none}
+.event-scene{position:relative;z-index:4;width:min(100%,960px);margin:0 auto;text-align:center}
+.event-scene > .eyebrow{font-size:clamp(10px,1.4vw,13px);line-height:1.5;margin-bottom:2px}
+.event-scene > .big-script{margin:2px auto 0;font-size:clamp(59px,8.5vw,104px);line-height:1}
+.event-lead{
+  font:clamp(22px,2.8vw,31px)/1.12 var(--hand);
+  color:#60463d;margin:4px auto 24px;max-width:650px;text-wrap:balance;
+}
+.event-layout{
+  display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);
+  gap:clamp(18px,3.7vw,48px);align-items:center;
+  background:linear-gradient(145deg,#fffbf1f2,#fbedd9f2);
+  border:1px solid #bf9a7f;
+  box-shadow:0 10px 0 #dcbfa5a8,0 22px 35px #88654f30;
+  border-radius:18px;
+  padding:clamp(15px,2.8vw,30px);
+  width:min(100%,920px);margin:0 auto;
+}
+.event-layout .venue-art{width:100%;max-width:none;margin:0;min-width:0}
+.event-layout .venue-art-image{height:clamp(270px,31vw,390px)}
+.event-layout .venue-art-image img{width:100%;height:100%;object-fit:contain}
+.event-details{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.event-details > .event-type{font-size:11px;line-height:1.4}
+.event-details > h3{
+  font:400 clamp(38px,4.5vw,59px)/1.03 var(--script);
+  color:var(--red-dark);margin:7px auto 17px;
+  overflow-wrap:break-word;
+}
+.event-details > h3 span{font:21px var(--sans);vertical-align:middle;color:var(--red)}
+.event-details .event-date,.event-details .event-time,.event-details .event-venue{
+  font-size:clamp(14px,1.5vw,17px);line-height:1.35;max-width:360px;
+  margin:8px auto;color:#4c3934;text-align:center;
+}
+.event-details .event-time{font-size:clamp(16px,1.8vw,19px);color:var(--red-dark)}
+.event-details .event-date{align-items:center}
+.event-details .event-date svg{margin-top:0}
+.event-details .event-venue{line-height:1.45}
+.event-details .card-link{margin:13px auto 0;min-height:45px;font-size:13px;padding:11px 18px}
+.next-event-link{
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  text-decoration:none;color:var(--red-dark);font:700 13px/1.3 var(--sans);
+  letter-spacing:.025em;background:#fff5e6;
+  border:1px solid #c69a79;border-radius:40px;padding:14px 20px;
+  margin:32px auto 0;box-shadow:0 5px 13px #956f5430;
+  transition:transform .2s ease,background .2s ease;
+}
+.next-event-link span{font-size:23px;font-weight:400;line-height:0.75}
+.next-event-link:hover{transform:translateY(3px);background:#fde7d6}
+.event-scene-reception .closing-card{
+  width:min(100%,750px);margin:38px auto 4px;padding:20px 16px 10px;
+  border-top:1px solid #c9a789;
+  display:flex;flex-direction:column;align-items:center;
+}
+.closing-card .attendance-note{font-size:clamp(24px,3vw,33px);margin:0 auto 6px}
+.closing-card .end-heart{font-size:45px;line-height:1}
+.closing-card .signature{font-size:clamp(23px,3vw,28px);margin:5px 0 14px}
+.closing-card .signature strong{font-size:clamp(35px,5vw,44px)}
+.closing-card .invitation-buttons{gap:12px;margin:9px auto 13px}
+.closing-card .replay-btn{margin:9px 0 4px}
+.site-footer{
+  position:relative;z-index:2;width:100%;box-sizing:border-box;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom));
+  color:#755b4d;background:#f5e6d0;text-align:center;
+  font:600 12px/1.6 var(--sans);letter-spacing:.06em;
+  border-top:1px solid #d7bba0;
+}
+@media(max-width:760px){
+  .event-chapter > .event-stage,.last-chapter.event-chapter > .event-stage{
+    padding:calc(100px + env(safe-area-inset-top)) 14px 43px;min-height:100svh;
+  }
+  .event-scene{width:min(100%,480px)}
+  .event-scene > .big-script{font-size:clamp(58px,14vw,78px)}
+  .event-lead{font-size:clamp(21px,5.6vw,27px);margin:1px auto 17px;max-width:360px}
+  .event-layout{grid-template-columns:minmax(0,1fr);gap:13px;padding:12px 12px 22px;border-radius:14px}
+  .event-layout .venue-art{width:min(100%,355px);border-radius:10px}
+  .event-layout .venue-art-image{height:clamp(180px,59vw,284px)}
+  .event-layout .venue-art-caption{padding:8px 11px;font-size:11px}
+  .event-details > h3{font-size:clamp(39px,10vw,51px);margin:6px auto 11px}
+  .event-details .event-date,.event-details .event-time,.event-details .event-venue{font-size:clamp(14px,4vw,16px);line-height:1.35;margin:6px auto}
+  .event-details .event-venue{font-size:14px;padding:0 4px}
+  .event-details .card-link{margin:9px auto 0;padding:10px 15px}
+  .next-event-link{margin:28px auto 0;min-height:43px}
+  .event-scene-reception .closing-card{margin-top:30px;padding:17px 8px 10px}
+  .closing-card .invitation-buttons{flex-direction:column;align-items:stretch;width:min(100%,310px);gap:11px}
+  .closing-card .action-pill{justify-content:center;width:100%;font-size:13px}
+  .closing-card .signature strong{display:inline-block}
+  .site-footer{font-size:11px}
+}
+@media(max-width:375px){
+  .event-chapter > .event-stage,.last-chapter.event-chapter > .event-stage{padding-inline:10px}
+  .event-scene > .big-script{font-size:57px}
+  .event-layout .venue-art-image{height:180px}
+  .event-details > h3{font-size:37px}
+}
+@media(prefers-reduced-motion:reduce){
+  .next-event-link{transition:none}
+}
+

@@ -36,7 +36,7 @@
 
   <div class="site-chrome" id="siteChrome">
     <a href="#chapter-1" class="brand" aria-label="Giridharan and Padma Priya home">G <span>♥</span> P</a>
-    <div class="chapter-status" aria-live="polite"><span id="chapterName">OUR STORY</span><span class="status-separator">/</span><span id="chapterCounter">01 — 08</span></div>
+    <div class="chapter-status" aria-live="polite"><span id="chapterName">OUR STORY</span><span class="status-separator">/</span><span id="chapterCounter">01 — 09</span></div>
     <div class="top-actions">
       <button type="button" id="musicToggle" aria-pressed="false" title="Play gentle instrumental music" aria-label="Turn background music on"><svg><use href="#icon-music"></use></svg><span class="sound-wave">●</span></button>
       <button type="button" id="skipToInvite" class="skip-button">Skip to invite <span aria-hidden="true">↗</span></button>
@@ -50,7 +50,8 @@
     <button class="progress-dot" data-go="chapter-5" title="Friendship to love" aria-label="Go to Friendship to Love"></button>
     <button class="progress-dot" data-go="chapter-6" title="Forever" aria-label="Go to Forever"></button>
     <button class="progress-dot" data-go="chapter-7" title="Mark the calendar" aria-label="Go to Mark the Calendar"></button>
-    <button class="progress-dot" data-go="chapter-8" title="You're invited" aria-label="Go to Your Invitation"></button>
+    <button class="progress-dot" data-go="chapter-8" title="Wedding details" aria-label="Go to Wedding Details"></button>
+    <button class="progress-dot" data-go="chapter-9" title="Reception and closing" aria-label="Go to Reception Details"></button>
   </div>
 
   <main class="invitation-main">
@@ -101,7 +102,7 @@
       <!-- 2. CHILDHOOD -->
       <section class="chapter" id="chapter-2" data-name="CHILDHOOD FRIENDSHIP" data-number="2">
         <div class="stage stage-two">
-          <div class="chapter-stamp">02 / 08 · THE FIRST CHAPTER</div>
+          <div class="chapter-stamp">02 / 09 · THE FIRST CHAPTER</div>
           <span class="doodle-star dstar-1" aria-hidden="true">✳</span><span class="doodle-star dstar-2" aria-hidden="true">✦</span>
           <div class="scene-composition scene-childhood">
             <div class="illustration-wrap childhood-image image-float">
@@ -231,42 +232,71 @@
         </div>
       </section>
 
-      <!-- 8. INVITATION -->
-      <section class="chapter last-chapter" id="chapter-8" data-name="YOUR INVITATION" data-number="8">
-        <div class="stage stage-eight">
-          <span class="stage-number">CHAPTER 08 <span>—</span> THE CELEBRATION</span>
-          <div class="final-splash">
-            <p class="eyebrow">Two hearts · Two families · One celebration</p>
-            <h2 class="big-script">You're invited!</h2>
-            <p class="final-intro">With the blessings of God and our beloved families, we are delighted to invite you to the wedding celebrations of</p>
-            <h3 class="final-names">Giridharan <span>♥</span> Padma Priya</h3>
-            <div class="events-grid">
-              <article class="event-card marriage-card"><div class="card-corner">♡</div><div class="event-type">The wedding</div><h4>Marriage</h4>
-              <a class="venue-art wedding-illustration" href="assets/temple-storybook.webp" target="_blank" rel="noopener noreferrer" aria-label="View full cartoon illustration of the wedding temple">
-                <span class="venue-art-image"><img src="assets/temple-storybook.webp" alt="Approved colorful storybook illustration of Sri Selvamuthukumaraswamy Temple, showing its detailed South Indian gopuram and entrance" width="750" height="1333" loading="lazy" decoding="async"></span>
-                <span class="venue-art-caption">The wedding temple <span aria-hidden="true">↗</span></span>
+      <!-- 8. WEDDING: dedicated invitation screen -->
+      <section class="chapter event-chapter" id="chapter-8" data-name="THE WEDDING" data-number="8">
+        <div class="stage stage-eight event-stage">
+          <span class="stage-number">CHAPTER 08 <span>—</span> THE WEDDING</span>
+          <div class="event-scene event-scene-wedding">
+            <p class="eyebrow">With the blessings of our families</p>
+            <h2 class="big-script">The Wedding</h2>
+            <p class="event-lead">You're invited to celebrate the marriage of Giridharan &amp; Padma Priya.</p>
+            <article class="event-layout">
+              <a class="venue-art wedding-illustration" href="assets/temple-storybook.webp" target="_blank" rel="noopener noreferrer" aria-label="View the illustrated wedding temple in full">
+                <span class="venue-art-image"><img src="assets/temple-storybook.webp" alt="Illustration of Sri Selvamuthukumaraswamy Temple and its colorful gopuram" width="750" height="1333" loading="lazy" decoding="async"></span>
+                <span class="venue-art-caption">Our wedding temple <span aria-hidden="true">↗</span></span>
               </a>
-              <p class="event-date"><svg><use href="#icon-calendar"></use></svg><span id="weddingDateText">Monday, 8 February 2027</span></p><p class="event-time" id="weddingTimeText">4:30 AM – 6:00 AM</p><p class="event-venue" id="weddingVenueText">Arulmigu Sri Selvamuthukumaraswamy Temple<br>Maraimalai Nagar</p><a class="card-link" id="weddingMap" href="#" target="_blank" rel="noopener noreferrer"><svg><use href="#icon-map"></use></svg> Temple directions <span>↗</span></a></article>
-              <article class="event-card reception-card"><div class="card-corner">♥</div><div class="event-type">The celebration</div><h4>Reception</h4>
-              <a class="venue-art reception-illustration" href="assets/alwaar-palace-storybook.webp" target="_blank" rel="noopener noreferrer" aria-label="View full cartoon illustration of Sri Alwaar Palace">
-                <span class="venue-art-image"><img src="assets/alwaar-palace-storybook.webp" alt="Approved cream-and-gold storybook illustration of Sri Alwaar Palace, showing its arched glass facade and grand entrance" width="750" height="1333" loading="lazy" decoding="async"></span>
+              <div class="event-details">
+                <p class="event-type">A new chapter begins</p>
+                <h3>Giridharan <span>♥</span> Padma Priya</h3>
+                <p class="event-date"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span id="weddingDateText">Monday, 8 February 2027</span></p>
+                <p class="event-time" id="weddingTimeText">4:30 AM – 6:00 AM</p>
+                <p class="event-venue" id="weddingVenueText">Arulmigu Sri Selvamuthukumaraswamy Temple<br>Maraimalai Nagar</p>
+                <a class="card-link" id="weddingMap" href="#" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#icon-map"></use></svg> Temple directions <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+            <a class="next-event-link" href="#chapter-9">Continue to our reception <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. RECEPTION AND CLOSING: spacious final screen -->
+      <section class="chapter event-chapter last-chapter" id="chapter-9" data-name="RECEPTION" data-number="9">
+        <div class="stage stage-nine event-stage">
+          <span class="stage-number">CHAPTER 09 <span>—</span> THE CELEBRATION</span>
+          <div class="event-scene event-scene-reception">
+            <p class="eyebrow">And now we celebrate together</p>
+            <h2 class="big-script">Reception</h2>
+            <p class="event-lead">Join us for an evening filled with laughter, blessings and beautiful memories.</p>
+            <article class="event-layout reception-layout">
+              <a class="venue-art reception-illustration" href="assets/alwaar-palace-storybook.webp" target="_blank" rel="noopener noreferrer" aria-label="View the illustration of Sri Alwaar Palace in full">
+                <span class="venue-art-image"><img src="assets/alwaar-palace-storybook.webp" alt="Illustration of Sri Alwaar Palace with its curved glass facade and entrance" width="750" height="1333" loading="lazy" decoding="async"></span>
                 <span class="venue-art-caption">Sri Alwaar Palace <span aria-hidden="true">↗</span></span>
               </a>
-              <p class="event-date"><svg><use href="#icon-calendar"></use></svg><span id="receptionDateText">Monday, 8 February 2027</span></p><p class="event-time" id="receptionTimeText">6:30 PM onwards</p><p class="event-venue" id="receptionVenueText">Sri Alwaar Palace<br>Kattankulathur</p><a class="card-link" id="receptionMap" href="#" target="_blank" rel="noopener noreferrer"><svg><use href="#icon-map"></use></svg> Reception directions <span>↗</span></a></article>
+              <div class="event-details">
+                <p class="event-type">A celebration of love</p>
+                <h3>Giri <span>♥</span> Priya</h3>
+                <p class="event-date"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg><span id="receptionDateText">Monday, 8 February 2027</span></p>
+                <p class="event-time" id="receptionTimeText">6:30 PM onwards</p>
+                <p class="event-venue" id="receptionVenueText">Sri Alwaar Palace<br>Kattankulathur</p>
+                <a class="card-link" id="receptionMap" href="#" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#icon-map"></use></svg> Reception directions <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+            <div class="closing-card">
+              <p class="attendance-note">Together with our families, we await your gracious presence.</p>
+              <div class="end-heart" id="endHeart" aria-hidden="true">♥</div>
+              <p class="signature">With love, <strong>Giri &amp; Priya</strong></p>
+              <div class="invitation-buttons">
+                <button type="button" id="calendarDownload" class="action-pill primary"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg> Add to calendar</button>
+                <button type="button" id="shareInvite" class="action-pill"><svg aria-hidden="true"><use href="#icon-share"></use></svg> Share invitation</button>
+              </div>
+              <button type="button" id="replayStory" class="replay-btn">↶ &nbsp; Relive our story</button>
             </div>
-            <div class="invitation-buttons">
-              <button type="button" id="calendarDownload" class="action-pill primary"><svg><use href="#icon-calendar"></use></svg> Add to calendar</button>
-              <button type="button" id="shareInvite" class="action-pill"><svg><use href="#icon-share"></use></svg> Share invitation</button>
-            </div>
-            <p class="attendance-note">Together with our families, we await your gracious presence.</p>
-            <div class="end-heart" id="endHeart" aria-hidden="true">♥</div>
-            <p class="signature">With love, <strong>Giri & Priya</strong></p>
-            <button type="button" id="replayStory" class="replay-btn">↶ &nbsp; Relive our story</button>
           </div>
         </div>
       </section>
     </div>
   </main>
+  <footer class="site-footer"><span>Developed by Giridharan Raman</span></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <noscript><p class="noscript">This invitation uses JavaScript for the scroll animations. Please enable JavaScript to experience the story.</p></noscript>
   <script src="script.js" defer></script>

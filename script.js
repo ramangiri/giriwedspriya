@@ -206,8 +206,9 @@ function buildTrail() {
     const y = storyStart + chapter.offsetTop;
     const sectionH = chapter.offsetHeight;
     const left = i%2===0;
-    positions.push({x:w*(left?.20:.80),y:y+Math.min(170,sectionH*.16)});
-    positions.push({x:w*(left?.83:.17),y:y+sectionH*.69});
+    const eventPage = chapter.classList.contains('event-chapter');
+    positions.push({x:w*(eventPage ? (left ? .07 : .93) : (left?.20:.80)),y:y+Math.min(170,sectionH*.16)});
+    positions.push({x:w*(eventPage ? (left ? .91 : .09) : (left?.83:.17)),y:y+sectionH*.69});
   });
   const endH = $('#endHeart');
   const endBox = endH.getBoundingClientRect();
@@ -369,7 +370,7 @@ function update() {
   if(y < storyTop-window.innerHeight) { updatePlane(y); return; }
   const idx=currentChapterIndex(y);
   chapterName.textContent=chapters[idx]?.dataset.name||'OUR STORY';
-  chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — 08`;
+  chapterCounter.textContent=`${String(idx+1).padStart(2,'0')} — ${String(chapters.length).padStart(2,'0')}`;
   progressDots.forEach((dot,i)=>dot.classList.toggle('active',i===idx));
   chapters.forEach((chapter)=>{
     if (chapter.classList.contains('last-chapter')) return;
@@ -378,8 +379,9 @@ function update() {
     const p=clamp((y-top)/range);
     if (y>top-window.innerHeight*1.4 && y<top+chapter.offsetHeight+window.innerHeight*.5) animateChapter(chapter,p);
   });
-  const finalTop=storyTop+chapters[7].offsetTop;
-  const finalP=ease((y-finalTop)/Math.max(1,chapters[7].offsetHeight*.6));
+  const finalChapter=chapters[chapters.length-1];
+  const finalTop=storyTop+finalChapter.offsetTop;
+  const finalP=ease((y-finalTop)/Math.max(1,finalChapter.offsetHeight*.6));
   $('#endHeart').style.transform=`scale(${lerp(.65,1.2,finalP)})`;
   updatePlane(y);
 }
@@ -481,6 +483,11 @@ buildCalendar();
 createPetals();
 requestAnimationFrame(()=>requestAnimationFrame(()=>{buildTrail();update();}));
 if(document.fonts?.ready) document.fonts.ready.then(()=>{buildTrail();requestFrame();});
+// Keep the single continuous trail aligned after venue images load.
+$('.venue-art img').forEach(img => {
+  if (!img.complete) img.addEventListener('load', () => { buildTrail(); requestFrame(); }, {once:true});
+});
+
 // Keep the opening video paused on its poster until the guest taps; on reduced-motion
 // devices the text remains legible without revealing it before the tap.
 
