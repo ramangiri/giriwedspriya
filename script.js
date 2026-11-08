@@ -143,7 +143,6 @@ $('#skipToInvite').addEventListener('click', () => {
   video.pause();
   goTo('chapter-8');
 });
-$('#replayStory').addEventListener('click', () => goTo('chapter-1'));
 progressDots.forEach((dot) => dot.addEventListener('click', () => goTo(dot.dataset.go)));
 
 function fillEventDetails() {
