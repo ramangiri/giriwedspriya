@@ -1074,13 +1074,14 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
 }
 .opening .opening-copy .opening-subtitle{
   position:absolute;
-  top:72%;
-  left:50%;
-  right:auto;
-  transform:translate(-50%,-50%);
+  top:71%;
+  left:0;
+  right:0;
+  /* Center via automatic margins, since the staggered reveal animates transform. */
+  transform:none;
   width:min(90vw,500px);
   max-width:90%;
-  margin:0;
+  margin:0 auto;
   font-size:clamp(24px,3.2vw,35px);
   line-height:1.2;
   text-wrap:balance;
