@@ -1016,3 +1016,153 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
   .opening{min-height:100svh}
 }
 
+
+
+/* Opening scene hierarchy:
+   1) eyebrow near top, 2) names in the true centre, 3) subtitle lower down,
+   4) ONE moving paper plane at bottom-centre, 5) plain cue BELOW that plane.
+   These override the old floating caption/pill without changing video or sound. */
+.opening .opening-copy,
+.opening.is-revealed .opening-copy {
+  position:absolute;
+  inset:0;
+  left:0;right:0;top:0;bottom:0;
+  width:100%;height:100%;
+  max-width:none;
+  display:block;
+  padding:0 clamp(15px,4vw,48px);
+  transform:none;
+  text-align:center;
+}
+.opening .opening-copy > .eyebrow{
+  position:absolute;
+  left:5%;right:5%;
+  top:clamp(55px,11svh,120px);
+  margin:0;
+  font-size:clamp(10px,1.6vw,14px);
+  line-height:1.45;
+  letter-spacing:clamp(.1em,.35vw,.23em);
+  text-wrap:balance;
+}
+.opening .opening-copy .opening-names{
+  position:absolute;
+  top:44%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(92vw,750px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:clamp(4px,1.4svh,15px);
+  margin:0;
+  font-size:clamp(44px,7vw,85px);
+  line-height:1.05;
+}
+.opening .opening-copy .opening-names .name-first,
+.opening .opening-copy .opening-names .name-second,
+.opening .opening-copy .opening-names .name-and{
+  display:block;
+  line-height:1.06;
+  white-space:nowrap;
+  margin:0 auto;
+  max-width:100%;
+}
+.opening .opening-copy .opening-names .name-and{
+  font-size:.57em;
+  line-height:.7;
+  padding:0;
+}
+.opening .opening-copy .opening-subtitle{
+  position:absolute;
+  top:72%;
+  left:50%;
+  right:auto;
+  transform:translate(-50%,-50%);
+  width:min(90vw,500px);
+  max-width:90%;
+  margin:0;
+  font-size:clamp(24px,3.2vw,35px);
+  line-height:1.2;
+  text-wrap:balance;
+}
+.opening .opening-plane-prompt,
+.opening.is-revealed .opening-plane-prompt,
+.opening.is-revealed .opening-plane-prompt.is-visible{
+  position:absolute;
+  z-index:19;
+  top:auto !important;
+  left:50% !important;
+  right:auto;
+  bottom:calc(4svh + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(90vw,380px);
+  max-width:calc(100% - 18px);
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  backdrop-filter:none;
+  background:transparent;
+  color:#fff5e5;
+  font:600 clamp(21px,3vw,26px)/1.14 var(--hand);
+  text-align:center;
+  text-shadow:0 2px 7px #1b090bcc,0 1px 2px #210609bd;
+  white-space:normal;
+  text-wrap:balance;
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+  transition:none;
+}
+.opening.is-revealed .opening-plane-prompt,
+.opening.is-revealed .opening-plane-prompt.is-visible{
+  visibility:visible;
+  opacity:1;
+  animation:opening-cue-appear .65s 3.45s both;
+}
+@keyframes opening-cue-appear{
+  from{opacity:0;filter:blur(5px)}
+  to{opacity:1;filter:blur(0)}
+}
+@media(max-width:760px){
+  .opening .opening-copy > .eyebrow{
+    top:clamp(57px,10.5svh,96px);
+    font-size:clamp(10px,2.3vw,12px);
+  }
+  .opening .opening-copy .opening-names{
+    top:43%;
+    font-size:clamp(39px,10vw,62px);
+    gap:clamp(7px,1.3svh,13px);
+  }
+  .opening .opening-copy .opening-subtitle{
+    top:71%;
+    font-size:clamp(23px,5.7vw,29px);
+  }
+  .opening .opening-plane-prompt,
+  .opening.is-revealed .opening-plane-prompt{
+    bottom:calc(3.8svh + env(safe-area-inset-bottom));
+    font-size:clamp(19px,5vw,23px);
+  }
+}
+@media(max-height:680px){
+  .opening .opening-copy > .eyebrow{top:clamp(32px,8svh,60px)}
+  .opening .opening-copy .opening-names{
+    top:41.5%;
+    font-size:clamp(35px,8.6vw,52px);
+    gap:clamp(4px,.8svh,8px);
+  }
+  .opening .opening-copy .opening-subtitle{top:69%;font-size:clamp(20px,4.8vw,26px)}
+  .opening .opening-plane-prompt,
+  .opening.is-revealed .opening-plane-prompt{bottom:calc(2.4svh + env(safe-area-inset-bottom));font-size:19px}
+}
+@media(max-height:470px) and (orientation:landscape){
+  .opening .opening-copy > .eyebrow{top:clamp(18px,6svh,32px)}
+  .opening .opening-copy .opening-names{top:41%;font-size:clamp(26px,7.1vh,42px);gap:2px}
+  .opening .opening-copy .opening-subtitle{top:69%;font-size:clamp(19px,4svh,23px)}
+  .opening .opening-plane-prompt,
+  .opening.is-revealed .opening-plane-prompt{bottom:6px;font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  .opening.is-revealed .opening-plane-prompt{animation:none}
+}
