@@ -29,3 +29,17 @@ All four approved location images are included in `assets/` and displayed in the
 - `alwaar-palace-storybook.webp`: illustrated Sri Alwaar Palace based on your venue photo, shown on the reception details card in Chapter 8.
 
 Venue pictures can be tapped to open the complete illustration. They are optimized WebP files and reveal gently when scrolled into view; the reduced-motion option keeps them static.
+
+## Envelope-opening soundtrack
+
+The opening video stays as `assets/opening.mp4` (the existing animation). A separate
+`<audio>` player in `index.html` is wired to **`assets/invite-open.mp4`**.
+Audio starts **only when guests tap anywhere on the opening screen**, not when
+the page loads, and stops when the envelope video ends or fails.
+
+**Required asset:** Add the original `invite-open.mp4` containing your chosen
+soundtrack inside the repository's `assets/` folder. The audio is not currently
+stored in this repository; until it is uploaded, the video still works silently.
+The file can be uploaded directly on GitHub at `assets/invite-open.mp4`.
+It is not necessary to extract audio separately; browsers can use the soundtrack
+from the MP4 through the audio element.

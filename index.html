@@ -58,6 +58,10 @@
       <video id="openingVideo" muted playsinline preload="metadata" poster="assets/opening-poster.webp">
         <source src="assets/opening.mp4" type="video/mp4">
       </video>
+      <!-- The uploaded MP4 provides the intro audio only; existing envelope visuals remain unchanged. -->
+      <audio id="openingSound" preload="none" aria-hidden="true">
+        <source src="assets/invite-open.mp4" type="video/mp4">
+      </audio>
       <div class="opening-gradient"></div>
       <div class="opening-copy">
         <p class="eyebrow light">A LITTLE STORY ABOUT TWO HEARTS</p>

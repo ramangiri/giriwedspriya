@@ -73,6 +73,7 @@ function goTo(id) {
    Only after the video finishes do words reveal one after another. */
 const opening = $('#opening');
 const openingTap = $('#openingTap');
+const openingSound = $('#openingSound');
 let openingStarted = false;
 let openingFallbackTimer = null;
 
@@ -80,6 +81,11 @@ function revealOpeningText() {
   if (!openingStarted || introFinished) return;
   introFinished = true;
   if (openingFallbackTimer !== null) window.clearTimeout(openingFallbackTimer);
+  // Intro music plays only with the tapped envelope opening, not on the closed screen.
+  if (openingSound) {
+    openingSound.pause();
+    try { openingSound.currentTime = 0; } catch (_) {}
+  }
   opening.classList.remove('is-playing');
   opening.classList.add('is-revealed');
   openingTap.hidden = true;
@@ -93,6 +99,18 @@ function startEnvelopeVideo() {
   openingStarted = true;
   openingTap.hidden = true;
   opening.classList.add('is-playing');
+  // The new soundtrack starts in the SAME user gesture as the envelope animation.
+  // Using an <audio> element keeps your existing 8-second envelope video unchanged.
+  if (openingSound) {
+    try { openingSound.currentTime = 0; } catch (_) {}
+    try {
+      const audioStart = openingSound.play();
+      if (audioStart && typeof audioStart.catch === 'function') {
+        // The envelope animation still works if the soundtrack file isn't present yet.
+        audioStart.catch(() => {});
+      }
+    } catch (_) { /* Audio is optional; never block the invitation. */ }
+  }
   // Start playback directly inside the tap interaction for mobile Safari.
   try {
     video.currentTime = 0;
