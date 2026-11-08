@@ -1724,13 +1724,27 @@ body > #travellingPlane.mobile-plane svg{
 
 
 
-/* ENVELOPE VIDEO ENDS + MUSIC STOPS, THEN FOUR TEXT GROUPS REVEAL
-   1. LITTLE STORY ABOUT TWO HEARTS
-   2. Giridharan & Padma Priya (one group, even when stacked on mobile)
-   3. From friends to forever
-   4. Scroll to follow our paper plane
-   Only opacity and small transform changes are animated to keep mobile smooth. */
-.opening-message-veil{
+/* SCROLL-DRIVEN INTRO: plane starts first, text reveals only as guests scroll.
+   The original envelope video and audio play only on tap, before this scene.
+   Extra scroll height is intentional: the same opening stays sticky, so users
+   can watch each text element appear without the background scrolling away. */
+#opening.opening{
+  height:220svh;
+  min-height:0;
+  overflow:visible;
+  background:#29161e;
+}
+#opening .opening-viewport{
+  position:sticky;
+  top:0;
+  height:100svh;
+  min-height:0;
+  width:100%;
+  overflow:hidden;
+  isolation:isolate;
+}
+#opening .opening-viewport > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#opening .opening-message-veil{
   position:absolute;
   inset:0;
   z-index:2;
@@ -1739,69 +1753,58 @@ body > #travellingPlane.mobile-plane svg{
   background:linear-gradient(180deg,rgba(34,13,19,.34),rgba(38,16,20,.17) 40%,rgba(26,9,15,.29));
   transition:opacity .55s ease;
 }
-.opening.is-revealed .opening-message-veil{opacity:1}
-
-/* Prevent the old per-name animations from firing. The whole h1 now animates
-   as one heading, even when CSS stacks its names on a narrow phone. */
-.opening.is-revealed .opening-copy .name-first,
-.opening.is-revealed .opening-copy .name-and,
-.opening.is-revealed .opening-copy .name-second{
-  animation:none!important;
+#opening.is-revealed .opening-message-veil{opacity:1}
+#opening .opening-copy .name-first,
+#opening .opening-copy .name-and,
+#opening .opening-copy .name-second{
   opacity:1!important;
   transform:none!important;
-}
-
-/* Nothing should flash on the last frame of the envelope video. */
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .eyebrow,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .opening-names,
-.opening.is-revealed:not(.is-text-sequence) .opening-copy .opening-subtitle,
-.opening.is-revealed:not(.is-text-sequence) .opening-plane-prompt{
   animation:none!important;
+}
+/* Override old time-based reveals. Every group starts hidden until its
+   scroll checkpoint, including on reload, regardless of the video end time. */
+#opening.is-revealed .opening-copy .eyebrow,
+#opening.is-revealed .opening-copy .opening-names,
+#opening.is-revealed .opening-copy .opening-subtitle,
+#opening.is-revealed .opening-plane-prompt{
   opacity:0!important;
-  visibility:hidden;
+  visibility:hidden!important;
+  animation:none!important;
+  transition:opacity .65s ease,transform .65s cubic-bezier(.2,.75,.3,1);
 }
-
-@keyframes invitation-line-rise {
-  from{opacity:0;transform:translate3d(0,16px,0)}
-  to{opacity:1;transform:translate3d(0,0,0)}
+#opening.is-revealed .opening-copy .eyebrow{transform:translate3d(0,18px,0)}
+#opening.is-revealed .opening-copy .opening-names{transform:translate(-50%,calc(-50% + 18px))}
+#opening.is-revealed .opening-copy .opening-subtitle{transform:translate3d(0,18px,0)}
+#opening.is-revealed .opening-plane-prompt{transform:translate(-50%,14px)}
+#opening.is-revealed.intro-step-1 .opening-copy .eyebrow{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translate3d(0,0,0);
 }
-/* Preserve h1's centering translate so it never shifts off-center. */
-@keyframes invitation-names-rise {
-  from{opacity:0;transform:translate(-50%,calc(-50% + 18px))}
-  to{opacity:1;transform:translate(-50%,-50%)}
+#opening.is-revealed.intro-step-2 .opening-copy .opening-names{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translate(-50%,-50%);
 }
-/* The cue is positioned at the bottom with translateX(-50%). */
-@keyframes invitation-scroll-cue-rise {
-  from{opacity:0;transform:translate(-50%,14px)}
-  to{opacity:1;transform:translate(-50%,0)}
+#opening.is-revealed.intro-step-3 .opening-copy .opening-subtitle{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none;
 }
-.opening.is-revealed.is-text-sequence .opening-copy .eyebrow{
-  visibility:visible;
-  animation:invitation-line-rise .7s .12s cubic-bezier(.2,.75,.3,1) both;
+#opening.is-revealed.intro-step-4 .opening-plane-prompt{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translateX(-50%);
 }
-.opening.is-revealed.is-text-sequence .opening-copy .opening-names{
-  visibility:visible;
-  animation:invitation-names-rise .88s 1.03s cubic-bezier(.18,.78,.25,1) both;
+@media(max-width:760px){
+  #opening.opening{height:215svh;min-height:0}
 }
-.opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle{
-  visibility:visible;
-  animation:invitation-line-rise .78s 2.12s cubic-bezier(.2,.75,.3,1) both;
-}
-.opening.is-revealed.is-text-sequence .opening-plane-prompt{
-  visibility:visible;
-  animation:invitation-scroll-cue-rise .74s 3.12s cubic-bezier(.2,.75,.3,1) both;
+@media(max-height:540px){
+  #opening .opening-viewport{min-height:0}
 }
 @media(prefers-reduced-motion:reduce){
-  .opening-message-veil{transition:none}
-  .opening.is-revealed.is-text-sequence .opening-copy .eyebrow,
-  .opening.is-revealed.is-text-sequence .opening-copy .opening-names,
-  .opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle,
-  .opening.is-revealed.is-text-sequence .opening-plane-prompt{
-    animation:none;
-    opacity:1;
-    visibility:visible;
-  }
-  .opening.is-revealed.is-text-sequence .opening-copy .opening-names{transform:translate(-50%,-50%)}
-  .opening.is-revealed.is-text-sequence .opening-copy .opening-subtitle{transform:none}
-  .opening.is-revealed.is-text-sequence .opening-plane-prompt{transform:translateX(-50%)}
+  #opening.is-revealed .opening-copy .eyebrow,
+  #opening.is-revealed .opening-copy .opening-names,
+  #opening.is-revealed .opening-copy .opening-subtitle,
+  #opening.is-revealed .opening-plane-prompt{transition:none}
 }

@@ -90,11 +90,16 @@ function goTo(id) {
 /* Tap anywhere on the original closed-envelope video to begin.
    Only after the video finishes do words reveal one after another. */
 const opening = $('#opening');
+const openingViewport = $('.opening-viewport', opening);
 const openingTap = $('#openingTap');
 const openingSound = $('#openingSound');
 let openingStarted = false;
 let openingFallbackTimer = null;
-let openingRevealFrame = null;
+// Scroll-driven, one-by-one reveal: no text appears just because the video ended.
+let openingRevealSteps = 0;
+let lastOpeningRevealAt = 0;
+let openingRevealTimer = null;
+const openingScrollThresholds = [.08, .29, .52, .76];
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
@@ -113,18 +118,46 @@ function revealOpeningText() {
   opening.classList.remove('is-playing');
   opening.classList.add('is-revealed');
   openingTap.hidden = true;
-  // iOS Safari can batch video-end style changes into one frame. A distinct
-  // class on the next paint guarantees each text line animates independently.
-  if (openingRevealFrame !== null) cancelAnimationFrame(openingRevealFrame);
-  openingRevealFrame = requestAnimationFrame(() => {
-    openingRevealFrame = requestAnimationFrame(() => {
-      opening.classList.add('is-text-sequence');
-      openingRevealFrame = null;
-    });
-  });
+  // Show the real moving plane first. The visitor now scrolls to reveal
+  // the message, with each text group following their paper-plane journey.
+  opening.classList.add('plane-ready');
   document.body.classList.remove('intro-locked');
   document.documentElement.classList.remove('intro-locked');
   requestFrame();
+}
+
+function updateOpeningScrollReveal(scrollY, now = performance.now()) {
+  if (!introFinished || openingRevealSteps >= openingScrollThresholds.length) return;
+  const runway = Math.max(1, opening.offsetHeight - openingViewport.offsetHeight);
+  const progress = clamp((scrollY - mainTopOnPage) / runway);
+  if(progress < openingScrollThresholds[openingRevealSteps]) return;
+
+  // A fast swipe must not make four pieces of text appear at once. Each reveal
+  // gets its own moment while the plane continues to follow the finger.
+  const wait = openingRevealSteps === 0 ? 0 : Math.max(0, 640 - (now - lastOpeningRevealAt));
+  if(wait > 0) {
+    if(openingRevealTimer === null){
+      openingRevealTimer = window.setTimeout(() => {
+        openingRevealTimer = null;
+        requestFrame();
+      }, wait);
+    }
+    return;
+  }
+
+  openingRevealSteps += 1;
+  lastOpeningRevealAt = now;
+  opening.classList.add('intro-step-' + openingRevealSteps);
+  // If the user has already swiped past multiple thresholds, preserve the
+  // order using one timed check per step, never an automatic start.
+  if(openingRevealSteps < openingScrollThresholds.length &&
+     progress >= openingScrollThresholds[openingRevealSteps] &&
+     openingRevealTimer === null) {
+    openingRevealTimer = window.setTimeout(() => {
+      openingRevealTimer = null;
+      requestFrame();
+    }, 655);
+  }
 }
 
 function startEnvelopeVideo() {
@@ -237,10 +270,14 @@ function buildTrail() {
   planeSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
   const storyStart = storyBook.getBoundingClientRect().top - invitationMain.getBoundingClientRect().top;
   const openingHeight = opening.offsetHeight;
+  const viewportHeight = openingViewport.offsetHeight;
   const positions = [
-    // Visible only after the envelope opens; the trailing curve crosses the next screen.
-    {x:w*.82, y:openingHeight*.60},
-    {x:w*.50, y:openingHeight*.83},
+    // The plane waits at the bottom centre when the video ends. As guests
+    // scroll, it flies across the still-visible opening and into Chapter 01.
+    {x:w*.50, y:viewportHeight*.79},
+    {x:w*.43, y:viewportHeight*1.04},
+    {x:w*.76, y:viewportHeight*1.42},
+    {x:w*.26, y:Math.max(viewportHeight*1.79,openingHeight-viewportHeight*.20)},
     {x:w*.62, y:storyStart+25}
   ];
   chapters.forEach((chapter,i) => {
@@ -413,9 +450,14 @@ function updatePlane(scrollY) {
   // At the end of the opening screen the plane simply keeps flying into Chapter 1.
   // Start the paper plane at the bottom CENTRE of the opening.
   // Shift smoothly back to the usual story-flight level on the next screen.
-  const openingProgress=clamp(scrollY/Math.max(1,opening.offsetHeight));
-  const viewportGuide=lerp(.83,.68,ease(openingProgress));
   const relativeScroll=scrollY-mainTopOnPage;
+  const openingRunway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
+  const openingProgress=clamp(relativeScroll/openingRunway);
+  // Keep the paper plane below the main names while the opening is sticky,
+  // then gently guide it upward as Chapter 01 comes into view.
+  const viewportGuide=relativeScroll<=openingRunway
+    ? lerp(.84,.79,ease(openingProgress))
+    : lerp(.79,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
   // Follow scrolling directly: the old sine-wave offset temporarily opposed
   // the finger's movement and made the plane appear stuck.
   const targetY=relativeScroll+window.innerHeight*viewportGuide;
@@ -445,8 +487,9 @@ function updatePlane(scrollY) {
 function update(now=performance.now()) {
   rafPending=false;
   const y=window.scrollY;
-  // Always update the plane BEFORE other expensive scene animations.
+  // The plane moves first. Separate scroll thresholds reveal each line.
   updatePlane(y);
+  updateOpeningScrollReveal(y,now);
 
   const storyTop=storyBook.offsetTop;
   const isStoryVisible=y+window.innerHeight*.32>=storyTop;
