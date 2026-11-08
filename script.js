@@ -460,7 +460,12 @@ function update(now=performance.now()) {
     const metric=chapterMetrics[i];
     if(!metric)return;
     const range=Math.max(1,metric.height-window.innerHeight);
-    const p=clamp((y-metric.top)/range);
+    // Chapter 6 has NO oversized scroll tail. Animate the curtains while that
+    // full-screen scene enters view, not via an artificial extra 24svh hold.
+    // By the time it fills the viewport, the mandapam and names are revealed.
+    const p=chapter.dataset.number==='6'
+      ? clamp((y-(metric.top-window.innerHeight*.44))/(window.innerHeight*.70))
+      : clamp((y-metric.top)/range);
     if(y>metric.top-window.innerHeight*1.4 &&
        y<metric.top+metric.height+window.innerHeight*.5 &&
        Math.abs(p-chapterProgress[i])>=(mobileOptimized.matches?.008:.003)){

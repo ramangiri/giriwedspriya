@@ -1653,13 +1653,13 @@ body > #travellingPlane.mobile-plane svg{
 
 
 
-/* CHAPTER 06 FULL-VIEW / NO EMPTY SCROLL TAIL
-   Screen 6 previously inherited 165–185svh from all story chapters, leaving
-   a long blank exit after the curtain had already opened. Keep enough scroll
-   distance for its existing reveal animation, but remove that dead space. */
+/* CHAPTER 06: EXACTLY ONE FULL VIEWPORT — NO EMPTY SCROLL TAIL
+   Unlike other sticky chapters, the wedding reveal should occupy one screen.
+   The curtain reveal progress is computed as the page ENTERS the viewport. */
 #chapter-6 {
-  height:132svh;
+  height:100svh;
   min-height:0;
+  margin:0;
 }
 #chapter-6 > .stage-six {
   height:100svh;
@@ -1683,7 +1683,7 @@ body > #travellingPlane.mobile-plane svg{
    while leaving the Chapter 06 heading and safe-area controls unobstructed. */
 @media(max-width:760px){
   #chapter-6{
-    height:124svh;
+    height:100svh;
     min-height:0;
   }
   #chapter-6 > .stage-six{
