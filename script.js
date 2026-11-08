@@ -99,7 +99,11 @@ let openingFallbackTimer = null;
 let openingRevealSteps = 0;
 let lastOpeningRevealAt = 0;
 let openingRevealTimer = null;
-const openingScrollThresholds = [.10, .31, .54, .76];
+// Shorter mobile scroll runway: reveal the four texts while the plane flies.
+const openingScrollThresholds = mobileOptimized.matches
+  ? [.07, .23, .42, .62]
+  : [.10, .31, .54, .76];
+const openingRevealGapMs = mobileOptimized.matches ? 260 : 640;
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
@@ -134,7 +138,7 @@ function updateOpeningScrollReveal(scrollY, now = performance.now()) {
 
   // A fast swipe must not make four pieces of text appear at once. Each reveal
   // gets its own moment while the plane continues to follow the finger.
-  const wait = openingRevealSteps === 0 ? 0 : Math.max(0, 640 - (now - lastOpeningRevealAt));
+  const wait = openingRevealSteps === 0 ? 0 : Math.max(0, openingRevealGapMs - (now - lastOpeningRevealAt));
   if(wait > 0) {
     if(openingRevealTimer === null){
       openingRevealTimer = window.setTimeout(() => {
@@ -156,7 +160,7 @@ function updateOpeningScrollReveal(scrollY, now = performance.now()) {
     openingRevealTimer = window.setTimeout(() => {
       openingRevealTimer = null;
       requestFrame();
-    }, 655);
+    }, openingRevealGapMs + 15);
   }
 }
 
@@ -271,15 +275,17 @@ function buildTrail() {
   const storyStart = storyBook.getBoundingClientRect().top - invitationMain.getBoundingClientRect().top;
   const openingHeight = opening.offsetHeight;
   const viewportHeight = openingViewport.offsetHeight;
+  // Scale the same curved flight to the actual opening height. A shorter
+  // mobile scene must not leave hardcoded 1.93-screen waypoints beyond its end.
+  const flightStart=viewportHeight*.14;
+  const flightEnd=openingHeight-viewportHeight*.22;
+  const flightY=(progress)=>lerp(flightStart,flightEnd,progress);
   const positions = [
-    // The plane is FIRST visible in the upper-left after the envelope opens.
-    // While guests scroll the sticky opening, it flies diagonally downward,
-    // arcs around the centered text, reaches the bottom and enters Chapter 01.
-    {x:w*.11, y:viewportHeight*.13},
-    {x:w*.18, y:viewportHeight*.53},
-    {x:w*.74, y:viewportHeight*1.06},
-    {x:w*.69, y:viewportHeight*1.50},
-    {x:w*.49, y:Math.max(viewportHeight*1.93,openingHeight-viewportHeight*.19)},
+    {x:w*.11, y:flightY(0)},   // start: top-left when envelope finishes
+    {x:w*.19, y:flightY(.23)},
+    {x:w*.73, y:flightY(.53)},
+    {x:w*.68, y:flightY(.79)},
+    {x:w*.49, y:flightY(1)},   // reach lower half before Chapter 01
     {x:w*.62, y:storyStart+25}
   ];
   chapters.forEach((chapter,i) => {
@@ -455,9 +461,8 @@ function updatePlane(scrollY) {
   const relativeScroll=scrollY-mainTopOnPage;
   const openingRunway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
   const openingProgress=clamp(relativeScroll/openingRunway);
-  // The opening starts in the upper-left at 14% of the viewport, NOT 84%.
-  // The scroll drives the plane from top to bottom while text is revealed
-  // at its four checkpoints. Past the opening, the same trail continues.
+  // 14% -> 77% of the mobile screen in less than one viewport scroll,
+  // instead of taking more than a viewport. Never add easing/lag to touch.
   const viewportGuide=relativeScroll<=openingRunway
     ? lerp(.14,.77,ease(openingProgress))
     : lerp(.77,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
