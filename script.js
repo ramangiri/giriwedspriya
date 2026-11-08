@@ -47,6 +47,15 @@ const path = $('#trailDots');
 const maskLine = $('#trailReveal');
 const plane = $('#travellingPlane');
 const planeSvg = $('#trailSvg');
+// Keep the plane in a tiny fixed compositor layer on phones, separate from
+// the very tall SVG trail, which otherwise makes mobile browsers repaint it.
+const useMobilePlane = mobileOptimized.matches;
+if(useMobilePlane){
+  plane.classList.add('mobile-plane');
+  document.body.appendChild(plane);
+}
+let mainTopOnPage=0;
+let mainLeftOnScreen=0;
 const video = $('#openingVideo');
 const chapterName = $('#chapterName');
 const chapterCounter = $('#chapterCounter');
@@ -54,7 +63,7 @@ const progressDots = $$('.progress-dot');
 const toast = $('#toast');
 let pathLength = 0;
 let rafPending = false;
-let lastPaintTime=0;
+// The browser's native display refresh rate drives mobile plane updates.
 let chapterMetrics=[];
 const chapterProgress=new Array(chapters.length).fill(-1);
 const journeySketchPaths=$$('.path-sketch');
@@ -119,6 +128,13 @@ function startEnvelopeVideo() {
         audioStart.catch(() => {});
       }
     } catch (_) { /* Audio is optional; never block the invitation. */ }
+  }
+  // Make the original 8-second opening slightly brisker on phones, without
+  // re-encoding or replacing its visuals. Keep the uploaded music in sync.
+  const mobilePlaybackRate=mobileOptimized.matches?1.18:1;
+  try { video.playbackRate=mobilePlaybackRate; } catch (_) {}
+  if(openingSound){
+    try { openingSound.playbackRate=mobilePlaybackRate; } catch (_) {}
   }
   // Start playback directly inside the tap interaction for mobile Safari.
   try {
@@ -198,6 +214,9 @@ let trailSamples = [];
 function buildTrail() {
   const w = Math.max(300, invitationMain.clientWidth);
   const h = Math.max(1000, invitationMain.scrollHeight);
+  const mainRect=invitationMain.getBoundingClientRect();
+  mainTopOnPage=mainRect.top+window.scrollY;
+  mainLeftOnScreen=mainRect.left;
   planeSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
   const storyStart = storyBook.getBoundingClientRect().top - invitationMain.getBoundingClientRect().top;
   const openingHeight = opening.offsetHeight;
@@ -374,7 +393,14 @@ function updatePlane(scrollY) {
   // Shift smoothly back to the usual story-flight level on the next screen.
   const openingProgress=clamp(scrollY/Math.max(1,opening.offsetHeight));
   const viewportGuide=lerp(.83,.68,ease(openingProgress));
-  const targetY=-invitationMain.getBoundingClientRect().top+window.innerHeight*viewportGuide;
+  const relativeScroll=scrollY-mainTopOnPage;
+  // The previous plane looked almost stationary vertically. This small,
+  // continuous flight arc adds visible motion along the SAME dotted trail.
+  // It remains scroll-controlled, with no auto-scrolling or artificial delay.
+  const flightArc=useMobilePlane
+    ? Math.sin(relativeScroll*Math.PI*2/Math.max(400,window.innerHeight*.85))*window.innerHeight*.085
+    : 0;
+  const targetY=relativeScroll+window.innerHeight*viewportGuide+flightArc;
   let low=0,high=trailSamples.length-1;
   while(low<high) {
     const mid=(low+high)>>1;
@@ -390,8 +416,12 @@ function updatePlane(scrollY) {
   const before=trailSamples[Math.max(0,low-1)]||lower;
   const after=trailSamples[Math.min(trailSamples.length-1,low+1)]||upper;
   const degrees=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
-  // GPU transforms avoid mobile layout/paint work caused by left/top updates.
-  plane.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${degrees}deg)`;
+  // The mobile plane is viewport-fixed: map the same trail point to screen
+  // coordinates, then move only its compositor transform at display refresh.
+  // Desktop retains the original absolute plane positioning.
+  const drawX=useMobilePlane?x+mainLeftOnScreen:x;
+  const drawY=useMobilePlane?y-relativeScroll:y;
+  plane.style.transform=`translate3d(${drawX.toFixed(1)}px,${drawY.toFixed(1)}px,0) translate(-50%,-50%) rotate(${degrees.toFixed(1)}deg)`;
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
 
 }
@@ -427,14 +457,9 @@ function update() {
 function requestFrame(){
   if(rafPending)return;
   rafPending=true;
-  requestAnimationFrame(function paint(now){
-    if(mobileOptimized.matches && now-lastPaintTime<30){
-      requestAnimationFrame(paint);
-      return;
-    }
-    lastPaintTime=now;
-    update();
-  });
+  // Let the browser paint on every native animation frame (typically 60Hz on
+  // mobiles). The old forced 30fps cap caused visibly stepped plane motion.
+  requestAnimationFrame(update);
 }
 window.addEventListener('scroll',requestFrame,{passive:true});
 let resizeDebounce=null,layoutWidth=window.innerWidth,layoutHeight=window.innerHeight;

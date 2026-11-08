@@ -1189,3 +1189,28 @@ body.intro-locked .invitation-main > .trail-overlay{opacity:0}
   .story-event-illustration.venue-art > img{filter:none}
 }
 @media(prefers-reduced-motion:reduce){.trail-overlay #travellingPlane{will-change:auto}}
+
+
+/* Smooth mobile plane: small viewport compositor layer independent of
+   the enormous, static story trail, so the plane can respond at screen rate. */
+body > #travellingPlane.mobile-plane{
+  position:fixed !important;
+  z-index:90;
+  top:0 !important;
+  left:0 !important;
+  width:clamp(44px,11vw,62px);
+  height:clamp(44px,11vw,62px);
+  opacity:0;
+  pointer-events:none;
+  will-change:transform,opacity;
+  filter:none;
+  transform:translate3d(-120px,-120px,0);
+}
+body > #travellingPlane.mobile-plane svg{
+  display:block;
+  height:100%;
+  width:100%;
+}
+@media(prefers-reduced-motion:reduce){
+  body > #travellingPlane.mobile-plane{will-change:auto}
+}
