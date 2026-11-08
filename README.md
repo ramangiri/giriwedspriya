@@ -18,3 +18,14 @@ The site is static and can be deployed with Netlify; no build command or databas
 **Check details before publishing.** The ceremony time and temple were taken from the supplied invitation image and have not been separately confirmed. Reception: 8 February 2027, evening, Sri Alwaar Palace, Kattankulathur. Update `CONFIG` at the top of `script.js` and corresponding fallback text in `index.html` if required.
 
 **Original intro note:** The included `assets/opening.mp4` is the optimized ~8-second opening animation to load quickly on mobile.
+
+## Approved cartoon illustrations
+
+All four approved location images are included in `assets/` and displayed in the website:
+
+- `giri-house.webp`: corrected KING FITNESS building with the actual two-level facade, lower shops, and front gate; appears in Chapter 3.
+- `priya-house.webp`: Priya's cream-and-green house with balconies and ornate gates; appears in Chapter 3.
+- `temple-storybook.webp`: illustrated temple based on your temple photo, shown on the wedding details card in Chapter 8.
+- `alwaar-palace-storybook.webp`: illustrated Sri Alwaar Palace based on your venue photo, shown on the reception details card in Chapter 8.
+
+Venue pictures can be tapped to open the complete illustration. They are optimized WebP files and reveal gently when scrolled into view; the reduced-motion option keeps them static.

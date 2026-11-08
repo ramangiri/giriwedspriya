@@ -391,3 +391,23 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>{buildTrail();update();}));
 if(document.fonts?.ready) document.fonts.ready.then(()=>{buildTrail();requestFrame();});
 if(reduceMotion) {video.pause();video.setAttribute('poster','assets/opening-poster.webp');}
 
+
+/* Reveal the temple and reception illustrations when visitors scroll to them.
+   Default styling stays visible if JavaScript or IntersectionObserver is unavailable. */
+const venueIllustrations = [...document.querySelectorAll('.venue-art')];
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  const venueObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.13, rootMargin: '0px 0px -4% 0px' });
+  venueIllustrations.forEach(illustration => {
+    illustration.classList.add('animated-venue');
+    venueObserver.observe(illustration);
+  });
+} else {
+  venueIllustrations.forEach(illustration => illustration.classList.add('in-view'));
+}

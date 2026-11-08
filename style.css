@@ -46,3 +46,19 @@
 @media(max-width:760px){.stage-three{padding-top:calc(104px + env(safe-area-inset-top));padding-bottom:40px}.stage-three .headline-top{font-size:clamp(29px,7.4vw,44px);line-height:1.02}.family-sketch.house-pair{width:min(470px,95vw);gap:8px;margin:12px auto 16px}.house-card{padding:5px 5px 4px}.house-card .house-image{height:clamp(140px,22vh,205px)}.house-card figcaption{font-size:clamp(18px,5vw,24px);padding-top:8px}.houses-link{top:37%;width:52px}.stage-three .sticky-note{max-width:88vw}}
 @media(max-width:400px){.stage-three .headline-top{font-size:clamp(27px,7.1vw,36px)}.house-card .house-image{height:clamp(130px,21vh,175px)}.family-sketch.house-pair{width:94vw;margin:8px auto 14px}.stage-three .sticky-note p{font-size:clamp(21px,6vw,26px)}}
 @media(prefers-reduced-motion:reduce){.house-card img{transition:none}}
+
+/* The four approved location illustrations: two family homes + wedding and reception venues. */
+.venue-art{display:block;position:relative;isolation:isolate;overflow:hidden;max-width:380px;margin:2px auto 19px;background:#fff4e4;border:1px solid #ceb499;border-radius:12px;box-shadow:0 7px 19px #72524427;text-decoration:none;color:inherit;transition:box-shadow .4s ease,transform .6s cubic-bezier(.2,.7,.2,1),opacity .6s ease}
+.venue-art-image{height:clamp(240px,29vw,340px);position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;background:#f7e9d1}
+.venue-art-image::before{content:"";position:absolute;inset:-12px;z-index:0;background-position:center;background-size:cover;filter:blur(15px) saturate(.85);opacity:.31;transform:scale(1.06)}
+.wedding-illustration .venue-art-image::before{background-image:url('assets/temple-storybook.webp')}
+.reception-illustration .venue-art-image::before{background-image:url('assets/alwaar-palace-storybook.webp')}
+.venue-art-image img{position:relative;z-index:1;display:block;height:100%;width:100%;object-fit:contain;filter:drop-shadow(0 4px 9px #794d3933);transition:transform .55s ease}
+.venue-art-caption{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:12px 14px;font:700 12px/1.35 var(--sans);letter-spacing:.025em;color:#764434;text-align:left;background:#fff6e7}
+.venue-art-caption span{color:var(--red);font-size:19px;line-height:12px}
+.venue-art.animated-venue{opacity:0;transform:translateY(24px) scale(.97)}
+.venue-art.animated-venue.in-view{opacity:1;transform:translateY(0) scale(1)}
+@media(hover:hover){.venue-art:hover{box-shadow:0 12px 27px #7650473d;transform:translateY(-3px)}.venue-art:hover img{transform:scale(1.03)}}
+@media(max-width:760px){.venue-art{width:100%;max-width:440px;margin:2px auto 16px;border-radius:10px}.venue-art-image{height:clamp(250px,83vw,360px)}.venue-art-caption{padding:11px 12px;font-size:12px}.event-card{max-width:100%}}
+@media(max-width:380px){.venue-art-image{height:clamp(220px,80vw,295px)}.venue-art-caption{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.venue-art,.venue-art.animated-venue,.venue-art.animated-venue.in-view,.venue-art-image img{opacity:1!important;transform:none!important;transition:none!important}}
