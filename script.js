@@ -363,19 +363,16 @@ function animateChapter(chapter, p) {
       break;
     }
     case 6: {
-      const open=ease((reducedP-.04)*2.0);
-      $('.left-curtain',chapter).style.transform=`translateX(${-open*105}%)`;
-      $('.right-curtain',chapter).style.transform=`translateX(${open*105}%)`;
-      const f=ease((reducedP-.30)*2.5);
-      $('.reveal-copy',chapter).style.opacity=String(f);
-      $('.reveal-copy',chapter).style.transform=`translateY(${lerp(38,0,f)}px) scale(${lerp(.90,1,f)})`;
-      $('.mandapam-art',chapter).style.opacity=String(.12+.72*f);
-      const backdrop=$('.reveal-background',chapter);
-      if(backdrop && !reduceMotion){
-        backdrop.style.opacity=String(lerp(.7,1,f));
-        if(!mobileOptimized.matches)backdrop.style.transform=`translate3d(0,${lerp(16,0,f)}px,0) scale(${lerp(1.055,1.015,f)})`;
-      }
-      $('#petalField').style.opacity=String(f);
+      // The silk panels open directly with scroll position, revealing the
+      // mandapam and names in a natural, lightweight cinematic transition.
+      const open=ease((reducedP-.05)*1.95);
+      $('.left-curtain',chapter).style.transform=`translate3d(${-open*104}%,0,0)`;
+      $('.right-curtain',chapter).style.transform=`translate3d(${open*104}%,0,0)`;
+      const fade=ease((reducedP-.25)*2.8);
+      const copy=$('.reveal-copy',chapter);
+      copy.style.opacity=String(fade);
+      copy.style.transform=`translate3d(0,${lerp(26,0,fade)}px,0)`;
+      $('#petalField').style.opacity=String(fade);
       break;
     }
     case 7: {

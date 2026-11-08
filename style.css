@@ -1477,3 +1477,177 @@ body > #travellingPlane.mobile-plane svg{
   .stage-six .reveal-copy{opacity:1!important}
 }
 
+
+
+
+/* Chapter 6: approved realistic red silk and gold mandapam reveal.
+   A single optimized curtain photo is split visually into two GPU panels. */
+.stage-six{
+  isolation:isolate;
+  background:radial-gradient(ellipse at 50% 40%,#fff8e9,#f8e5cc 67%,#f0d4b7 100%);
+}
+.stage-six .mandapam-stage{
+  position:relative;
+  isolation:isolate;
+  display:block;
+  width:min(94vw,48svh,570px);
+  height:auto;
+  aspect-ratio:650 / 964;
+  max-width:100%;
+  min-height:0;
+  max-height:none;
+  margin:0 auto;
+  overflow:hidden;
+  border:2px solid #c69b63;
+  border-radius:clamp(14px,2vw,25px);
+  background:#542818;
+  box-shadow:0 0 0 4px #fff4e1,0 18px 40px #603c323b;
+}
+.stage-six .mandapam-halo,
+.stage-six .mandapam-art{display:none!important}
+.stage-six .reveal-background{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:1!important;
+  transform:none!important;
+  will-change:auto;
+}
+.stage-six .reveal-background img{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+.stage-six .reveal-background::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,#230f113a 0%,#1a0b0b95 47%,#260c0b73 100%);
+  pointer-events:none;
+}
+.stage-six .reveal-copy{
+  position:absolute;inset:0;
+  width:92%;height:100%;max-width:none;
+  z-index:3;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:clamp(7px,1.5svh,16px);
+  margin:0 auto;
+  padding:clamp(16px,5%,40px) 2px;
+  text-align:center;
+  color:#fff5dd;
+  text-shadow:0 3px 8px #240f0cee,0 1px 3px #23100add;
+  pointer-events:none;
+  opacity:0;
+}
+.stage-six .reveal-copy .eyebrow{
+  color:#ffeed4;
+  font:700 clamp(11px,1.4vw,14px)/1.3 var(--display);
+  letter-spacing:.2em;text-transform:uppercase;
+  margin:0;
+}
+.stage-six .reveal-copy h2{
+  color:#fff0d6;
+  font:italic 400 clamp(36px,5.3vw,66px)/1.06 Georgia,serif;
+  letter-spacing:-.02em;
+  text-wrap:balance;
+  margin:4px auto;
+}
+.stage-six .reveal-copy .you-invited{
+  color:#fff5df;
+  font:italic clamp(17px,2vw,27px)/1.24 Georgia,serif;
+  margin:0 auto 4px;max-width:94%;
+  text-wrap:balance;
+}
+.stage-six .reveal-copy .couple-names{
+  color:#fff0d5;
+  font:italic 400 clamp(42px,6vw,77px)/1.03 Georgia,serif;
+  text-shadow:0 4px 8px #2d1008,0 1px 3px #270a05;
+  margin:6px auto;max-width:100%;
+}
+.stage-six .reveal-copy .couple-names span,
+.stage-six .reveal-copy .couple-names em{
+  display:block;font-style:italic;
+  line-height:1.05;margin:0 auto;
+}
+.stage-six .reveal-copy .couple-names em{
+  color:#e8bb85;font-size:.56em;
+  padding:clamp(5px,1svh,12px) 0;
+}
+.stage-six .reveal-copy .ring-doodle{
+  color:#ffe8bd;
+  font:30px/1 Georgia,serif;
+  margin:0;
+  text-shadow:0 2px 8px #4a1c11;
+}
+.stage-six .curtain{
+  position:absolute;
+  top:0;bottom:0;
+  width:50.25%;height:100%;
+  z-index:7;
+  border:0;border-radius:0;
+  background-image:url('assets/screen6-realistic-curtains.webp');
+  background-repeat:no-repeat;
+  background-size:200% 100%;
+  box-shadow:none;
+  transform:translate3d(0,0,0);
+  backface-visibility:hidden;
+  will-change:transform;
+  pointer-events:none;
+}
+.stage-six .curtain.left-curtain{
+  left:0;right:auto;
+  background-position:left center;
+}
+.stage-six .curtain.right-curtain{
+  right:0;left:auto;
+  background-position:right center;
+}
+.stage-six .curtain::before,
+.stage-six .curtain::after,
+.stage-six .curtain span{display:none!important}
+.stage-six .curtain-rail{
+  position:absolute;top:0;left:0;right:0;
+  height:clamp(18px,4%,38px);
+  z-index:8;
+  background:url('assets/screen6-realistic-curtains.webp') center top / 100% auto no-repeat;
+  filter:drop-shadow(0 3px 5px #240b0870);
+  pointer-events:none;
+}
+@media(max-width:760px){
+  .stage-six .mandapam-stage{
+    width:min(95vw,48svh,540px);
+    height:auto;aspect-ratio:650 / 964;
+    min-height:0;max-height:none;
+    margin:0 auto;
+    border-radius:clamp(15px,4vw,22px);
+  }
+  .stage-six .reveal-copy{
+    width:94%;padding:16px 3px;
+    gap:clamp(7px,1.35svh,12px);
+  }
+  .stage-six .reveal-copy h2{
+    font-size:clamp(29px,8vw,48px);
+    line-height:1.08;margin:3px auto;
+  }
+  .stage-six .reveal-copy .you-invited{
+    font-size:clamp(16px,4.2vw,22px);
+    margin:0 auto;
+  }
+  .stage-six .reveal-copy .couple-names{
+    font-size:clamp(38px,9.4vw,56px);
+    line-height:1.02;margin:4px auto;
+  }
+  .stage-six .reveal-copy .couple-names em{font-size:.6em;padding:4px 0}
+  .stage-six .reveal-copy .ring-doodle{font-size:25px}
+}
+@media(max-height:630px) and (max-width:760px){
+  .stage-six .mandapam-stage{width:min(94vw,44svh)}
+  .stage-six .reveal-copy{gap:4px;padding:9px 0}
+  .stage-six .reveal-copy h2{font-size:clamp(27px,7.6vw,38px);margin:0}
+  .stage-six .reveal-copy .you-invited{font-size:clamp(14px,3.7vw,18px)}
+  .stage-six .reveal-copy .couple-names{font-size:clamp(30px,8vw,45px)}
+  .stage-six .reveal-copy .couple-names em{padding:2px 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .stage-six .curtain{transition:none;will-change:auto}
+}
+
