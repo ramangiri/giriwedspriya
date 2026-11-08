@@ -363,7 +363,7 @@ function animateChapter(chapter, p) {
       break;
     }
     case 6: {
-      const open=ease((reducedP-.08)*1.65);
+      const open=ease((reducedP-.04)*2.0);
       $('.left-curtain',chapter).style.transform=`translateX(${-open*105}%)`;
       $('.right-curtain',chapter).style.transform=`translateX(${open*105}%)`;
       const f=ease((reducedP-.30)*2.5);

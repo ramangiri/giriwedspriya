@@ -1232,3 +1232,248 @@ body > #travellingPlane.mobile-plane svg{
 @media(prefers-reduced-motion:reduce){
   body > #travellingPlane.mobile-plane svg{animation:none;will-change:auto}
 }
+
+
+/* Screen 06 — realistic burgundy silk curtain reveal, matching the approved
+   mobile design. Both photo layers come from the approved artwork.
+   Transforms remain scroll-controlled; gold rod stays stationary. */
+.stage-six{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(ellipse at 50% 38%,#fff8eb 8%,#f8e9d9 66%,#efd6bd 100%);
+  isolation:isolate;
+}
+.stage-six .wedding-reveal-florals{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background-image:url('assets/floral-corner.svg'),url('assets/floral-corner.svg');
+  background-repeat:no-repeat;
+  background-position:left -30px top 2%,right -32px bottom 4%;
+  background-size:clamp(150px,26vw,260px),clamp(150px,26vw,260px);
+  opacity:.68;
+}
+.stage-six .mandapam-stage{
+  position:relative;
+  z-index:3;
+  display:block;
+  width:min(590px,78vw);
+  height:min(780px,80svh);
+  min-height:0;
+  max-height:80svh;
+  margin:28px auto 0;
+  padding:0;
+  border:2px solid #d3a469;
+  border-radius:clamp(18px,3vw,28px);
+  background:#42221c;
+  overflow:hidden;
+  isolation:isolate;
+  box-shadow:0 0 0 5px #fff7e9,0 17px 30px rgba(72,41,32,.23);
+}
+.stage-six .mandapam-halo,
+.stage-six .mandapam-art {display:none}
+.stage-six .reveal-background{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  z-index:0;
+  opacity:1;
+  transform:none!important;
+  will-change:auto;
+}
+.stage-six .reveal-background img{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center 54%;
+  display:block;
+  filter:none;
+}
+.stage-six .reveal-background::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,
+     rgba(44,22,16,.30) 0%,
+     rgba(37,17,10,.50) 44%,
+     rgba(46,25,14,.42) 80%,
+     rgba(30,16,12,.30) 100%);
+  pointer-events:none;
+}
+.stage-six .curtain{
+  position:absolute;
+  top:0;
+  bottom:0;
+  z-index:7;
+  width:50.6%;
+  height:100%;
+  margin:0;
+  border:0;
+  border-radius:0;
+  background-image:url('assets/screen6-curtains.webp');
+  background-repeat:no-repeat;
+  background-size:200% 100%;
+  box-shadow:none;
+  will-change:transform;
+  backface-visibility:hidden;
+}
+.stage-six .curtain.left-curtain{
+  left:0;
+  right:auto;
+  background-position:left center;
+}
+.stage-six .curtain.right-curtain{
+  left:auto;
+  right:0;
+  background-position:right center;
+}
+.stage-six .curtain::before,
+.stage-six .curtain::after,
+.stage-six .curtain span{display:none!important}
+.stage-six .curtain-rod{
+  position:absolute;
+  top:0;left:0;right:0;
+  width:100%;
+  height:clamp(32px,5.3vw,53px);
+  z-index:8;
+  pointer-events:none;
+  background-image:url('assets/screen6-curtains.webp');
+  background-repeat:no-repeat;
+  background-size:100% auto;
+  background-position:center top;
+  filter:drop-shadow(0 3px 5px rgba(39,20,11,.45));
+}
+.stage-six .reveal-copy{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+  padding:55px clamp(12px,3vw,35px) 35px;
+  margin:0;
+  text-align:center;
+  color:#fff5d9;
+  text-shadow:0 3px 8px rgba(38,14,9,.92),0 1px 2px rgba(32,12,9,.9);
+  background:none;
+  pointer-events:none;
+  opacity:0;
+}
+.stage-six .reveal-copy .eyebrow{
+  color:#f4d5a6;
+  font-size:clamp(11px,1.5vw,14px);
+  letter-spacing:.19em;
+  line-height:1.4;
+  margin:0 0 clamp(9px,2svh,15px);
+}
+.stage-six .reveal-copy h2{
+  font:400 clamp(39px,5.3vw,64px)/1.06 var(--script);
+  color:#fff0cf;
+  letter-spacing:0;
+  margin:2px auto clamp(10px,1.8svh,17px);
+  max-width:100%;
+  text-wrap:balance;
+}
+.stage-six .reveal-copy .you-invited{
+  color:#fff0d6;
+  font:clamp(21px,2.8vw,28px)/1.13 var(--hand);
+  line-height:1.16;
+  margin:0 auto clamp(15px,3svh,23px);
+  max-width:420px;
+  text-wrap:balance;
+}
+.stage-six .reveal-copy .couple-names{
+  font:400 clamp(55px,7.5vw,84px)/.98 var(--script);
+  color:#ffecd2;
+  margin:0 auto 7px;
+  text-shadow:0 3px 11px #220d08ee;
+  width:100%;
+}
+.stage-six .reveal-copy .couple-names span{
+  display:block;
+  padding:3px 0;
+  white-space:nowrap;
+}
+.stage-six .reveal-copy .couple-names em{
+  display:block;
+  margin:3px auto;
+  color:#f7c986;
+  font-size:.57em;
+  line-height:1;
+}
+.stage-six .reveal-copy .ring-doodle{
+  color:#ffdfb6;
+  font-size:35px;
+  text-shadow:0 2px 7px #2b1412;
+}
+.stage-six .petal-field{pointer-events:none;z-index:5}
+@media(max-width:760px){
+  .stage-six .wedding-reveal-florals{
+    background-position:left -46px top 6%,right -41px bottom 3%;
+    background-size:155px,165px;
+    opacity:.55;
+  }
+  .stage-six .mandapam-stage{
+    width:calc(100% - 21px);
+    max-width:470px;
+    height:min(77svh,775px);
+    max-height:77svh;
+    margin:22px auto 0;
+    border-radius:22px;
+    box-shadow:0 0 0 4px #fff7e8,0 11px 20px rgba(74,43,30,.18);
+  }
+  .stage-six .curtain-rod{height:clamp(25px,7vw,41px)}
+  .stage-six .reveal-copy{
+    padding:35px 14px 23px;
+  }
+  .stage-six .reveal-copy .eyebrow{
+    font-size:10px;
+    margin:0 0 8px;
+  }
+  .stage-six .reveal-copy h2{
+    font-size:clamp(37px,11vw,55px);
+    line-height:1.02;
+    margin:0 auto 14px;
+  }
+  .stage-six .reveal-copy .you-invited{
+    font-size:clamp(19px,5vw,24px);
+    max-width:305px;
+    margin:0 auto 17px;
+  }
+  .stage-six .reveal-copy .couple-names{
+    font-size:clamp(48px,11.7vw,67px);
+    line-height:1;
+  }
+  .stage-six .reveal-copy .couple-names span{padding:2px 0}
+  .stage-six .reveal-copy .couple-names em{
+    font-size:.59em;
+    margin:4px auto;
+  }
+}
+@media(max-height:690px) and (max-width:760px){
+  .stage-six .mandapam-stage{height:76svh;margin-top:10px}
+  .stage-six .reveal-copy{padding:28px 12px 15px}
+  .stage-six .reveal-copy h2{font-size:clamp(33px,9vw,43px);margin-bottom:8px}
+  .stage-six .reveal-copy .you-invited{font-size:20px;margin-bottom:10px}
+  .stage-six .reveal-copy .couple-names{font-size:clamp(42px,10vw,55px)}
+  .stage-six .reveal-copy .ring-doodle{font-size:26px}
+}
+@media(max-height:470px) and (orientation:landscape){
+  .stage-six .mandapam-stage{width:min(63vw,420px);height:76svh;margin-top:10px}
+  .stage-six .reveal-copy{padding:18px 9px 8px}
+  .stage-six .reveal-copy h2{font-size:clamp(29px,6vh,39px);margin:0 auto 5px}
+  .stage-six .reveal-copy .you-invited{font-size:17px;margin-bottom:8px}
+  .stage-six .reveal-copy .couple-names{font-size:clamp(30px,8vh,41px)}
+  .stage-six .reveal-copy .eyebrow{margin-bottom:4px}
+  .stage-six .reveal-copy .ring-doodle{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .stage-six .curtain{transform:translateX(0)!important;will-change:auto}
+  .stage-six .reveal-copy{opacity:1!important}
+}
+
