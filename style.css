@@ -2454,3 +2454,55 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     margin-top: 10px;
   }
 }
+
+/* Chapter 9 — transparent high-resolution Toby artwork (717 × 675).
+   Natural alpha transparency lets the site's own sand/paper background
+   show through instead of drawing an off-colour photo rectangle. */
+#chapter-9 .reception-story-stage .story-closing .toby-farewell {
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(94vw, 560px);
+  max-width: none;
+  margin: 14px 0 10px;
+  padding: 0;
+  overflow: visible;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-farewell img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 717 / 675;
+  max-width: none;
+  object-fit: contain;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+  mix-blend-mode: normal;
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 1;
+}
+#chapter-9 .reception-story-stage .story-closing .maker-credit {
+  position: relative;
+  margin-top: 10px;
+  z-index: 1;
+}
+@media(max-width: 760px) {
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell {
+    width: min(96vw, 445px);
+    margin: 10px 0 12px;
+  }
+}
+@media(max-width: 390px) {
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell {
+    width: min(96vw, 390px);
+  }
+}
