@@ -2293,3 +2293,48 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
   #travellingPlane.intro-plane-arriving svg,
   body > #travellingPlane.mobile-plane.intro-plane-arriving svg{animation:none!important}
 }
+
+
+/* Toby — user-supplied original beagle photo, quietly placed like the flower
+   corner decorations. It's a BACKGROUND ornament, not a new invitation page
+   or foreground illustration. Keep story text and flight path unobstructed. */
+.stage-three .toby-watermark,
+.stage-five .toby-watermark{
+  position:absolute;
+  z-index:1;
+  width:clamp(166px,23vw,264px);
+  aspect-ratio:3 / 2;
+  background:url('assets/toby-background.webp') center / contain no-repeat;
+  opacity:.14;
+  filter:saturate(.65) sepia(.2);
+  pointer-events:none;
+  user-select:none;
+  -webkit-mask-image:radial-gradient(ellipse 75% 75% at 50% 53%,#000 42%,transparent 100%);
+  mask-image:radial-gradient(ellipse 75% 75% at 50% 53%,#000 42%,transparent 100%);
+}
+.stage-three .toby-watermark-family{
+  top:14%;
+  right:1%;
+  transform:rotate(7deg);
+}
+.stage-five .toby-watermark-love{
+  left:2%;
+  bottom:12%;
+  transform:rotate(-6deg);
+}
+.stage-three .headline-top,
+.stage-three .chapter-micro{position:relative;z-index:3}
+@media(max-width:760px){
+  .stage-three .toby-watermark-family{
+    top:11%;
+    right:-22px;
+    width:clamp(135px,37vw,195px);
+    opacity:.12;
+  }
+  .stage-five .toby-watermark-love{
+    bottom:9%;
+    left:-18px;
+    width:clamp(140px,38vw,195px);
+    opacity:.12;
+  }
+}
