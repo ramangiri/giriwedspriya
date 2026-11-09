@@ -2368,3 +2368,36 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
   .reception-story-stage .toby-nine-one { top: 10%; right: -13px; }
   .reception-story-stage .toby-nine-two { bottom: 4%; left: -15px; }
 }
+
+/* Responsive Toby accents for Chapters 7 and 9.
+   Slot one = sitting, slot two = running; swap in the two original photos
+   once supplied. Both currently keep the existing Toby artwork as placeholder. */
+.stage-seven,
+.reception-story-stage { isolation: isolate; }
+.stage-seven .toby-watermark,
+.reception-story-stage .toby-watermark {
+  max-width: 24%;
+  height: auto;
+  background-size: contain;
+  background-position: center;
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .stage-seven .toby-watermark,
+  .reception-story-stage .toby-watermark { width: clamp(100px, 14vw, 155px); opacity: .11; }
+}
+@media (max-width: 760px) {
+  .stage-seven .toby-watermark,
+  .reception-story-stage .toby-watermark {
+    width: clamp(72px, 22vw, 120px);
+    max-width: 25%;
+    opacity: .09;
+  }
+  .stage-seven .toby-seven-one { top: 11%; left: 2%; }
+  .stage-seven .toby-seven-two { bottom: 2%; right: 2%; }
+  .reception-story-stage .toby-nine-one { top: 11%; left: 2%; right: auto; }
+  .reception-story-stage .toby-nine-two { bottom: 2%; right: 2%; left: auto; }
+}
+@media (max-width: 390px) {
+  .stage-seven .toby-watermark,
+  .reception-story-stage .toby-watermark { width: 76px; max-width: 22%; opacity: .075; }
+}
