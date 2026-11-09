@@ -2414,3 +2414,25 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
 body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   animation-duration: .55s !important;
 }
+
+/* Toby is the discreet RSVP admin shortcut, not an authentication bypass. */
+.rsvp-section{position:relative}
+.toby-admin-gate{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:fit-content;max-width:100%;margin:10px auto 18px;
+  color:#865063;text-decoration:none;font:600 15px/1.3 var(--hand, cursive);
+  border-radius:20px;padding:4px 12px;transition:transform .22s ease;
+}
+.toby-admin-gate img{
+  display:block;width:clamp(72px,11vw,112px);height:clamp(65px,10vw,100px);
+  object-fit:contain;object-position:center;filter:drop-shadow(0 4px 4px #4b293026);
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 55%,transparent 78%);
+  mask-image:radial-gradient(ellipse at center,#000 55%,transparent 78%);
+}
+.toby-admin-gate:hover{transform:translateY(-3px)}
+.toby-admin-gate:focus-visible{outline:3px solid #bb7c77;outline-offset:5px}
+@media(max-width:760px){
+ .toby-admin-gate{font-size:14px;padding:5px 9px;margin:8px auto 14px}
+ .toby-admin-gate img{width:72px;height:67px}
+}
+@media(prefers-reduced-motion:reduce){.toby-admin-gate{transition:none}}
