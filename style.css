@@ -2414,3 +2414,62 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
 body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   animation-duration: .55s !important;
 }
+
+/* Chapter 09 Toby visibility repair: previously opacity .075-.13 and z-index 0
+   kept the tiny images almost invisible behind the floral scene. */
+#chapter-9 .reception-story-stage .toby-watermark{
+  display:block;
+  position:absolute;
+  z-index:3;
+  width:clamp(145px,17vw,230px);
+  max-width:26%;
+  height:auto;
+  aspect-ratio: 200 / 133;
+  background-image:url('assets/toby-background.webp');
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-position:center;
+  opacity:.78;
+  filter:none;
+  -webkit-mask-image:none;
+  mask-image:none;
+  pointer-events:none;
+}
+#chapter-9 .reception-story-stage .toby-nine-one{
+  top:20%;
+  right:1.5%;
+  left:auto;
+  bottom:auto;
+  transform:rotate(5deg);
+}
+#chapter-9 .reception-story-stage .toby-nine-two{
+  bottom:7%;
+  left:1.5%;
+  top:auto;
+  right:auto;
+  transform:rotate(-6deg) scaleX(-1);
+}
+@media(max-width:760px){
+  #chapter-9 .reception-story-stage .toby-watermark{
+    width:clamp(98px,27vw,145px);
+    max-width:29%;
+    opacity:.72;
+  }
+  #chapter-9 .reception-story-stage .toby-nine-one{
+    top:23%;
+    right:1%;
+    left:auto;
+  }
+  #chapter-9 .reception-story-stage .toby-nine-two{
+    bottom:3%;
+    left:1%;
+    right:auto;
+  }
+}
+@media(max-width:390px){
+  #chapter-9 .reception-story-stage .toby-watermark{
+    width:96px;
+    max-width:29%;
+    opacity:.68;
+  }
+}
