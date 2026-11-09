@@ -1,7 +1,7 @@
 import { pbkdf2Sync, timingSafeEqual } from "node:crypto";
 
-const SALT = "891465cd4239629c94c2ab939658e199";
-const HASH = "30ed37c5a5a6683f368ef8890d0fb5e8ecd53e6bc20dd17fc717a8398dd37dae";
+const SALT = "5229b149759a5da71b253d81de90e5fbf5d991d7431dad01";
+const HASH = "8971fc24687d0e71045f953d30fdc0d725ca8f722670f509f61f20e8626c4e88";
 const FORM_ID = "6af13b60bcc7393e2a739b9e";
 const ITERATIONS = 210000;
 
