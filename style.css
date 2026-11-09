@@ -1858,3 +1858,29 @@ body > #travellingPlane.mobile-plane svg{
 @media(prefers-reduced-motion:reduce){
   body.mobile-plane-sync .chapter .plane-synced-text{opacity:1;transition:none}
 }
+
+
+/* CHAPTER FIVE — REVEAL TEXT WITH THE TRAVELLING PLANE, NOT THE
+   OLD CHAPTER SCROLL FADE. The photo and heart particles keep their effects.
+   Four lines progressively appear as the plane crosses the mobile scene. */
+@media(max-width:820px),(pointer:coarse){
+  body.mobile-plane-sync #chapter-5 .love-copy{
+    opacity:1!important;
+    transform:none!important;
+  }
+  body.mobile-plane-sync #chapter-5 .plane-five-piece{
+    opacity:0;
+    transform:translate3d(0,12px,0);
+    transition:opacity .38s ease-out,transform .38s cubic-bezier(.2,.7,.25,1);
+  }
+  body.mobile-plane-sync #chapter-5.plane-five-step-1 .plane-five-piece-1,
+  body.mobile-plane-sync #chapter-5.plane-five-step-2 .plane-five-piece-2,
+  body.mobile-plane-sync #chapter-5.plane-five-step-3 .plane-five-piece-3,
+  body.mobile-plane-sync #chapter-5.plane-five-step-4 .plane-five-piece-4{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.mobile-plane-sync #chapter-5 .plane-five-piece{opacity:1;transform:none;transition:none}
+}

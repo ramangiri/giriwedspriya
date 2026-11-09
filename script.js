@@ -76,18 +76,33 @@ const mobileStoryTextSelectors=[
   '.childhood-copy .margin-note',
   '.stage-three .headline-top',
   '.paths-copy .display-title',
-  '.love-copy .handwritten-mini',
+  null, // Chapter 5 gets its own plane-position-driven four-part reveal.
   '.reveal-copy .you-invited',
   '.save-date-caption',
   '.story-event-heading',
   '.story-event-heading'
 ];
 let nextPlaneChapter=0;
+const chapterFive=chapters[4];
+let chapterFiveRevealStep=0;
 if(useMobilePlane && !reduceMotion){
   chapters.forEach((chapter,i)=>{
     const selector=mobileStoryTextSelectors[i];
     if(selector)$(selector,chapter)?.classList.add('plane-synced-text');
   });
+  // Chapter 5 previously revealed the entire copy from its own scroll
+  // progress, but only the last line was linked to the travelling plane.
+  // Give each line a distinct reveal stage controlled by plane position.
+  const chapterFiveText=[
+    '.love-copy > .eyebrow',
+    '.love-copy > .display-title',
+    '.love-copy > p:not(.eyebrow):not(.handwritten-mini)',
+    '.love-copy > .handwritten-mini'
+  ];
+  chapterFiveText.forEach((selector,i)=>{
+    $(selector,chapterFive)?.classList.add('plane-five-piece', 'plane-five-piece-'+(i+1));
+  });
+  $('.love-copy > .heart-rule',chapterFive)?.classList.add('plane-five-piece','plane-five-piece-4');
 }
 const journeySketchPaths=$$('.path-sketch');
 const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
@@ -418,7 +433,15 @@ function animateChapter(chapter, p) {
       const photo=$('.love-photo',chapter),copy=$('.love-copy',chapter);
       photo.style.transform=`translateX(${lerp(-60,0,f)}px) scale(${lerp(.82,1.03,f)})`;
       photo.style.opacity=String(f);
-      copy.style.transform=`translateX(${lerp(60,0,g)}px)`;copy.style.opacity=String(g);
+      // On mobile, reveal individual words with the ACTUAL plane position.
+      // Do not also fade the parent using separate scroll-based timing.
+      if(useMobilePlane && !reduceMotion){
+        copy.style.transform='none';
+        copy.style.opacity='1';
+      }else{
+        copy.style.transform=`translateX(${lerp(60,0,g)}px)`;
+        copy.style.opacity=String(g);
+      }
       $$('.love-bloom span',chapter).forEach((heart,i)=>{
         const t=ease((reducedP-.18-i*.045)*3.5);
         heart.style.opacity=String(t*.73);
@@ -518,6 +541,20 @@ function update(now=performance.now()) {
       if(!metric || planeWorldY < metric.top+Math.min(metric.height*.12,openingViewport.offsetHeight*.15))break;
       chapters[nextPlaneChapter].classList.add('plane-text-arrived');
       nextPlaneChapter++;
+    }
+    // Reveal the four Chapter 5 lines when the plane actually flies across
+    // their section. The plane and text share one scroll-driven coordinate,
+    // rather than the old conflicting chapter progress and timer logic.
+    const fiveMetric=chapterMetrics[4];
+    if(fiveMetric){
+      const flightThroughFive=(planeWorldY-fiveMetric.top)/
+        Math.max(1,openingViewport.offsetHeight);
+      const revealPoints=[.24,.45,.66,.87];
+      while(chapterFiveRevealStep<revealPoints.length &&
+            flightThroughFive>=revealPoints[chapterFiveRevealStep]){
+        chapterFiveRevealStep++;
+        chapterFive.classList.add('plane-five-step-'+chapterFiveRevealStep);
+      }
     }
   }
 
