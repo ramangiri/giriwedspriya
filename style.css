@@ -2473,3 +2473,82 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     opacity:.68;
   }
 }
+
+
+/* CHAPTER 9 MOBILE FIX: two Toby poses belong in the document flow, not
+   absolutely positioned over the RSVP or Share Invitation buttons.
+   The original source artwork contains both poses in one rectangular poster:
+   crop each half and softly feather its edges to hide the poster box. */
+#chapter-9 .reception-story-stage .story-closing .toby-farewell {
+  display: flex;
+  position: relative;
+  width: min(100%, 350px);
+  max-width: 100%;
+  min-height: 125px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(22px, 7vw, 64px);
+  margin: 18px auto 8px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  isolation: isolate;
+  pointer-events: none;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
+  display: block;
+  position: relative;
+  inset: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  flex: 0 0 auto;
+  width: clamp(96px, 12vw, 126px);
+  max-width: 43%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  z-index: 0;
+  opacity: .95;
+  transform: none;
+  background-color: transparent;
+  background-image: url('assets/toby-background.webp');
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  filter: saturate(.95);
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse 65% 71% at 50% 54%, #000 42%, rgba(0,0,0,.92) 57%, transparent 96%);
+  mask-image: radial-gradient(ellipse 65% 71% at 50% 54%, #000 42%, rgba(0,0,0,.92) 57%, transparent 96%);
+  pointer-events: none;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-nine-one {
+  background-position: left center;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-nine-two {
+  background-position: right center;
+}
+@media (max-width: 760px) {
+  #chapter-9 .reception-story-stage .story-closing .invitation-buttons {
+    margin-bottom: 0;
+  }
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell {
+    width: min(100%, 300px);
+    min-height: 112px;
+    gap: clamp(16px, 6vw, 30px);
+    margin: 16px auto 6px;
+    padding: 0 8px;
+  }
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
+    width: clamp(82px, 27vw, 112px);
+    max-width: 42%;
+    opacity: .96;
+  }
+}
+@media (max-width: 390px) {
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell {
+    min-height: 100px;
+    gap: 12px;
+  }
+  #chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
+    width: min(29vw, 98px);
+  }
+}
