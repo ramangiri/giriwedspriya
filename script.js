@@ -163,14 +163,14 @@ const openingTap = $('#openingTap');
 const openingSound = $('#openingSound');
 let openingStarted = false;
 let openingFallbackTimer = null;
-// Scroll-driven, one-by-one reveal: no text appears just because the video ended.
-let openingRevealSteps = 0;
-// Four reveal thresholds correspond to the SAME scroll-controlled plane flight.
-// By 82% of the mobile flight, all messages are fully triggered before the
-// plane arrives at the bottom. No separate timer can lag behind the plane.
-const openingScrollThresholds = mobileOptimized.matches
-  ? [.14, .36, .58, .82]
-  : [.10, .31, .54, .76];
+let introPlaneReady = false;
+let openingSequenceTimers = [];
+// The post-video opening is SILENT. Music for this scene can be added later.
+// This is an intentional timed reveal, independent of finger scrolling.
+function unlockInvitationScroll(){
+  document.body.classList.remove('intro-locked');
+  document.documentElement.classList.remove('intro-locked');
+}
 // Opening audio ends with the envelope video; no extra music tail.
 function stopOpeningSound() {
   if (!openingSound) return;
@@ -182,40 +182,49 @@ function stopOpeningSound() {
 function revealOpeningText() {
   if (!openingStarted || introFinished) return;
   introFinished = true;
-  if (openingFallbackTimer !== null) window.clearTimeout(openingFallbackTimer);
-  // Stop the soundtrack as soon as the envelope-opening video finishes.
+  if(openingFallbackTimer !== null){
+    window.clearTimeout(openingFallbackTimer);
+    openingFallbackTimer = null;
+  }
+  // The envelope's soundtrack belongs to the VIDEO ONLY.
+  // Never restart it or start any new music on this story title screen.
   stopOpeningSound();
   video.pause();
   opening.classList.remove('is-playing');
   opening.classList.add('is-revealed');
   openingTap.hidden = true;
-  // Show the real moving plane first. The visitor now scrolls to reveal
-  // the message, with each text group following their paper-plane journey.
-  opening.classList.add('plane-ready');
-  // On phones, later story headings fade in once the same travelling plane
-  // reaches their chapter. The existing illustration animations stay intact.
-  if(useMobilePlane && !reduceMotion) document.body.classList.add('mobile-plane-sync');
-  document.body.classList.remove('intro-locked');
-  document.documentElement.classList.remove('intro-locked');
-  requestFrame();
-}
 
-function updateOpeningScrollReveal(scrollY) {
-  if(!introFinished)return;
-  const runway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
-  const progress=clamp((scrollY-mainTopOnPage)/runway);
-  // Each text group appears only after the plane has travelled far enough.
-  // Removing the old time queue means even a fast mobile swipe cannot reach
-  // the bottom while the final sentence is still waiting for a timer.
-  let reached=0;
-  for(const threshold of openingScrollThresholds){
-    if(progress>=threshold)reached++;
+  if(useMobilePlane && !reduceMotion){
+    // Preserve the existing plane/text sync for chapters 1–9.
+    document.body.classList.add('mobile-plane-sync');
   }
-  while(openingRevealSteps<reached){
-    openingRevealSteps++;
-    opening.classList.add('intro-step-'+openingRevealSteps);
+
+  if(reduceMotion){
+    // Accessible instant reveal, but still keep the plane above the cue.
+    opening.classList.add('intro-step-1','intro-step-2','intro-step-3','intro-step-4');
+    introPlaneReady=true;
+    unlockInvitationScroll();
+    requestFrame();
+    return;
   }
-  if(progress>=.965)opening.classList.add('intro-all-visible');
+
+  // 1) Small story heading, 2) both names together, 3) friendship subtitle.
+  // After a short pause, ONE real traveling paper plane glides in above
+  // the bottom caption, then "Scroll to follow..." appears underneath.
+  // Scrolling remains locked until the full intro message can be read.
+  [[180,'intro-step-1'],[1140,'intro-step-2'],[2290,'intro-step-3']].forEach(([delay,step])=>{
+    openingSequenceTimers.push(window.setTimeout(()=>opening.classList.add(step),delay));
+  });
+  openingSequenceTimers.push(window.setTimeout(()=>{
+    introPlaneReady=true;
+    plane.classList.add('intro-plane-arriving');
+    requestFrame();
+  },3440));
+  openingSequenceTimers.push(window.setTimeout(()=>{
+    opening.classList.add('intro-step-4');
+    unlockInvitationScroll();
+    requestFrame();
+  },4210));
 }
 
 function startEnvelopeVideo() {
@@ -331,15 +340,16 @@ function buildTrail() {
   const viewportHeight = openingViewport.offsetHeight;
   // Scale the same curved flight to the actual opening height. A shorter
   // mobile scene must not leave hardcoded 1.93-screen waypoints beyond its end.
-  const flightStart=viewportHeight*.14;
-  const flightEnd=openingHeight-viewportHeight*.22;
+  const flightStart=viewportHeight*.82;
+  const flightEnd=openingHeight-viewportHeight*.20;
   const flightY=(progress)=>lerp(flightStart,flightEnd,progress);
   const positions = [
-    {x:w*.11, y:flightY(0)},   // start: top-left when envelope finishes
-    {x:w*.19, y:flightY(.23)},
-    {x:w*.73, y:flightY(.53)},
-    {x:w*.68, y:flightY(.79)},
-    {x:w*.49, y:flightY(1)},   // reach lower half before Chapter 01
+    // Start CENTERED just ABOVE the bottom "Scroll to follow..." message.
+    // The same real plane continues moving when the guest starts scrolling.
+    {x:w*.50, y:flightY(0)},
+    {x:w*.66, y:flightY(.28)},
+    {x:w*.36, y:flightY(.60)},
+    {x:w*.58, y:flightY(1)},
     {x:w*.62, y:storyStart+25}
   ];
   chapters.forEach((chapter,i) => {
@@ -521,23 +531,25 @@ function animateChapter(chapter, p) {
   }
 }
 function updatePlane(scrollY) {
-  if(!pathLength || !introFinished) { plane.style.opacity='0'; return null; }
+  // The traveling plane stays hidden during the video and the first three
+  // title reveals. It appears AFTER the subtitle above the scroll cue.
+  if(!pathLength || !introFinished || !introPlaneReady) { plane.style.opacity='0'; return null; }
   if(reduceMotion) {
     maskLine.style.strokeDashoffset='0';
     plane.style.opacity='0';
     return null;
   }
-  // At the end of the opening screen the plane simply keeps flying into Chapter 1.
-  // Start the paper plane at the bottom CENTRE of the opening.
-  // Shift smoothly back to the usual story-flight level on the next screen.
+  // After the post-video reveal the plane starts above the scroll caption.
+  // When scrolling begins, the very same element flies into Chapter 1.
   const relativeScroll=scrollY-mainTopOnPage;
   const openingRunway=Math.max(1,opening.offsetHeight-openingViewport.offsetHeight);
   const openingProgress=clamp(relativeScroll/openingRunway);
-  // 14% -> 77% of the mobile screen in less than one viewport scroll,
-  // instead of taking more than a viewport. Never add easing/lag to touch.
+  // Keep it near the scroll cue before scrolling; move smoothly into the
+  // story on scroll. No second decorative plane or sudden jump.
   const viewportGuide=relativeScroll<=openingRunway
-    ? lerp(.14,.77,ease(openingProgress))
-    : lerp(.77,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
+    ? lerp(.82,.75,ease(openingProgress))
+    : lerp(.75,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
+  if(relativeScroll>12)plane.classList.remove('intro-plane-arriving');
   // Follow scrolling directly: the old sine-wave offset temporarily opposed
   // the finger's movement and made the plane appear stuck.
   // Use the same stable 100svh height as the sticky opening artwork.
@@ -572,9 +584,9 @@ function updatePlane(scrollY) {
 function update(now=performance.now()) {
   rafPending=false;
   const y=window.scrollY;
-  // The plane moves first. Text follows ITS scroll progress, never a timer.
+  // The plane follows scroll into the story. The first screen's text was
+  // already revealed in order after the video, independent of scrolling.
   const planeWorldY=updatePlane(y);
-  updateOpeningScrollReveal(y);
 
   // Across all nine mobile story screens, reveal each selected text block
   // when the travelling plane reaches its section. Only new chapters update.
