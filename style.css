@@ -2510,3 +2510,21 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     width: min(96vw, 390px);
   }
 }
+
+/* Chapter 9: tapping the existing Toby artwork opens the private RSVP login.
+   Do not change the artwork, its sand blending, size, or mobile positioning. */
+#chapter-9 .reception-story-stage .story-closing .toby-farewell {
+  pointer-events: auto;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-dashboard-link {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+#chapter-9 .reception-story-stage .story-closing .toby-dashboard-link:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 5px;
+}
