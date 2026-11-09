@@ -2414,141 +2414,43 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
 body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   animation-duration: .55s !important;
 }
-
-/* Chapter 09 Toby visibility repair: previously opacity .075-.13 and z-index 0
-   kept the tiny images almost invisible behind the floral scene. */
-#chapter-9 .reception-story-stage .toby-watermark{
-  display:block;
-  position:absolute;
-  z-index:3;
-  width:clamp(145px,17vw,230px);
-  max-width:26%;
-  height:auto;
-  aspect-ratio: 200 / 133;
-  background-image:url('assets/toby-background.webp');
-  background-repeat:no-repeat;
-  background-size:contain;
-  background-position:center;
-  opacity:.78;
-  filter:none;
-  -webkit-mask-image:none;
-  mask-image:none;
-  pointer-events:none;
-}
-#chapter-9 .reception-story-stage .toby-nine-one{
-  top:20%;
-  right:1.5%;
-  left:auto;
-  bottom:auto;
-  transform:rotate(5deg);
-}
-#chapter-9 .reception-story-stage .toby-nine-two{
-  bottom:7%;
-  left:1.5%;
-  top:auto;
-  right:auto;
-  transform:rotate(-6deg) scaleX(-1);
-}
-@media(max-width:760px){
-  #chapter-9 .reception-story-stage .toby-watermark{
-    width:clamp(98px,27vw,145px);
-    max-width:29%;
-    opacity:.72;
-  }
-  #chapter-9 .reception-story-stage .toby-nine-one{
-    top:23%;
-    right:1%;
-    left:auto;
-  }
-  #chapter-9 .reception-story-stage .toby-nine-two{
-    bottom:3%;
-    left:1%;
-    right:auto;
-  }
-}
-@media(max-width:390px){
-  #chapter-9 .reception-story-stage .toby-watermark{
-    width:96px;
-    max-width:29%;
-    opacity:.68;
-  }
-}
-
-
-/* CHAPTER 9 MOBILE FIX: two Toby poses belong in the document flow, not
-   absolutely positioned over the RSVP or Share Invitation buttons.
-   The original source artwork contains both poses in one rectangular poster:
-   crop each half and softly feather its edges to hide the poster box. */
+/* Chapter 9: exact Toby artwork from the approved invitation preview.
+   The image is a single softly feathered crop; keep it in normal document
+   flow under Share Invitation so buttons and the signature stay unobstructed. */
 #chapter-9 .reception-story-stage .story-closing .toby-farewell {
-  display: flex;
-  position: relative;
-  width: min(100%, 350px);
-  max-width: 100%;
-  min-height: 125px;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(22px, 7vw, 64px);
-  margin: 18px auto 8px;
-  padding: 0 8px;
-  box-sizing: border-box;
-  isolation: isolate;
-  pointer-events: none;
-}
-#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
   display: block;
   position: relative;
-  inset: auto;
-  top: auto;
-  right: auto;
-  bottom: auto;
-  left: auto;
-  flex: 0 0 auto;
-  width: clamp(96px, 12vw, 126px);
-  max-width: 43%;
-  height: auto;
-  aspect-ratio: 3 / 4;
-  z-index: 0;
-  opacity: .95;
-  transform: none;
-  background-color: transparent;
-  background-image: url('assets/toby-background.webp');
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  filter: saturate(.95);
-  mix-blend-mode: multiply;
-  -webkit-mask-image: radial-gradient(ellipse 65% 71% at 50% 54%, #000 42%, rgba(0,0,0,.92) 57%, transparent 96%);
-  mask-image: radial-gradient(ellipse 65% 71% at 50% 54%, #000 42%, rgba(0,0,0,.92) 57%, transparent 96%);
+  width: min(100%, 520px);
+  margin: 14px auto 15px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  isolation: isolate;
+  line-height: 0;
   pointer-events: none;
 }
-#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-nine-one {
-  background-position: left center;
-}
-#chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-nine-two {
-  background-position: right center;
+#chapter-9 .reception-story-stage .story-closing .toby-farewell img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  object-fit: contain;
 }
 @media (max-width: 760px) {
   #chapter-9 .reception-story-stage .story-closing .invitation-buttons {
     margin-bottom: 0;
   }
   #chapter-9 .reception-story-stage .story-closing .toby-farewell {
-    width: min(100%, 300px);
-    min-height: 112px;
-    gap: clamp(16px, 6vw, 30px);
-    margin: 16px auto 6px;
-    padding: 0 8px;
-  }
-  #chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
-    width: clamp(82px, 27vw, 112px);
-    max-width: 42%;
-    opacity: .96;
+    width: min(100%, 390px);
+    margin: 12px auto 17px;
   }
 }
 @media (max-width: 390px) {
   #chapter-9 .reception-story-stage .story-closing .toby-farewell {
-    min-height: 100px;
-    gap: 12px;
-  }
-  #chapter-9 .reception-story-stage .story-closing .toby-farewell .toby-watermark {
-    width: min(29vw, 98px);
+    width: min(100%, 360px);
+    margin-top: 10px;
   }
 }
