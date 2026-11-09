@@ -1884,3 +1884,57 @@ body > #travellingPlane.mobile-plane svg{
 @media(prefers-reduced-motion:reduce){
   body.mobile-plane-sync #chapter-5 .plane-five-piece{opacity:1;transform:none;transition:none}
 }
+
+
+/* CHAPTERS 03 + 05: EARLY MOBILE PLANE-SYNCHRONIZED REVEALS.
+   The same paper-plane flight triggers the text and its illustration.
+   Keep desktop's original elaborate animations untouched. */
+@media(max-width:820px),(pointer:coarse){
+  body.mobile-plane-sync #chapter-3 .plane-three-piece{
+    opacity:0;
+    transition:opacity .32s ease-out,transform .32s cubic-bezier(.2,.72,.3,1);
+  }
+  body.mobile-plane-sync #chapter-3 .headline-top.plane-three-piece,
+  body.mobile-plane-sync #chapter-3 .family-sketch.plane-three-piece{
+    transform:translate3d(0,12px,0);
+  }
+  body.mobile-plane-sync #chapter-3 .sticky-note.plane-three-piece{
+    transform:translate3d(0,12px,0) rotate(-5deg);
+  }
+  body.mobile-plane-sync #chapter-3 .chapter-micro.plane-three-piece{
+    transform:translate3d(0,8px,0);
+  }
+  body.mobile-plane-sync #chapter-3.plane-three-step-1 .plane-three-piece-1,
+  body.mobile-plane-sync #chapter-3.plane-three-step-2 .plane-three-piece-2,
+  body.mobile-plane-sync #chapter-3.plane-three-step-3 .plane-three-piece-3{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+  body.mobile-plane-sync #chapter-3.plane-three-step-2 .sticky-note.plane-three-piece-2{
+    transform:rotate(-5deg);
+  }
+
+  /* The couple illustration appears with Chapter 5's very first line.
+     Its mobile float/offset is replaced by one cheap GPU-composited reveal. */
+  body.mobile-plane-sync #chapter-5 .love-photo.plane-five-art{
+    opacity:0 !important;
+    transform:translate3d(-12px,12px,0) scale(.96) !important;
+    animation:none !important;
+    transition:opacity .35s ease-out,transform .35s cubic-bezier(.2,.7,.3,1);
+  }
+  body.mobile-plane-sync #chapter-5.plane-five-step-1 .love-photo.plane-five-art{
+    opacity:1 !important;
+    transform:translate3d(0,0,0) scale(1) !important;
+  }
+  body.mobile-plane-sync #chapter-5 .plane-five-piece{
+    transition-duration:.32s;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.mobile-plane-sync #chapter-3 .plane-three-piece,
+  body.mobile-plane-sync #chapter-5 .love-photo.plane-five-art{
+    opacity:1!important;
+    transform:none!important;
+    transition:none;
+  }
+}

@@ -74,7 +74,7 @@ const chapterProgress=new Array(chapters.length).fill(-1);
 const mobileStoryTextSelectors=[
   '.chapter-one-content .story-caption',
   '.childhood-copy .margin-note',
-  '.stage-three .headline-top',
+  null, // Chapter 3: headline, house images and notes synchronize with the plane.
   '.paths-copy .display-title',
   null, // Chapter 5 gets its own plane-position-driven four-part reveal.
   '.reveal-copy .you-invited',
@@ -83,16 +83,34 @@ const mobileStoryTextSelectors=[
   '.story-event-heading'
 ];
 let nextPlaneChapter=0;
+const chapterThree=chapters[2];
 const chapterFive=chapters[4];
+let chapterThreeRevealStep=0;
 let chapterFiveRevealStep=0;
+// Earlier checkpoints match the *visible* plane. By the time a new sticky
+// chapter takes the whole viewport, its headline and imagery have appeared.
+const chapterThreeRevealPoints=[.12,.33,.55];
+const chapterFiveRevealPoints=[.10,.30,.51,.71];
 if(useMobilePlane && !reduceMotion){
   chapters.forEach((chapter,i)=>{
     const selector=mobileStoryTextSelectors[i];
     if(selector)$(selector,chapter)?.classList.add('plane-synced-text');
   });
-  // Chapter 5 previously revealed the entire copy from its own scroll
-  // progress, but only the last line was linked to the travelling plane.
-  // Give each line a distinct reveal stage controlled by plane position.
+  // Chapter 3: show title + both houses together, followed by the note and
+  // its caption as the same paper plane flies across the family illustration.
+  const chapterThreeStages=[
+    ['.headline-top', '.family-sketch.house-pair'],
+    ['.sticky-note.note-family'],
+    ['.chapter-micro']
+  ];
+  chapterThreeStages.forEach((selectors,i)=>{
+    selectors.forEach(selector=>{
+      $(selector,chapterThree)?.classList.add('plane-three-piece','plane-three-piece-'+(i+1));
+    });
+  });
+  // Chapter 5: show the couple image with the first sentence, rather than
+  // revealing the image late via the independent chapter-scroll progress.
+  $('.love-photo',chapterFive)?.classList.add('plane-five-art');
   const chapterFiveText=[
     '.love-copy > .eyebrow',
     '.love-copy > .display-title',
@@ -403,13 +421,18 @@ function animateChapter(chapter, p) {
       break;
     }
     case 3: {
-      const f=ease((reducedP-.06)*1.9),g=ease((reducedP-.25)*2.5);
-      const sketch=$('.family-sketch',chapter),note=$('#familyNote');
-      sketch.style.transform=`scale(${lerp(.75,1,f)}) translateY(${lerp(30,0,f)}px)`;
-      sketch.style.opacity=String(f);
-      note.style.opacity=String(Math.max(.02,g));
-      note.style.transform=`translateY(${lerp(210,0,g)}px) rotate(${lerp(9,-5,g)}deg)`;
-      $('.chapter-micro',chapter).style.opacity=String(g);
+      if(useMobilePlane && !reduceMotion){
+        // Do not override the plane-synchronized title, house cards, and note
+        // with a second scroll-progress fade or 210px slide on each frame.
+      }else{
+        const f=ease((reducedP-.06)*1.9),g=ease((reducedP-.25)*2.5);
+        const sketch=$('.family-sketch',chapter),note=$('#familyNote');
+        sketch.style.transform=`scale(${lerp(.75,1,f)}) translateY(${lerp(30,0,f)}px)`;
+        sketch.style.opacity=String(f);
+        note.style.opacity=String(Math.max(.02,g));
+        note.style.transform=`translateY(${lerp(210,0,g)}px) rotate(${lerp(9,-5,g)}deg)`;
+        $('.chapter-micro',chapter).style.opacity=String(g);
+      }
       break;
     }
     case 4: {
@@ -431,14 +454,14 @@ function animateChapter(chapter, p) {
     case 5: {
       const f=ease(reducedP*1.8),g=ease((reducedP-.13)*2.1);
       const photo=$('.love-photo',chapter),copy=$('.love-copy',chapter);
-      photo.style.transform=`translateX(${lerp(-60,0,f)}px) scale(${lerp(.82,1.03,f)})`;
-      photo.style.opacity=String(f);
-      // On mobile, reveal individual words with the ACTUAL plane position.
-      // Do not also fade the parent using separate scroll-based timing.
       if(useMobilePlane && !reduceMotion){
+        // On phones the couple image AND four text pieces are revealed by
+        // the same plane positions. Avoid the previous late photo fade.
         copy.style.transform='none';
         copy.style.opacity='1';
       }else{
+        photo.style.transform=`translateX(${lerp(-60,0,f)}px) scale(${lerp(.82,1.03,f)})`;
+        photo.style.opacity=String(f);
         copy.style.transform=`translateX(${lerp(60,0,g)}px)`;
         copy.style.opacity=String(g);
       }
@@ -542,16 +565,26 @@ function update(now=performance.now()) {
       chapters[nextPlaneChapter].classList.add('plane-text-arrived');
       nextPlaneChapter++;
     }
-    // Reveal the four Chapter 5 lines when the plane actually flies across
-    // their section. The plane and text share one scroll-driven coordinate,
-    // rather than the old conflicting chapter progress and timer logic.
+    // Chapter 3: the heading and both family houses arrive TOGETHER.
+    // The note and closing caption follow as the same plane crosses the scene.
+    const threeMetric=chapterMetrics[2];
+    if(threeMetric){
+      const flightThroughThree=(planeWorldY-threeMetric.top)/
+        Math.max(1,openingViewport.offsetHeight);
+      while(chapterThreeRevealStep<chapterThreeRevealPoints.length &&
+            flightThroughThree>=chapterThreeRevealPoints[chapterThreeRevealStep]){
+        chapterThreeRevealStep++;
+        chapterThree.classList.add('plane-three-step-'+chapterThreeRevealStep);
+      }
+    }
+    // Chapter 5: the couple image and first sentence arrive together, then
+    // the remaining sentences reveal earlier along the plane's flight.
     const fiveMetric=chapterMetrics[4];
     if(fiveMetric){
       const flightThroughFive=(planeWorldY-fiveMetric.top)/
         Math.max(1,openingViewport.offsetHeight);
-      const revealPoints=[.24,.45,.66,.87];
-      while(chapterFiveRevealStep<revealPoints.length &&
-            flightThroughFive>=revealPoints[chapterFiveRevealStep]){
+      while(chapterFiveRevealStep<chapterFiveRevealPoints.length &&
+            flightThroughFive>=chapterFiveRevealPoints[chapterFiveRevealStep]){
         chapterFiveRevealStep++;
         chapterFive.classList.add('plane-five-step-'+chapterFiveRevealStep);
       }
