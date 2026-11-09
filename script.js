@@ -212,19 +212,19 @@ function revealOpeningText() {
   // After a short pause, ONE real traveling paper plane glides in above
   // the bottom caption, then "Scroll to follow..." appears underneath.
   // Scrolling remains locked until the full intro message can be read.
-  [[180,'intro-step-1'],[1140,'intro-step-2'],[2290,'intro-step-3']].forEach(([delay,step])=>{
+  [[100,'intro-step-1'],[570,'intro-step-2'],[1150,'intro-step-3']].forEach(([delay,step])=>{
     openingSequenceTimers.push(window.setTimeout(()=>opening.classList.add(step),delay));
   });
   openingSequenceTimers.push(window.setTimeout(()=>{
     introPlaneReady=true;
     plane.classList.add('intro-plane-arriving');
     requestFrame();
-  },3440));
+  },1700));
   openingSequenceTimers.push(window.setTimeout(()=>{
     opening.classList.add('intro-step-4');
     unlockInvitationScroll();
     requestFrame();
-  },4210));
+  },2200));
 }
 
 function startEnvelopeVideo() {
