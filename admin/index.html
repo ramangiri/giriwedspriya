@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f9ecd9">
+  <title>Private RSVP Dashboard | Giri &amp; Priya</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <script defer src="/admin/admin.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div>
+      <p class="eyebrow">Giridharan &amp; Padma Priya</p>
+      <h1>RSVP Dashboard <span aria-hidden="true">♡</span></h1>
+      <p class="subheading">Private guest-response summary</p>
+    </div>
+    <button type="button" id="logout" class="quiet" hidden>Lock dashboard</button>
+  </header>
+  <main>
+    <section class="panel login-panel" id="loginPanel" aria-labelledby="loginTitle">
+      <div class="lock-icon" aria-hidden="true">♙</div>
+      <h2 id="loginTitle">Administrator access</h2>
+      <p>Guests can RSVP on the wedding website without logging in. This page is for the invitation owner.</p>
+      <form id="loginForm">
+        <label for="password">Dashboard password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required spellcheck="false">
+        <button type="submit" id="loginButton" class="primary">Unlock dashboard</button>
+      </form>
+      <p class="feedback" id="loginMessage" role="status" aria-live="polite"></p>
+      <a href="/" class="guest-link">Back to the wedding invitation</a>
+    </section>
+    <section id="dashboard" hidden aria-label="Guest attendance summary">
+      <div class="dashboard-head">
+        <div>
+          <p class="eyebrow">Reception • 8 February 2027</p>
+          <h2>Guest responses</h2>
+        </div>
+        <button type="button" id="refresh" class="quiet">Refresh</button>
+      </div>
+      <p id="sourceBanner" class="notice" role="status" aria-live="polite"></p>
+      <div class="metrics">
+        <article class="metric"><p>Confirmed people</p><strong id="peopleCount">—</strong><small>Including accompanying guests</small></article>
+        <article class="metric"><p>Accepting RSVPs</p><strong id="yesCount">—</strong><small>Responses marked attending</small></article>
+        <article class="metric"><p>Declined RSVPs</p><strong id="noCount">—</strong><small>Responses marked not attending</small></article>
+        <article class="metric"><p>Total responses</p><strong id="totalCount">—</strong><small>Individual form submissions</small></article>
+      </div>
+      <section class="panel import-panel" id="importPanel" aria-label="Local CSV import">
+        <h3>Import guest responses privately</h3>
+        <p>Until automatic syncing is connected, export <strong>wedding-rsvp</strong> responses as CSV from Netlify. Choose the file here to calculate counts. The CSV is processed in this browser and is <strong>not uploaded</strong>.</p>
+        <label for="csvFile" class="file-label">Choose RSVP CSV</label>
+        <input type="file" id="csvFile" accept=".csv,text/csv">
+        <p class="feedback" id="importMessage" role="status" aria-live="polite"></p>
+        <a href="https://app.netlify.com/projects/giri-weds-priya" target="_blank" rel="noopener noreferrer" class="source-link">Open Netlify Forms</a>
+      </section>
+      <section class="panel response-panel">
+        <div class="responses-head">
+          <h3>RSVP details</h3>
+          <span class="source-tag" id="sourceTag">No data loaded</span>
+        </div>
+        <div class="filter-row">
+          <label for="search">Search guest</label>
+          <input type="search" id="search" placeholder="Guest name or contact">
+          <label for="filter">Show</label>
+          <select id="filter">
+            <option value="all">All responses</option>
+            <option value="yes">Attending</option>
+            <option value="no">Declined</option>
+            <option value="unknown">Unspecified</option>
+          </select>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Guest</th><th>RSVP</th><th>People</th><th>Submitted</th></tr></thead>
+            <tbody id="rsvpRows"></tbody>
+          </table>
+        </div>
+        <p id="emptyState" class="empty" hidden>No matching responses.</p>
+        <p class="smallprint">Counts include submitted RSVPs, not a verified unique guest list. If one person submits more than once, review both replies before using the total for catering.</p>
+      </section>
+      <p class="footer-note">Only the invitation owner should use this page. Nothing is saved in your browser after you close or reload it.</p>
+    </section>
+  </main>
+</body>
+</html>
