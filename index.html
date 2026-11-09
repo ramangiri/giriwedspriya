@@ -221,6 +221,17 @@
             <h2 class="display-title">A day worth <span class="red-script">remembering.</span></h2>
             <div class="calendar-perspective"><div class="calendar-card" id="calendarCard"><span class="cal-tape tape-left"></span><span class="cal-tape tape-right"></span><p class="cal-year">2027</p><h3>February</h3><div class="calendar-grid" id="calendarGrid" aria-label="February 2027 calendar with Monday the eighth highlighted"></div></div></div>
             <p class="save-date-caption">Monday · <strong>8 February 2027</strong></p>
+            <div class="wedding-countdown" id="weddingCountdown" role="timer" aria-live="off" aria-label="Wedding countdown">
+              <p class="countdown-heading" id="countdownHeading">Counting down to forever</p>
+              <div class="countdown-grid">
+                <div class="countdown-unit"><span class="countdown-number" id="countdownDays">—</span><span class="countdown-label">Days</span></div>
+                <div class="countdown-unit"><span class="countdown-number" id="countdownHours">—</span><span class="countdown-label">Hours</span></div>
+                <div class="countdown-unit"><span class="countdown-number" id="countdownMinutes">—</span><span class="countdown-label">Mins</span></div>
+                <div class="countdown-unit"><span class="countdown-number" id="countdownSeconds">—</span><span class="countdown-label">Secs</span></div>
+              </div>
+              <p class="countdown-footnote">Until our wedding · 4:30 AM IST</p>
+              <a class="countdown-rsvp-link" href="#rsvp">RSVP to our celebrations <span aria-hidden="true">↘</span></a>
+            </div>
             <div class="signpost" id="signpost" aria-label="Our journey: Family Bond, Friendship, Love, Wedding"><div class="sign-shaft"></div><span class="sign sign-1">Family bond</span><span class="sign sign-2">Friendship</span><span class="sign sign-3">Love</span><span class="sign sign-4">Wedding ♥</span></div>
           </div>
         </div>
@@ -281,6 +292,36 @@
             <p class="attendance-note">Together with our families, we await your gracious presence.</p>
             <div class="end-heart" id="endHeart" aria-hidden="true">♥</div>
             <p class="signature">With love, <strong>Giri &amp; Priya</strong></p>
+            <section class="rsvp-section" id="rsvp" aria-label="RSVP for our wedding celebrations">
+              <p class="rsvp-kicker">We would love to celebrate with you</p>
+              <h3>Will you join us?</h3>
+              <details class="rsvp-details" id="rsvpDetails">
+                <summary class="rsvp-summary">RSVP · Let us know <span aria-hidden="true">＋</span></summary>
+                <form id="rsvpForm" name="wedding-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                  <input type="hidden" name="form-name" value="wedding-rsvp">
+                  <p class="rsvp-honeypot" hidden><label>Please leave this blank <input name="bot-field"></label></p>
+                  <label class="rsvp-field">Your name
+                    <input type="text" name="guest_name" autocomplete="name" maxlength="80" placeholder="Your name" required>
+                  </label>
+                  <fieldset class="rsvp-fieldset">
+                    <legend>Will you be attending?</legend>
+                    <label><input type="radio" name="attendance" value="yes" required> Joyfully accepts</label>
+                    <label><input type="radio" name="attendance" value="no"> Sorry, can't attend</label>
+                  </fieldset>
+                  <label class="rsvp-field" id="rsvpGuestCountLabel">Number of guests (including you)
+                    <input type="number" id="rsvpGuests" name="guests" min="1" max="15" value="1" inputmode="numeric" required>
+                  </label>
+                  <label class="rsvp-field">Phone or email (optional)
+                    <input type="text" name="contact" maxlength="120" placeholder="For any invitation updates">
+                  </label>
+                  <label class="rsvp-field">A message for us (optional)
+                    <textarea name="message" rows="2" maxlength="500" placeholder="Your wishes..."></textarea>
+                  </label>
+                  <button type="submit" class="rsvp-submit" id="rsvpSubmit">Send my RSVP <span aria-hidden="true">♥</span></button>
+                  <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
+                </form>
+              </details>
+            </section>
             <div class="invitation-buttons">
               <button type="button" id="calendarDownload" class="action-pill primary"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg> Add to calendar</button>
               <button type="button" id="shareInvite" class="action-pill"><svg aria-hidden="true"><use href="#icon-share"></use></svg> Share invitation</button>

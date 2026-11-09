@@ -78,15 +78,18 @@ const mobileStoryTextSelectors=[
   '.paths-copy .display-title',
   null, // Chapter 5 gets its own plane-position-driven four-part reveal.
   '.reveal-copy .you-invited',
-  '.save-date-caption',
+  null, // Chapter 7 has its own synced calendar, date, and countdown stages.
   '.story-event-heading',
   '.story-event-heading'
 ];
 let nextPlaneChapter=0;
 const chapterThree=chapters[2];
 const chapterFive=chapters[4];
+const chapterSeven=chapters[6];
 let chapterThreeRevealStep=0;
 let chapterFiveRevealStep=0;
+let chapterSevenRevealStep=0;
+const chapterSevenRevealPoints=[.48,.75,.98];
 // Earlier checkpoints match the *visible* plane. By the time a new sticky
 // chapter takes the whole viewport, its headline and imagery have appeared.
 const chapterThreeRevealPoints=[.12,.33,.55];
@@ -121,6 +124,18 @@ if(useMobilePlane && !reduceMotion){
     $(selector,chapterFive)?.classList.add('plane-five-piece', 'plane-five-piece-'+(i+1));
   });
   $('.love-copy > .heart-rule',chapterFive)?.classList.add('plane-five-piece','plane-five-piece-4');
+  // Chapter 7: the heading and calendar appear TOGETHER when the plane
+  // arrives; the date and countdown follow as it crosses the scene.
+  const sevenStages=[
+    ['.calendar-scene > .eyebrow', '.calendar-scene > .display-title', '.calendar-perspective'],
+    ['.save-date-caption'],
+    ['.wedding-countdown']
+  ];
+  sevenStages.forEach((selectors,i)=>{
+    selectors.forEach(selector=>{
+      $(selector,chapterSeven)?.classList.add('plane-seven-piece','plane-seven-piece-'+(i+1));
+    });
+  });
 }
 const journeySketchPaths=$$('.path-sketch');
 const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
@@ -487,15 +502,20 @@ function animateChapter(chapter, p) {
       break;
     }
     case 7: {
-      const f=ease(reducedP*2.5),g=ease((reducedP-.28)*2.7);
-      const calendar=$('#calendarCard');
-      calendar.style.opacity=String(f);
-      calendar.style.transform=`rotateX(${lerp(-85,0,f)}deg) rotate(-2deg) scale(${lerp(.9,1,f)})`;
-      const special=$('.special-day',chapter);
-      if(special)special.style.transform=`scale(${lerp(1,1.16,g)})`;
-      const post=$('#signpost');
-      post.style.opacity=String(g);
-      post.style.translate=`0 ${lerp(150,0,g)}px`;
+      if(useMobilePlane && !reduceMotion){
+        // On mobile the same paper-plane coordinate reveals the heading,
+        // calendar, date and countdown. Avoid the separate delayed 3D flip.
+      }else{
+        const f=ease(reducedP*2.5),g=ease((reducedP-.28)*2.7);
+        const calendar=$('#calendarCard');
+        calendar.style.opacity=String(f);
+        calendar.style.transform=`rotateX(${lerp(-85,0,f)}deg) rotate(-2deg) scale(${lerp(.9,1,f)})`;
+        const special=$('.special-day',chapter);
+        if(special)special.style.transform=`scale(${lerp(1,1.16,g)})`;
+        const post=$('#signpost');
+        post.style.opacity=String(g);
+        post.style.translate=`0 ${lerp(150,0,g)}px`;
+      }
       break;
     }
   }
@@ -587,6 +607,18 @@ function update(now=performance.now()) {
             flightThroughFive>=chapterFiveRevealPoints[chapterFiveRevealStep]){
         chapterFiveRevealStep++;
         chapterFive.classList.add('plane-five-step-'+chapterFiveRevealStep);
+      }
+    }
+    // Chapter 7 uses the exact same plane position as the calendar reveal.
+    // No late text trigger or separate CSS scroll animation.
+    const sevenMetric=chapterMetrics[6];
+    if(sevenMetric){
+      const flightThroughSeven=(planeWorldY-sevenMetric.top)/
+        Math.max(1,openingViewport.offsetHeight);
+      while(chapterSevenRevealStep<chapterSevenRevealPoints.length &&
+            flightThroughSeven>=chapterSevenRevealPoints[chapterSevenRevealStep]){
+        chapterSevenRevealStep++;
+        chapterSeven.classList.add('plane-seven-step-'+chapterSevenRevealStep);
       }
     }
   }
@@ -750,6 +782,81 @@ $('#shareInvite').addEventListener('click',async()=>{
     if(navigator.clipboard){await navigator.clipboard.writeText(message);showToast('Invitation details copied!');return;}
   }catch(err){if(err?.name==='AbortError')return;}
   const el=document.createElement('textarea');el.value=message;document.body.append(el);el.select();document.execCommand('copy');el.remove();showToast('Invitation details copied!');
+});
+
+
+
+/* Wedding-day countdown: event time is explicitly IST, regardless of which
+   country a guest opens the invitation from. Never display negative counts. */
+const weddingCountdownMs=new Date(CONFIG.wedding.startLocal+'+05:30').getTime();
+const weddingCountdown=$('#weddingCountdown');
+const weddingCountdownTitle=$('#countdownHeading');
+const weddingCountdownValues=[
+  $('#countdownDays'),$('#countdownHours'),$('#countdownMinutes'),$('#countdownSeconds')
+];
+function refreshWeddingCountdown(){
+  const remaining=Math.max(0,weddingCountdownMs-Date.now());
+  const days=Math.floor(remaining/86400000);
+  const hours=Math.floor(remaining%86400000/3600000);
+  const mins=Math.floor(remaining%3600000/60000);
+  const secs=Math.floor(remaining%60000/1000);
+  [String(days),String(hours).padStart(2,'0'),String(mins).padStart(2,'0'),String(secs).padStart(2,'0')]
+    .forEach((value,i)=>{weddingCountdownValues[i].textContent=value;});
+  weddingCountdownTitle.textContent=remaining===0?'Our wedding day is here ♥':'Counting down to forever';
+  weddingCountdown.setAttribute('aria-label',
+    remaining===0?'Our wedding day is here':
+    String(days)+' days, '+String(hours)+' hours, '+String(mins)+' minutes until our wedding');
+}
+refreshWeddingCountdown();
+window.setInterval(refreshWeddingCountdown,1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshWeddingCountdown();});
+
+/* Accessible RSVP form; Netlify Forms stores replies under the site owner's
+   Netlify dashboard. Only report success after the server accepts the POST. */
+const rsvpForm=$('#rsvpForm');
+const rsvpDetails=$('#rsvpDetails');
+const rsvpGuests=$('#rsvpGuests');
+const rsvpGuestsLabel=$('#rsvpGuestCountLabel');
+const rsvpStatus=$('#rsvpStatus');
+const rsvpSubmit=$('#rsvpSubmit');
+function syncRsvpAttendance(){
+  const attendance=rsvpForm.elements['attendance'].value;
+  const declined=attendance==='no';
+  rsvpGuestsLabel.hidden=declined;
+  rsvpGuests.min=declined?'0':'1';
+  rsvpGuests.required=!declined;
+  if(declined)rsvpGuests.value='0';
+  else if(Number(rsvpGuests.value)<1)rsvpGuests.value='1';
+}
+rsvpForm.addEventListener('change',event=>{
+  if(event.target.name==='attendance')syncRsvpAttendance();
+});
+$('.countdown-rsvp-link')?.addEventListener('click',()=>{rsvpDetails.open=true;});
+rsvpForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(!rsvpForm.reportValidity())return;
+  rsvpSubmit.disabled=true;
+  rsvpSubmit.textContent='Sending RSVP…';
+  rsvpStatus.textContent='';
+  try{
+    const formData=new FormData(rsvpForm);
+    const response=await fetch('/',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(formData).toString()
+    });
+    if(!response.ok)throw new Error('RSVP submission failed');
+    rsvpStatus.textContent='Thank you! Your RSVP has been received ♥';
+    rsvpStatus.classList.add('is-success');
+    rsvpForm.reset();
+    syncRsvpAttendance();
+  }catch(_){
+    rsvpStatus.classList.remove('is-success');
+    rsvpStatus.textContent='We could not send your RSVP. Please try again.';
+  }finally{
+    rsvpSubmit.disabled=false;
+    rsvpSubmit.textContent='Send my RSVP ♥';
+  }
 });
 
 // Boot. Every effect is a reversible function of scroll position, not a one-way autoplay.
