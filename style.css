@@ -2401,3 +2401,16 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg{
   .stage-seven .toby-watermark,
   .reception-story-stage .toby-watermark { width: 76px; max-width: 22%; opacity: .075; }
 }
+
+/* Faster journey from the revealed first screen to Chapter One.
+   Preserve the same flight and text synchronisation with less scroll travel. */
+@media (max-width: 820px) {
+  #opening.opening { height: 135svh; min-height: 0; }
+}
+@media (max-width: 820px) and (max-height: 540px) {
+  #opening.opening { height: 145svh; }
+}
+#travellingPlane.intro-plane-arriving svg,
+body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
+  animation-duration: .55s !important;
+}
