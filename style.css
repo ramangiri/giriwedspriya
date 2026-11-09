@@ -2499,6 +2499,10 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   #chapter-9 .reception-story-stage .story-closing .toby-farewell {
     width: min(96vw, 445px);
     margin: 10px 0 12px;
+    /* The "Toby" signature sits against the artwork's left edge.
+       Keep the approved image and its size, but move it safely
+       inside the invitation on narrow mobile screens. */
+    transform: translateX(calc(-50% + clamp(18px, 6vw, 28px)));
   }
 }
 @media(max-width: 390px) {
