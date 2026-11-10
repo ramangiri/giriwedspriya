@@ -9,6 +9,42 @@ const countIds = ["peopleCount","yesCount","noCount","totalCount"];
 let authorization = "";
 let allEntries = [];
 let source = "none";
+let sessionVersion = 0;
+let loadVersion = 0;
+let activeRequest = null;
+
+function invalidatePendingLoads() {
+  loadVersion++;
+  activeRequest?.abort();
+  activeRequest = null;
+}
+function isCurrentLoad(session, load) {
+  return Boolean(authorization) && session === sessionVersion && load === loadVersion;
+}
+function lockDashboard(focusPassword = true) {
+  // Invalidate first: an already-resolved response or local file read may
+  // finish after abort(), including after a new session has been unlocked.
+  sessionVersion++;
+  invalidatePendingLoads();
+  authorization = "";
+  allEntries = [];
+  source = "none";
+  dashboard.hidden = true;
+  loginPanel.hidden = false;
+  $("#logout").hidden = true;
+  $("#password").value = "";
+  $("#csvFile").value = "";
+  $("#search").value = "";
+  $("#filter").value = "all";
+  $("#importMessage").textContent = "";
+  loginMessage.textContent = "";
+  setBanner("");
+  render(); // Remove private rows and counts, rather than only hiding them.
+  $("#emptyState").hidden = true;
+  $("#refresh").disabled = false;
+  $("#loginButton").disabled = false;
+  if (focusPassword) $("#password").focus();
+}
 
 function normalize(raw) {
   const response = String(raw.attendance || "").toLowerCase().trim();
@@ -85,11 +121,11 @@ function render() {
   }
   $("#emptyState").hidden = filtered.length !== 0;
 }
-async function fetchResponses() {
+async function fetchResponses(signal) {
   const response = await fetch("/.netlify/functions/rsvp-admin", {
     method: "GET",
     headers: { Authorization: "Basic " + authorization, Accept: "application/json" },
-    cache: "no-store", credentials: "omit"
+    cache: "no-store", credentials: "omit", signal
   });
   const payload = await response.json().catch(() => ({}));
   if (response.status === 401) throw new Error("Incorrect dashboard password.");
@@ -99,58 +135,70 @@ async function fetchResponses() {
   return payload;
 }
 async function loadFromServer() {
-  const payload = await fetchResponses();
-  if (payload.connected) {
-    source = "live";
-    allEntries = (payload.entries || []).map(normalize);
-    setBanner(payload.truncated
-      ? "Live Netlify data loaded, but there are more than 5,000 responses. Review remaining replies in Netlify."
-      : "Live responses loaded securely from Netlify Forms.", !payload.truncated);
-  } else {
-    source = "none";
-    allEntries = [];
-    setBanner("Live sync is not connected yet. Import the RSVP CSV below. The file stays on your device.");
+  const session = sessionVersion;
+  invalidatePendingLoads();
+  const load = loadVersion;
+  const controller = new AbortController();
+  activeRequest = controller;
+  try {
+    const payload = await fetchResponses(controller.signal);
+    if (!isCurrentLoad(session, load)) return false;
+    if (payload.connected) {
+      source = "live";
+      allEntries = (payload.entries || []).map(normalize);
+      setBanner(payload.truncated
+        ? "Live Netlify data loaded, but there are more than 5,000 responses. Review remaining replies in Netlify."
+        : "Live responses loaded securely from Netlify Forms.", !payload.truncated);
+    } else {
+      source = "none";
+      allEntries = [];
+      setBanner("Live sync is not connected yet. Import the RSVP CSV below. The file stays on your device.");
+    }
+    render();
+    return true;
+  } catch (error) {
+    if (!isCurrentLoad(session, load)) return false;
+    throw error;
+  } finally {
+    if (activeRequest === controller) activeRequest = null;
   }
-  render();
 }
 loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   const pass = $("#password").value;
-  if (!pass) return;
+  if (!pass || $("#loginButton").disabled) return;
+  const session = ++sessionVersion;
   authorization = btoa("admin:" + pass);
   $("#password").value = "";
   $("#loginButton").disabled = true;
   loginMessage.textContent = "Checking access…";
   try {
-    await loadFromServer();
+    const loaded = await loadFromServer();
+    if (!loaded || session !== sessionVersion) return;
     loginPanel.hidden = true;
     dashboard.hidden = false;
     $("#logout").hidden = false;
     loginMessage.textContent = "";
   } catch (error) {
+    if (session !== sessionVersion) return;
     authorization = "";
     loginMessage.textContent = error.message || "Could not unlock dashboard.";
   } finally {
-    $("#loginButton").disabled = false;
+    if (session === sessionVersion) $("#loginButton").disabled = false;
   }
 });
-$("#logout").addEventListener("click", () => {
-  authorization = "";
-  allEntries = [];
-  source = "none";
-  dashboard.hidden = true;
-  loginPanel.hidden = false;
-  $("#logout").hidden = true;
-  $("#csvFile").value = "";
-  $("#loginMessage").textContent = "";
-  $("#password").focus();
-});
+$("#logout").addEventListener("click", () => lockDashboard());
+// Do not retain an unlocked guest list in the browser's back/forward cache.
+window.addEventListener("pagehide", () => lockDashboard(false));
 $("#refresh").addEventListener("click", async () => {
-  if (!authorization) return;
+  if (!authorization || dashboard.hidden || $("#refresh").disabled) return;
+  const session = sessionVersion;
   $("#refresh").disabled = true;
   try { await loadFromServer(); }
   catch(error) { setBanner(error.message || "Unable to refresh."); }
-  finally { $("#refresh").disabled = false; }
+  finally {
+    if (session === sessionVersion) $("#refresh").disabled = false;
+  }
 });
 $("#search").addEventListener("input", render);
 $("#filter").addEventListener("change", render);
@@ -206,16 +254,24 @@ function parseEntriesFromCSV(text) {
 }
 $("#csvFile").addEventListener("change", async event => {
   const file = event.target.files?.[0];
-  if(!file)return;
+  if(!file || !authorization || dashboard.hidden)return;
+  const session = sessionVersion;
+  invalidatePendingLoads();
+  const load = loadVersion;
   const feedback = $("#importMessage");
   feedback.textContent = "Reading your CSV locally…";
   try{
     if(file.size > 5_000_000)throw new Error("This CSV is too large (5 MB maximum).");
-    const entries = parseEntriesFromCSV(await file.text());
+    const text = await file.text();
+    if (!isCurrentLoad(session, load)) return;
+    const entries = parseEntriesFromCSV(text);
     allEntries = entries;
     source = "csv";
     feedback.textContent = String(entries.length) + " RSVP responses imported from your device.";
     setBanner("CSV imported locally. Counts reflect this file, not automatically updated Netlify submissions.", true);
     render();
-  }catch(error){feedback.textContent = error.message || "Could not import this CSV.";}
+  }catch(error){
+    if (isCurrentLoad(session, load))
+      feedback.textContent = error.message || "Could not import this CSV.";
+  }
 });

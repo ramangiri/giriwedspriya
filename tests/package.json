@@ -1,0 +1,6 @@
+{
+  "name": "wedding-rsvp-regression-tests",
+  "private": true,
+  "scripts": { "test": "node --test *.test.cjs *.test.mjs" },
+  "devDependencies": { "jsdom": "26.1.0" }
+}
