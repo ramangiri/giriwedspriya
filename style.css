@@ -2646,3 +2646,150 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     padding:0 6px;
   }
 }
+
+
+/* Invitation polish: refined opening book, no chapter headers, and better event spacing.
+   Keep numbered chapter IDs and progress dots internally so scrolling/RSVP works. */
+.site-chrome .chapter-status,
+.story-book .stage-number,
+.story-book .chapter-stamp { display:none!important; }
+
+/* Open book: less cramped monogram with an understated inset-page border. */
+#chapter-1 .book-object .book-half::after{
+  content:"";position:absolute;inset:7px;pointer-events:none;
+  border:1px solid rgba(175,125,94,.27);
+  border-radius:7px;
+}
+#chapter-1 .book-object .book-inside{
+  position:relative;z-index:2;
+  font-size:clamp(54px,6.5vw,86px);
+  line-height:1;
+}
+#chapter-1 .book-object .book-half.left .book-inside{transform:translateX(-13%)}
+#chapter-1 .book-object .book-half.right .book-inside{transform:translateX(13%)}
+#chapter-1 .chapter-one-content .script-statement{
+  font-family:var(--hand);
+  font-weight:700;
+  line-height:1.22;
+  color:var(--ink);
+}
+#chapter-1 .chapter-one-content .script-statement em{
+  font-family:var(--hand);
+  font-style:normal;
+  font-weight:700;
+  font-size:1.18em;
+  color:var(--red-dark);
+  text-shadow:.4px 0 currentColor;
+}
+@media(max-width:760px){
+  #chapter-1 .chapter-one-content .book-object{
+    width:clamp(172px,50vw,226px);
+    height:clamp(98px,27vw,127px);
+    margin:4px auto;
+  }
+  #chapter-1 .book-object .book-inside{
+    font-size:clamp(52px,15vw,69px);
+  }
+  #chapter-1 .chapter-one-content .script-statement{
+    font-size:clamp(29px,7vw,38px);
+    line-height:1.25;
+  }
+}
+@media(max-width:760px) and (max-height:650px){
+  #chapter-1 .chapter-one-content .book-object{
+    width:clamp(145px,39vw,170px);
+    height:clamp(81px,22vw,99px);
+    margin:0 auto;
+  }
+  #chapter-1 .book-object .book-inside{font-size:clamp(45px,12vw,55px)}
+}
+@media(max-height:440px) and (orientation:landscape){
+  #chapter-1 .chapter-one-content .book-object{width:108px;height:62px}
+  #chapter-1 .book-object .book-inside{font-size:40px}
+}
+
+/* Wedding and reception: gentle breathing space between the heading,
+   illustration, couple names, date/time, venue, and directions. */
+#chapter-8 .story-event-heading h2,
+#chapter-9 .story-event-heading h2{
+  line-height:1.04;
+  margin:7px auto 11px;
+}
+#chapter-8 .story-event-heading > p:not(.eyebrow),
+#chapter-9 .story-event-heading > p:not(.eyebrow){
+  line-height:1.22;
+}
+#chapter-8 .story-heart-flourish,
+#chapter-9 .story-heart-flourish{margin-top:11px}
+#chapter-8 .story-event-couple,
+#chapter-9 .story-event-couple{line-height:1.1}
+#chapter-8 .story-event-venue,
+#chapter-9 .story-event-venue{line-height:1.23}
+
+@media(max-width:760px){
+  #chapter-8 > .story-event-stage,
+  #chapter-9 > .story-event-stage{
+    padding-top:calc(91px + env(safe-area-inset-top));
+    padding-bottom:clamp(44px,6svh,68px);
+  }
+  #chapter-8 .story-event-scene,
+  #chapter-9 .story-event-scene{
+    gap:clamp(9px,1.55svh,17px);
+  }
+  #chapter-8 .story-event-heading,
+  #chapter-9 .story-event-heading{padding-top:0}
+  #chapter-8 .story-event-heading .eyebrow,
+  #chapter-9 .story-event-heading .eyebrow{
+    margin:0 auto 7px;
+    font-size:clamp(10px,2.6vw,12px);
+    line-height:1.45;
+  }
+  #chapter-8 .story-event-heading h2,
+  #chapter-9 .story-event-heading h2{
+    font-size:clamp(48px,11.1vw,70px);
+    line-height:1.07;
+    margin:0 auto 8px;
+  }
+  #chapter-8 .story-event-heading > p:not(.eyebrow),
+  #chapter-9 .story-event-heading > p:not(.eyebrow){
+    font-size:clamp(20px,5.1vw,25px);
+    line-height:1.22;
+    margin:0 auto;
+    max-width:340px;
+  }
+  #chapter-8 .story-heart-flourish,
+  #chapter-9 .story-heart-flourish{height:23px;margin:10px auto 2px}
+  #chapter-8 .story-event-illustration.venue-art,
+  #chapter-9 .story-event-illustration.venue-art{margin:2px auto 0}
+  #chapter-8 .story-art-hint,
+  #chapter-9 .story-art-hint{margin:0 auto 4px;line-height:1.24}
+  #chapter-8 .story-event-details,
+  #chapter-9 .story-event-details{margin:4px auto 0}
+  #chapter-8 .story-event-couple,
+  #chapter-9 .story-event-couple{margin:2px auto 12px;line-height:1.16}
+  #chapter-8 .story-event-date,
+  #chapter-9 .story-event-date{margin:4px auto 5px;line-height:1.4}
+  #chapter-8 .story-event-time,
+  #chapter-9 .story-event-time{margin:5px auto 8px;line-height:1.35}
+  #chapter-8 .story-event-venue,
+  #chapter-9 .story-event-venue{margin:5px auto 11px;line-height:1.22}
+  #chapter-8 .story-event-details .story-map-link,
+  #chapter-9 .story-event-details .story-map-link{margin:7px auto 3px}
+  #chapter-8 .story-next-cue{margin:19px auto 0}
+  #chapter-9 .story-closing{margin:clamp(30px,4svh,48px) auto 0}
+  #chapter-9 .story-closing .closing-doodle{margin-bottom:15px}
+  #chapter-9 .story-closing .attendance-note{margin:6px auto 11px;line-height:1.24}
+  #chapter-9 .story-closing #endHeart{margin:7px auto 4px}
+  #chapter-9 .story-closing .signature{margin:5px auto 13px}
+  #chapter-9 .story-closing .rsvp-section{
+    margin:16px auto 17px;
+    padding:18px 16px 19px;
+  }
+  #chapter-9 .rsvp-section .rsvp-kicker{margin-bottom:6px;line-height:1.5}
+  #chapter-9 .rsvp-section h3{margin:5px auto 15px;line-height:1.14}
+  #chapter-9 .story-closing .invitation-buttons{margin:13px auto 18px;gap:13px}
+  #chapter-9 .toby-greeting{margin:19px auto 0}
+  #chapter-9 .toby-greeting .toby-greeting-kicker{margin-bottom:6px}
+  #chapter-9 .toby-greeting .toby-greeting-message{line-height:1.13;margin-bottom:6px}
+  #chapter-9 .toby-greeting .toby-greeting-note{line-height:1.5}
+}
