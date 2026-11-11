@@ -2568,3 +2568,29 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     top: clamp(22px, 5svh, 38px);
   }
 }
+
+
+/* Chapter 04: quiet hand-drawn details around the existing two paths.
+   SVG ornaments remain inside the artwork; no extra section height or mobile gap. */
+#chapter-4 .path-ornaments { pointer-events:none; }
+#chapter-4 .path-mini-heart {
+  fill:#e8a8a0;fill-opacity:.14;
+  stroke:#bc7275;stroke-width:1.9;stroke-linejoin:round;
+  opacity:.84;
+}
+#chapter-4 .path-sparkle { fill:#c59b5d;opacity:.58;animation:chapter-four-twinkle 5s ease-in-out infinite; }
+#chapter-4 .path-sparkle.second { animation-delay:-2.1s; }
+#chapter-4 .path-sparkle.third { animation-delay:-3.5s; }
+#chapter-4 .path-heart-initial {
+  font-family:var(--hand);font-size:24px;font-weight:700;
+  fill:#a44b57;text-anchor:middle;pointer-events:none;
+}
+#chapter-4 .path-heart-glow { fill:#e8a9a4;opacity:.22; }
+#chapter-4 .path-heart-halo {
+  fill:none;stroke:#c78982;stroke-width:1.6;
+  stroke-dasharray:2.4 9;opacity:.57;
+}
+@keyframes chapter-four-twinkle { 0%,100%{opacity:.38} 50%{opacity:.83} }
+@media (prefers-reduced-motion:reduce) {
+  #chapter-4 .path-sparkle { animation:none;opacity:.65; }
+}
