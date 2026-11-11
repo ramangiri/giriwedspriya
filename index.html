@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="style.css?v=20261109-toby-rsvp-tap">
+  <link rel="stylesheet" href="style.css?v=20261111-ch4-postcards">
 </head>
 <body class="intro-locked">
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -159,13 +159,43 @@
             <p class="eyebrow">No matter the distance</p>
             <h2 class="display-title">Different paths.<br><span>Still connected.</span></h2>
           </div>
-          <svg class="paths-art" viewBox="0 0 520 440" aria-hidden="true">
-            <path class="path-sketch path-sketch-1" d="M60 36C20 118 180 125 132 188c-43 57-68 116 76 197" fill="none" stroke="#7e9181" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 17"/>
-            <path class="path-sketch path-sketch-2" d="M458 36c48 85-124 114-70 182 41 54 32 98-102 167" fill="none" stroke="#b95c55" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 17"/>
-            <g class="paths-symbols" font-family="serif"><text x="44" y="38" font-size="50">♡</text><text x="449" y="40" font-size="50">♡</text></g>
-            <g class="meeting-heart"><path d="M257 358C228 324 181 349 198 390c13 29 48 49 62 59 15-10 49-30 62-59 17-41-30-66-59-32Z" transform="translate(0 -16) scale(1 .85)" fill="#d95462" stroke="#a33b46" stroke-width="3"/></g>
-          </svg>
+          <!-- Two travel-journal postcards: a compact scene for phones.
+               Existing draw-on-scroll SVG classes keep the original animation. -->
+          <div class="journey-postcards" role="img" aria-label="Giri and Priya taking different paths that meet at a heart">
+            <figure class="journey-postcard journey-postcard-giri" aria-hidden="true">
+              <span class="journey-postcard-tag">GIRI'S PATH</span>
+              <svg viewBox="0 0 210 128" aria-hidden="true" focusable="false">
+                <rect width="210" height="128" rx="4" fill="#f5e4ce"/>
+                <circle cx="58" cy="45" r="25" fill="#e7bd8d"/>
+                <path d="M0 92 Q43 55 82 80 T158 72 T210 87 V128 H0Z" fill="#bbcebf"/>
+                <path d="M0 108 Q54 78 104 104 T210 96 V128 H0Z" fill="#86a394"/>
+                <path d="M91 128 Q110 99 132 89" stroke="#f7e6cd" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <path d="M91 128 Q110 99 132 89" stroke="#b18f73" stroke-width="1.5" stroke-dasharray="5 7" fill="none"/>
+              </svg>
+              <figcaption>One direction...</figcaption>
+            </figure>
+            <figure class="journey-postcard journey-postcard-priya" aria-hidden="true">
+              <span class="journey-postcard-tag">PRIYA'S PATH</span>
+              <svg viewBox="0 0 210 128" aria-hidden="true" focusable="false">
+                <rect width="210" height="128" rx="4" fill="#f1ded9"/>
+                <circle cx="153" cy="43" r="22" fill="#d3a09b"/>
+                <circle cx="162" cy="34" r="21" fill="#f1ded9"/>
+                <path d="M18 37l3-7 3 7 7 3-7 3-3 7-3-7-7-3Z" fill="#c48b7c"/>
+                <path d="M0 94 Q41 57 90 86 T165 82 T210 88 V128 H0Z" fill="#d7b0ab"/>
+                <path d="M0 113 Q47 83 100 106 T210 97 V128 H0Z" fill="#af8586"/>
+                <path d="M119 128 Q106 104 83 91" stroke="#f7e2d2" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <path d="M119 128 Q106 104 83 91" stroke="#b68b81" stroke-width="1.5" stroke-dasharray="5 7" fill="none"/>
+              </svg>
+              <figcaption>Another direction...</figcaption>
+            </figure>
+            <svg class="paths-art" viewBox="0 0 520 320" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path class="path-sketch path-sketch-1" d="M132 210C135 240 196 236 256 267" fill="none" stroke="#77988a" stroke-width="5" stroke-linecap="round"/>
+              <path class="path-sketch path-sketch-2" d="M388 210C385 241 327 235 264 267" fill="none" stroke="#bd6967" stroke-width="5" stroke-linecap="round"/>
+              <g class="meeting-heart"><path d="M260 271C248 254 220 258 223 280c3 21 29 36 37 41 8-5 34-20 37-41 3-22-25-26-37-9Z" fill="#d95462" stroke="#9f4147" stroke-width="3.2"/></g>
+            </svg>
+          </div>
           <div class="two-notes"><div class="tiny-note tn1">Life took us on different journeys...</div><div class="tiny-note tn2">...but our bond only grew stronger.</div></div>
+          <p class="journey-whisper">The miles changed. Our bond didn't. <span aria-hidden="true">♡</span></p>
         </div>
       </section>
 
