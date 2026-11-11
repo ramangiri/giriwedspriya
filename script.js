@@ -666,6 +666,10 @@ function update(now=performance.now()) {
     // By the time it fills the viewport, the mandapam and names are revealed.
     const p=chapter.dataset.number==='6'
       ? clamp((y-(metric.top-window.innerHeight*.44))/(window.innerHeight*.70))
+      // Chapter 4 is content-height on phones, not a sticky scroll runway.
+      // Reveal the original winding paths as it ENTERS the viewport instead.
+      : chapter.dataset.number==='4' && mobileOptimized.matches
+      ? clamp((y-(metric.top-window.innerHeight*.82))/(window.innerHeight*.72))
       : clamp((y-metric.top)/range);
     if(y>metric.top-window.innerHeight*1.4 &&
        y<metric.top+metric.height+window.innerHeight*.5 &&
