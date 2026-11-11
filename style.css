@@ -2553,3 +2553,18 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   /* Keep the original two notes and curved path exactly where they are;
      remove only the bottom space imposed by the old 100svh stage. */
 }
+
+
+/* Chapter 05 mobile: balance the closing handwritten line with the space
+   above and below it. Preserve the illustration and scroll-reveal timing. */
+@media (max-width: 760px) {
+  #chapter-5 .love-copy .handwritten-mini {
+    position: relative;
+    top: clamp(48px, 9.5svh, 100px);
+  }
+}
+@media (max-width: 760px) and (max-height: 700px) {
+  #chapter-5 .love-copy .handwritten-mini {
+    top: clamp(22px, 5svh, 38px);
+  }
+}
