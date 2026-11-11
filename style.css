@@ -2528,3 +2528,259 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   outline: 3px solid var(--red);
   outline-offset: 5px;
 }
+
+/* CHAPTER 04 — two illustrated travel-journal postcards.
+   Replace the stretched winding-path scene with a compact composition
+   while keeping the existing scroll-drawn paths, paper plane and notes. */
+#chapter-4 {
+  height: 155svh;
+  min-height: 790px;
+}
+#chapter-4 .stage-four {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 13px);
+  padding: clamp(92px, 11vh, 125px) 18px clamp(28px, 5vh, 52px);
+}
+#chapter-4 .paths-copy {
+  flex: none;
+  position: relative;
+  z-index: 5;
+  width: min(94%, 770px);
+  text-align: center;
+}
+#chapter-4 .paths-copy .eyebrow { margin: 0 0 5px; }
+#chapter-4 .paths-copy .display-title {
+  font-size: clamp(40px, 5.2vw, 70px);
+  line-height: 1.01;
+  margin: 0 auto 4px;
+  text-wrap: balance;
+}
+#chapter-4 .journey-postcards {
+  position: relative;
+  width: min(640px, 100%);
+  height: clamp(258px, 38vh, 355px);
+  flex: none;
+  margin: 0 auto;
+  isolation: isolate;
+}
+#chapter-4 .journey-postcard {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 42%;
+  height: 68%;
+  margin: 0;
+  padding: 10px 10px 8px;
+  border: 1px solid #cbad91;
+  border-radius: 6px;
+  background: #fff6e8;
+  box-shadow: 0 11px 22px #73543e35, inset 0 0 0 2px #fffaf2;
+  transform-origin: 50% 95%;
+}
+#chapter-4 .journey-postcard::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: -10px;
+  left: calc(50% - 29px);
+  width: 58px;
+  height: 22px;
+  background: #d8b39b83;
+  border: 1px solid #ab866d2e;
+  transform: rotate(-3deg);
+  box-shadow: 0 1px 2px #754c3230;
+}
+#chapter-4 .journey-postcard-giri {
+  left: 5%;
+  transform: rotate(-5deg);
+  animation: journey-sway-giri 6s ease-in-out infinite alternate;
+}
+#chapter-4 .journey-postcard-priya {
+  right: 5%;
+  transform: rotate(5deg);
+  animation: journey-sway-priya 6.8s ease-in-out infinite alternate;
+}
+#chapter-4 .journey-postcard-priya::before {
+  background: #ecc0b585;
+  transform: rotate(4deg);
+}
+#chapter-4 .journey-postcard-tag {
+  display: block;
+  flex: none;
+  padding: 2px 1px 4px;
+  font: 700 clamp(9px, 1.1vw, 11px)/1 var(--sans);
+  letter-spacing: .16em;
+  color: #866350;
+  text-align: center;
+  white-space: nowrap;
+}
+#chapter-4 .journey-postcard-priya .journey-postcard-tag { color: #9d6669; }
+#chapter-4 .journey-postcard > svg {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  border-radius: 3px;
+  overflow: hidden;
+}
+#chapter-4 .journey-postcard figcaption {
+  flex: none;
+  padding-top: 5px;
+  font: 600 clamp(18px, 2.4vw, 26px)/1 var(--hand);
+  text-align: center;
+  color: #72594c;
+  white-space: nowrap;
+}
+#chapter-4 .journey-postcards > .paths-art {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+#chapter-4 .path-sketch {
+  filter: drop-shadow(0 2px 1px #fff8ecb0);
+}
+#chapter-4 .meeting-heart {
+  transform-origin: 260px 286px;
+  filter: drop-shadow(0 3px 3px #9f414740);
+}
+#chapter-4 .two-notes {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(12px, 2.6vw, 24px);
+  width: min(535px, 95%);
+  margin: -12px auto 0;
+  transform: none;
+}
+#chapter-4 .tiny-note {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 103px;
+  padding: 16px;
+  border: 1px solid #d7b99b7a;
+  border-radius: 2px;
+  font: 600 clamp(21px, 2.3vw, 29px)/1.07 var(--hand);
+  text-wrap: balance;
+  box-shadow: 3px 7px 12px #6f4a3527;
+}
+#chapter-4 .tn1 { transform: rotate(-3deg); background: #f8e0be; }
+#chapter-4 .tn2 { transform: rotate(3deg); background: #f6ded7; }
+#chapter-4 .journey-whisper {
+  position: relative;
+  z-index: 3;
+  margin: 7px auto 0;
+  font: 600 clamp(20px, 2.6vw, 30px)/1.13 var(--hand);
+  text-align: center;
+  color: #845d51;
+}
+#chapter-4 .journey-whisper span {
+  color: var(--red);
+  font-size: 1.18em;
+}
+@keyframes journey-sway-giri {
+  from { transform: translateY(0) rotate(-5deg); }
+  to { transform: translateY(-6px) rotate(-3.5deg); }
+}
+@keyframes journey-sway-priya {
+  from { transform: translateY(-2px) rotate(5deg); }
+  to { transform: translateY(5px) rotate(3.5deg); }
+}
+@media (max-width: 760px) {
+  #chapter-4 {
+    height: 142svh;
+    min-height: 760px;
+  }
+  #chapter-4 .stage-four {
+    padding: calc(91px + env(safe-area-inset-top)) 13px 18px;
+    gap: 5px;
+  }
+  #chapter-4 .stage-number {
+    top: calc(76px + env(safe-area-inset-top));
+  }
+  #chapter-4 .paths-copy {
+    width: 96%;
+  }
+  #chapter-4 .paths-copy .eyebrow {
+    font-size: 10px;
+    letter-spacing: .15em;
+    margin-bottom: 3px;
+  }
+  #chapter-4 .paths-copy .display-title {
+    font-size: clamp(36px, 8.7vw, 51px);
+    line-height: 1;
+    margin-bottom: 1px;
+  }
+  #chapter-4 .journey-postcards {
+    width: min(96vw, 410px);
+    height: clamp(244px, 34svh, 292px);
+  }
+  #chapter-4 .journey-postcard {
+    width: 42%;
+    height: 70%;
+    padding: 7px 7px 5px;
+  }
+  #chapter-4 .journey-postcard-giri { left: 4%; }
+  #chapter-4 .journey-postcard-priya { right: 4%; }
+  #chapter-4 .journey-postcard-tag {
+    font-size: clamp(8px, 2.1vw, 10px);
+    letter-spacing: .08em;
+  }
+  #chapter-4 .journey-postcard figcaption {
+    font-size: clamp(17px, 4.8vw, 23px);
+    padding-top: 4px;
+  }
+  #chapter-4 .two-notes {
+    gap: 10px;
+    width: min(92vw, 405px);
+    margin: -4px auto 0;
+  }
+  #chapter-4 .tiny-note {
+    min-height: 94px;
+    padding: 12px 10px;
+    font-size: clamp(18px, 5.4vw, 24px);
+    line-height: 1.05;
+  }
+  #chapter-4 .journey-whisper {
+    margin: 6px auto 0;
+    font-size: clamp(19px, 4.8vw, 24px);
+  }
+}
+@media (max-width: 375px) {
+  #chapter-4 .journey-postcard figcaption { font-size: 17px; }
+  #chapter-4 .tiny-note { font-size: 19px; padding: 10px 8px; }
+}
+@media (max-width: 760px) and (max-height: 700px) {
+  #chapter-4 .stage-four {
+    padding-top: calc(78px + env(safe-area-inset-top));
+    padding-bottom: 10px;
+  }
+  #chapter-4 .paths-copy .display-title {
+    font-size: clamp(32px, 8.3vw, 44px);
+  }
+  #chapter-4 .journey-postcards { height: 219px; }
+  #chapter-4 .two-notes { margin-top: -5px; }
+  #chapter-4 .tiny-note { min-height: 78px; font-size: 18px; padding: 10px 8px; }
+  #chapter-4 .journey-whisper { font-size: 18px; margin-top: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #chapter-4 .journey-postcard-giri,
+  #chapter-4 .journey-postcard-priya {
+    animation: none !important;
+  }
+}
