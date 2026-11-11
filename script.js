@@ -92,25 +92,15 @@ let chapterSevenRevealStep=0;
 const chapterSevenRevealPoints=[.48,.75,.98];
 // Earlier checkpoints match the *visible* plane. By the time a new sticky
 // chapter takes the whole viewport, its headline and imagery have appeared.
-const chapterThreeRevealPoints=[.12,.33,.55];
+const chapterThreeRevealPoints=[.10,.31,.50,.74];
 const chapterFiveRevealPoints=[.10,.30,.51,.71];
 if(useMobilePlane && !reduceMotion){
   chapters.forEach((chapter,i)=>{
     const selector=mobileStoryTextSelectors[i];
     if(selector)$(selector,chapter)?.classList.add('plane-synced-text');
   });
-  // Chapter 3: show title + both houses together, followed by the note and
-  // its caption as the same paper plane flies across the family illustration.
-  const chapterThreeStages=[
-    ['.headline-top', '.family-sketch.house-pair'],
-    ['.sticky-note.note-family'],
-    ['.chapter-micro']
-  ];
-  chapterThreeStages.forEach((selectors,i)=>{
-    selectors.forEach(selector=>{
-      $(selector,chapterThree)?.classList.add('plane-three-piece','plane-three-piece-'+(i+1));
-    });
-  });
+  // Chapter 3's soft home backdrop, approaching cartoons and story words are
+  // synchronized with the actual travelling paper plane in update().
   // Chapter 5: show the couple image with the first sentence, rather than
   // revealing the image late via the independent chapter-scroll progress.
   $('.love-photo',chapterFive)?.classList.add('plane-five-art');
@@ -137,7 +127,29 @@ if(useMobilePlane && !reduceMotion){
     });
   });
 }
-const journeySketchPaths=$$('.path-sketch');
+
+/* Chapter 3: one smooth, scroll-driven meeting. Reuse the existing paper-plane
+   progress on phones and the normal chapter progress on desktop. */
+function animateThreeMeeting(progress){
+  const scene=$('.three-scene',chapterThree);
+  if(!scene)return;
+  const boy=$('.three-boy',scene),girl=$('.three-girl',scene),heart=$('.three-heart',scene);
+  if(!boy||!girl||!heart)return;
+  const walk=ease(Math.max(0,Math.min(1,progress)));
+  const sceneWidth=scene.clientWidth;
+  const characterWidth=boy.offsetWidth;
+  const initialInset=sceneWidth*.045;
+  // Bring the two drawings close enough for their hands to meet.
+  const travel=Math.max(0,sceneWidth/2-characterWidth+14-initialInset);
+  const bounce=reduceMotion?0:Math.sin(walk*Math.PI*5)*2.4*(1-walk);
+  boy.style.transform=`translate3d(${(travel*walk).toFixed(1)}px,${bounce.toFixed(1)}px,0)`;
+  girl.style.transform=`translate3d(${(-travel*walk).toFixed(1)}px,${(-bounce).toFixed(1)}px,0)`;
+  const bloom=ease((walk-.76)*4.2);
+  heart.style.opacity=String(bloom);
+  heart.style.transform=`translate3d(-50%,${((1-bloom)*13).toFixed(1)}px,0) scale(${(.6+.4*bloom).toFixed(3)})`;
+}
+
+const journeySketchPaths=$('.path-sketch');
 const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
 let toastTimeout;
 let introFinished = false;
@@ -446,17 +458,19 @@ function animateChapter(chapter, p) {
       break;
     }
     case 3: {
-      if(useMobilePlane && !reduceMotion){
-        // Do not override the plane-synchronized title, house cards, and note
-        // with a second scroll-progress fade or 210px slide on each frame.
-      }else{
-        const f=ease((reducedP-.06)*1.9),g=ease((reducedP-.25)*2.5);
-        const sketch=$('.family-sketch',chapter),note=$('#familyNote');
-        sketch.style.transform=`scale(${lerp(.75,1,f)}) translateY(${lerp(30,0,f)}px)`;
-        sketch.style.opacity=String(f);
-        note.style.opacity=String(Math.max(.02,g));
-        note.style.transform=`translateY(${lerp(210,0,g)}px) rotate(${lerp(9,-5,g)}deg)`;
-        $('.chapter-micro',chapter).style.opacity=String(g);
+      if(!useMobilePlane || reduceMotion){
+        // Desktop and reduced-motion visitors use ordinary chapter progress.
+        const appear=ease((reducedP-.025)*3.3);
+        const message=ease((reducedP-.24)*3.3);
+        $('.headline-top',chapter).style.opacity=String(appear);
+        $('.three-scene',chapter).style.opacity=String(appear);
+        $('.three-tagline',chapter).style.opacity=String(message);
+        $$('.three-journey-piece',chapter).forEach(piece=>{
+          const step=Number(piece.dataset.step||2);
+          const threshold=step===2?.30:step===3?.47:.64;
+          piece.style.opacity=String(ease((reducedP-threshold)*6));
+        });
+        animateThreeMeeting(ease((reducedP-.12)*2.25));
       }
       break;
     }
@@ -597,8 +611,8 @@ function update(now=performance.now()) {
       chapters[nextPlaneChapter].classList.add('plane-text-arrived');
       nextPlaneChapter++;
     }
-    // Chapter 3: the heading and both family houses arrive TOGETHER.
-    // The note and closing caption follow as the same plane crosses the scene.
+    // Chapter 3: as the same paper plane crosses the houses, the two cartoon
+    // characters walk toward each other; the heart and words follow in order.
     const threeMetric=chapterMetrics[2];
     if(threeMetric){
       const flightThroughThree=(planeWorldY-threeMetric.top)/
@@ -608,6 +622,7 @@ function update(now=performance.now()) {
         chapterThreeRevealStep++;
         chapterThree.classList.add('plane-three-step-'+chapterThreeRevealStep);
       }
+      animateThreeMeeting((flightThroughThree-.15)/.59);
     }
     // Chapter 5: the couple image and first sentence arrive together, then
     // the remaining sentences reveal earlier along the plane's flight.
