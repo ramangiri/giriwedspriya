@@ -2529,15 +2529,27 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   outline-offset: 5px;
 }
 
-/* Chapter 4: keep the original winding paths and notes, but shorten
-   the sticky scroll runway so Chapter 5 arrives without a long empty gap. */
+/* Chapter 4 keeps the original hearts, winding paths, notes and artwork.
+   A shorter scroll runway alone still leaves a blank full-screen sticky stage
+   below the notes. On mobile let this ONE chapter size to its content instead
+   so Chapter 5 follows naturally, with no empty screen between the stories. */
 #chapter-4 {
   height: 120svh;
   min-height: 100svh;
 }
-@media (max-width: 760px) {
+@media (max-width: 820px) {
   #chapter-4 {
-    height: 112svh;
-    min-height: 100svh;
+    height: auto;
+    min-height: 0;
   }
+  #chapter-4 > .stage-four {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding-bottom: clamp(18px, 3svh, 28px);
+  }
+  /* Keep the original two notes and curved path exactly where they are;
+     remove only the bottom space imposed by the old 100svh stage. */
 }
