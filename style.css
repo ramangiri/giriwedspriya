@@ -2793,3 +2793,239 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   #chapter-9 .toby-greeting .toby-greeting-message{line-height:1.13;margin-bottom:6px}
   #chapter-9 .toby-greeting .toby-greeting-note{line-height:1.5}
 }
+
+
+/* Chapter 03 — faded homes and a paper-plane guided meeting.
+   Background house art is deliberately muted; characters and text tell the story. */
+#chapter-3 .stage-three {
+  gap:clamp(8px,1.6svh,17px);
+  padding:clamp(96px,12svh,132px) 15px 35px;
+  justify-content:center;
+}
+#chapter-3 .headline-top {
+  position:relative;
+  z-index:4;
+  max-width:min(92vw,750px);
+  margin:0 auto;
+  font-size:clamp(31px,4.2vw,59px);
+  line-height:1.09;
+  text-wrap:balance;
+}
+#chapter-3 .three-scene {
+  position:relative;
+  z-index:3;
+  flex:none;
+  width:min(650px,95vw);
+  height:clamp(310px,43svh,420px);
+  margin:0 auto;
+  isolation:isolate;
+}
+#chapter-3 .three-scene .family-sketch.house-pair {
+  position:absolute;
+  z-index:0;
+  inset:0;
+  width:100%;
+  height:100%;
+  margin:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8%;
+  opacity:.18;
+  pointer-events:none;
+  user-select:none;
+  filter:saturate(.56) sepia(.12);
+  -webkit-mask-image:radial-gradient(ellipse 75% 71% at 50% 51%,#000 35%,transparent 100%);
+  mask-image:radial-gradient(ellipse 75% 71% at 50% 51%,#000 35%,transparent 100%);
+}
+#chapter-3 .three-scene .house-card,
+#chapter-3 .three-scene .house-card-priya {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  background:none;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  overflow:visible;
+  transform:rotate(-3deg);
+}
+#chapter-3 .three-scene .house-card-priya{transform:rotate(3deg)}
+#chapter-3 .three-scene .house-card .house-image {
+  width:100%;
+  height:90%;
+  margin:0;
+  padding:0;
+  background:none;
+  border:0;
+  overflow:visible;
+}
+#chapter-3 .three-scene .house-card img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  filter:none;
+  transform:none;
+  scale:1;
+}
+#chapter-3 .three-scene .house-card figcaption,
+#chapter-3 .three-scene .houses-link {display:none}
+#chapter-3 .three-ground {
+  position:absolute;
+  z-index:1;
+  left:12%;right:12%;bottom:14px;
+  height:38px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,#b99a7960 0%,#d7b68b18 57%,transparent 77%);
+  filter:blur(7px);
+  pointer-events:none;
+}
+#chapter-3 .three-characters {
+  position:absolute;
+  z-index:3;
+  inset:0;
+  pointer-events:none;
+}
+#chapter-3 .three-character {
+  position:absolute;
+  bottom:14px;
+  width:clamp(105px,24vw,150px);
+  margin:0;
+  text-align:center;
+  will-change:transform;
+}
+#chapter-3 .three-boy{left:4.5%}
+#chapter-3 .three-girl{right:4.5%}
+#chapter-3 .three-character svg {
+  display:block;
+  width:100%;
+  height:auto;
+  overflow:visible;
+  filter:drop-shadow(0 9px 8px #79584d21);
+}
+#chapter-3 .three-character figcaption {
+  margin:-2px 0 0;
+  font:600 clamp(19px,2.5vw,25px)/1.1 var(--hand);
+  color:#865953;
+  letter-spacing:.015em;
+}
+#chapter-3 .three-heart {
+  position:absolute;
+  z-index:4;
+  left:50%;
+  bottom:48%;
+  color:#bd3856;
+  font-size:clamp(32px,5vw,49px);
+  line-height:1;
+  opacity:0;
+  transform:translate3d(-50%,13px,0) scale(.6);
+  filter:drop-shadow(0 4px 8px #cd7f8652);
+  pointer-events:none;
+}
+#chapter-3 .three-tagline {
+  position:relative;
+  z-index:4;
+  margin:0 auto;
+  max-width:94vw;
+  text-align:center;
+  font:600 clamp(27px,3vw,34px)/1.15 var(--hand);
+  color:#8b4450;
+  text-wrap:balance;
+}
+#chapter-3 .three-journey {
+  position:relative;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  column-gap:clamp(6px,1.4vw,14px);
+  row-gap:2px;
+  max-width:95vw;
+  margin:0 auto;
+  text-align:center;
+  font:600 clamp(22px,2.5vw,30px)/1.18 var(--hand);
+  color:#6b5445;
+}
+#chapter-3 .three-journey .journey-arrow{
+  color:#be3d52;
+  font:600 .84em/1 var(--sans);
+}
+#chapter-3 .three-journey .journey-final{color:#a72d45}
+#chapter-3 .three-journey .three-journey-piece{transition:opacity .42s ease,transform .42s ease}
+
+/* Mobile: the existing travelling plane introduces the scene and words.
+   Walking coordinates are set from real scene width in script.js, not an
+   independent timer, so the two characters stay aligned to scroll. */
+@media(max-width:820px),(pointer:coarse){
+  body.mobile-plane-sync #chapter-3 .headline-top,
+  body.mobile-plane-sync #chapter-3 .three-scene,
+  body.mobile-plane-sync #chapter-3 .three-tagline,
+  body.mobile-plane-sync #chapter-3 .three-journey-piece{
+    opacity:0;
+    transform:translate3d(0,10px,0);
+    transition:opacity .38s ease-out,transform .38s cubic-bezier(.2,.72,.3,1);
+  }
+  body.mobile-plane-sync #chapter-3.plane-three-step-1 .headline-top,
+  body.mobile-plane-sync #chapter-3.plane-three-step-1 .three-scene,
+  body.mobile-plane-sync #chapter-3.plane-three-step-2 .three-tagline,
+  body.mobile-plane-sync #chapter-3.plane-three-step-2 .journey-piece-2,
+  body.mobile-plane-sync #chapter-3.plane-three-step-3 .journey-piece-3,
+  body.mobile-plane-sync #chapter-3.plane-three-step-4 .journey-piece-4{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+}
+@media(max-width:760px){
+  #chapter-3 .stage-three{
+    padding:calc(93px + env(safe-area-inset-top)) 12px 30px;
+    gap:clamp(10px,1.7svh,15px);
+  }
+  #chapter-3 .headline-top{
+    font-size:clamp(28px,7.35vw,40px);
+    line-height:1.09;
+    max-width:95vw;
+  }
+  #chapter-3 .three-scene{
+    width:min(470px,96vw);
+    height:clamp(257px,38svh,346px);
+  }
+  #chapter-3 .three-character{
+    width:clamp(98px,26vw,119px);
+    bottom:11px;
+  }
+  #chapter-3 .three-heart{bottom:47%;font-size:38px}
+  #chapter-3 .three-tagline{font-size:clamp(25px,6.7vw,31px)}
+  #chapter-3 .three-journey{
+    font-size:clamp(21px,5.6vw,26px);
+    column-gap:8px;
+  }
+}
+@media(max-height:700px) and (max-width:760px){
+  #chapter-3 .stage-three{
+    padding-top:calc(79px + env(safe-area-inset-top));
+    gap:7px;
+    padding-bottom:18px;
+  }
+  #chapter-3 .headline-top{font-size:clamp(26px,7vw,34px)}
+  #chapter-3 .three-scene{height:clamp(230px,36svh,282px)}
+  #chapter-3 .three-character{width:clamp(85px,24vw,108px)}
+  #chapter-3 .three-tagline{font-size:clamp(22px,6vw,28px)}
+  #chapter-3 .three-journey{font-size:clamp(19px,5.2vw,23px)}
+}
+@media(prefers-reduced-motion:reduce){
+  #chapter-3 .three-character {will-change:auto}
+  body.mobile-plane-sync #chapter-3 .headline-top,
+  body.mobile-plane-sync #chapter-3 .three-scene,
+  body.mobile-plane-sync #chapter-3 .three-tagline,
+  body.mobile-plane-sync #chapter-3 .three-journey-piece{
+    opacity:1!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  #chapter-3 .three-journey .three-journey-piece{transition:none}
+}
