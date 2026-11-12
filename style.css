@@ -3029,3 +3029,122 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   }
   #chapter-3 .three-journey .three-journey-piece{transition:none}
 }
+
+
+/* Chapter 1 letters-only G ♥ P and shorter mobile paper-plane journey.
+   No book, panel, border, backdrop, or substitute illustration. */
+#chapter-1 .gp-monogram{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(23px,5.8vw,49px);
+  min-height:clamp(108px,14vw,151px);
+  width:min(100%,510px);
+  margin:2px auto 0;
+  padding:0;
+  background:none;
+  border:0;
+  box-shadow:none;
+  position:relative;
+  z-index:3;
+}
+#chapter-1 .gp-letter{
+  font:400 clamp(95px,10vw,143px)/1.03 var(--script);
+  color:#b52e48;
+  display:inline-block;
+  text-shadow:0 3px 9px rgba(103,53,58,.10);
+  white-space:nowrap;
+}
+#chapter-1 .gp-heart{
+  color:#b52e48;
+  display:inline-grid;
+  place-items:center;
+  font:400 clamp(37px,4.8vw,56px)/1 var(--display);
+  filter:drop-shadow(0 3px 6px rgba(131,48,62,.14));
+}
+#chapter-1 .gp-heart-shape{display:inline-block;transform-origin:center}
+@keyframes gp-letter-left-in{
+  from{opacity:0;transform:translate3d(-42px,9px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes gp-letter-right-in{
+  from{opacity:0;transform:translate3d(42px,9px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes gp-heart-enter{
+  from{opacity:0;transform:scale(.48)}
+  70%{opacity:1;transform:scale(1.13)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes gp-gentle-heartbeat{
+  0%,100%{transform:scale(1)}
+  20%{transform:scale(1.11)}
+  35%{transform:scale(1)}
+  46%{transform:scale(1.06)}
+  57%{transform:scale(1)}
+}
+@keyframes gp-word-fade{
+  from{opacity:0;transform:translate3d(0,13px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+/* Only animate once guests actually reach the first story screen. */
+#chapter-1.monogram-played .gp-left{
+  animation:gp-letter-left-in .65s cubic-bezier(.16,.77,.29,1) .04s both;
+}
+#chapter-1.monogram-played .gp-right{
+  animation:gp-letter-right-in .65s cubic-bezier(.16,.77,.29,1) .16s both;
+}
+#chapter-1.monogram-played .gp-heart{
+  animation:gp-heart-enter .52s cubic-bezier(.18,.7,.34,1) .41s both;
+}
+#chapter-1.monogram-played .gp-heart-shape{
+  animation:gp-gentle-heartbeat 2.7s ease-in-out 1.08s 2;
+}
+#chapter-1.monogram-played .chapter-one-content .eyebrow{
+  animation:gp-word-fade .4s ease-out both;
+}
+#chapter-1.monogram-played .chapter-one-content .display-title{
+  animation:gp-word-fade .54s ease-out .69s both;
+}
+#chapter-1.monogram-played .chapter-one-content .script-statement{
+  animation:gp-word-fade .54s ease-out .91s both;
+}
+#chapter-1.monogram-played .chapter-one-content .story-caption:not(.plane-synced-text){
+  animation:gp-word-fade .52s ease-out 1.14s both;
+}
+
+@media(max-width:820px){
+  /* Opening to story is shorter, and the first story screen flows into
+     screen 2 after about one natural swipe rather than a 165svh runway. */
+  #opening.opening{height:125svh;min-height:0}
+  #chapter-1{height:110svh;min-height:100svh}
+  #chapter-1 > .stage-one{height:100svh;min-height:100svh}
+  #chapter-1 .gp-monogram{
+    min-height:clamp(88px,23vw,122px);
+    gap:clamp(21px,5.8vw,34px);
+    margin:3px auto 0;
+  }
+  #chapter-1 .gp-letter{font-size:clamp(72px,21.6vw,103px)}
+  #chapter-1 .gp-heart{font-size:clamp(34px,10.8vw,47px)}
+}
+@media(max-width:820px) and (max-height:540px){
+  #opening.opening{height:130svh}
+  #chapter-1{height:110svh;min-height:100svh}
+  #chapter-1 .gp-monogram{min-height:66px;gap:16px;margin:0 auto}
+  #chapter-1 .gp-letter{font-size:clamp(55px,14vw,72px)}
+  #chapter-1 .gp-heart{font-size:30px}
+}
+@media(prefers-reduced-motion:reduce){
+  #chapter-1.monogram-played .gp-left,
+  #chapter-1.monogram-played .gp-right,
+  #chapter-1.monogram-played .gp-heart,
+  #chapter-1.monogram-played .gp-heart-shape,
+  #chapter-1.monogram-played .chapter-one-content .eyebrow,
+  #chapter-1.monogram-played .chapter-one-content .display-title,
+  #chapter-1.monogram-played .chapter-one-content .script-statement,
+  #chapter-1.monogram-played .chapter-one-content .story-caption{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
