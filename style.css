@@ -3516,3 +3516,173 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     transform:none!important;
   }
 }
+
+
+/* Two Hearts: MOBILE NORMAL-FLOW LAYOUT — final structural fix.
+   This page used a 165svh sticky/overflow-hidden stage; image + copy were
+   still being squeezed and visually overlapping while the stage scrolled.
+   Let this ONE chapter grow with its own content, like Chapter 4 already does.
+   No text or illustration is absolutely positioned or scroll-translated. */
+@media (max-width: 820px) {
+  #chapter-2 {
+    height:auto !important;
+    min-height:0 !important;
+    margin:0;
+    padding:0;
+  }
+  #chapter-2 > .stage-two {
+    position:relative !important;
+    top:auto !important;
+    height:auto !important;
+    min-height:0 !important;
+    display:block !important;
+    overflow:visible !important;
+    padding:calc(88px + env(safe-area-inset-top)) 14px
+            clamp(38px,6svh,62px);
+    box-sizing:border-box;
+  }
+  #chapter-2 .scene-composition.scene-childhood {
+    position:relative !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    align-items:center !important;
+    gap:clamp(22px,3.3svh,34px) !important;
+    width:min(100%,390px) !important;
+    height:auto !important;
+    max-width:100%;
+    min-width:0 !important;
+    min-height:0 !important;
+    margin:0 auto !important;
+    padding:0 !important;
+    transform:none !important;
+    overflow:visible !important;
+  }
+  #chapter-2 .scene-childhood > .childhood-image {
+    position:relative !important;
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    align-self:center;
+    flex:0 0 auto !important;
+    order:0;
+    width:min(53vw,208px) !important;
+    height:min(53vw,208px) !important;
+    min-height:0 !important;
+    max-height:none !important;
+    aspect-ratio:1 / 1;
+    margin:0 auto !important;
+    padding:0 !important;
+    opacity:1 !important;
+    transform:none !important;
+    animation:none !important;
+    overflow:visible;
+  }
+  #chapter-2 .scene-childhood > .childhood-image img {
+    display:block;
+    position:relative !important;
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  #chapter-2 .scene-childhood > .childhood-copy {
+    position:relative !important;
+    display:flex !important;
+    flex:0 0 auto;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    align-items:center !important;
+    align-self:stretch;
+    order:1;
+    gap:clamp(12px,2svh,18px) !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    margin:0 auto !important;
+    padding:0 !important;
+    text-align:center;
+    opacity:1 !important;
+    transform:none !important;
+    overflow:visible;
+  }
+  #chapter-2 .childhood-copy > .display-title {
+    position:relative;
+    display:block;
+    width:100% !important;
+    max-width:100% !important;
+    font-size:clamp(28px,7.4vw,39px) !important;
+    line-height:1.12 !important;
+    margin:0 auto !important;
+    overflow:visible !important;
+    text-wrap:balance;
+  }
+  #chapter-2 .childhood-copy .red-script {
+    font-size:1.08em !important;
+    white-space:normal !important;
+    line-height:1.13 !important;
+  }
+  #chapter-2 .childhood-copy > p:not(.eyebrow):not(.margin-note) {
+    display:block;
+    width:100% !important;
+    max-width:100% !important;
+    font-size:clamp(19px,5.35vw,24px) !important;
+    line-height:1.28 !important;
+    margin:0 auto !important;
+    opacity:1 !important;
+  }
+  #chapter-2 .childhood-copy > .handdrawn-underline {
+    flex:none;
+    width:clamp(95px,30vw,130px);
+    margin:0 auto !important;
+  }
+  #chapter-2 .childhood-copy > .margin-note {
+    display:block;
+    width:100% !important;
+    max-width:100% !important;
+    font-size:clamp(20px,5.4vw,25px) !important;
+    line-height:1.23 !important;
+    margin:0 auto !important;
+    opacity:1 !important;
+    transform:none !important;
+  }
+  #chapter-2.two-hearts-ready .childhood-copy .display-title,
+  #chapter-2.two-hearts-ready .childhood-copy > p,
+  #chapter-2.two-hearts-ready .childhood-copy .handdrawn-underline {
+    /* Fade only each line; no layout-affecting entrance transforms. */
+    animation:two-hearts-safe-fade .38s ease-out both;
+  }
+  #chapter-2.two-hearts-ready .childhood-copy > p:not(.margin-note) {
+    animation-delay:.10s;
+  }
+  #chapter-2.two-hearts-ready .childhood-copy > .margin-note {
+    animation-delay:.22s;
+  }
+}
+@keyframes two-hearts-safe-fade {
+  from {opacity:.78}
+  to {opacity:1}
+}
+@media(max-width:820px) and (max-height:700px) {
+  #chapter-2 > .stage-two {
+    padding-top:calc(76px + env(safe-area-inset-top));
+    padding-bottom:32px;
+  }
+  #chapter-2 .scene-childhood > .childhood-image {
+    width:min(43vw,165px) !important;
+    height:min(43vw,165px) !important;
+  }
+  #chapter-2 .scene-composition.scene-childhood {
+    gap:clamp(16px,2.5svh,23px) !important;
+  }
+  #chapter-2 .scene-childhood > .childhood-copy {
+    gap:clamp(9px,1.4svh,13px) !important;
+  }
+  #chapter-2 .childhood-copy > .display-title {
+    font-size:clamp(26px,7vw,34px) !important;
+  }
+}
