@@ -146,13 +146,17 @@ function animateThreeMeeting(progress){
   if(!boy||!girl||!heart)return;
   const walk=ease(Math.max(0,Math.min(1,progress)));
   const sceneWidth=scene.clientWidth;
-  const characterWidth=boy.offsetWidth;
+  // Each character has its own responsive width. Calculate independent
+  // distances so their hands meet on narrow Samsung/iPhone screens too.
+  const boyWidth=boy.getBoundingClientRect().width;
+  const girlWidth=girl.getBoundingClientRect().width;
   const initialInset=sceneWidth*.045;
-  // Bring the two drawings close enough for their hands to meet.
-  const travel=Math.max(0,sceneWidth/2-characterWidth+14-initialInset);
+  const handOverlap=Math.min(18,sceneWidth*.045);
+  const boyTravel=Math.max(0,sceneWidth/2-boyWidth+handOverlap-initialInset);
+  const girlTravel=Math.max(0,sceneWidth/2-girlWidth+handOverlap-initialInset);
   const bounce=reduceMotion?0:Math.sin(walk*Math.PI*5)*2.4*(1-walk);
-  boy.style.transform=`translate3d(${(travel*walk).toFixed(1)}px,${bounce.toFixed(1)}px,0)`;
-  girl.style.transform=`translate3d(${(-travel*walk).toFixed(1)}px,${(-bounce).toFixed(1)}px,0)`;
+  boy.style.transform=`translate3d(${(boyTravel*walk).toFixed(1)}px,${bounce.toFixed(1)}px,0)`;
+  girl.style.transform=`translate3d(${(-girlTravel*walk).toFixed(1)}px,${(-bounce).toFixed(1)}px,0)`;
   const bloom=ease((walk-.76)*4.2);
   heart.style.opacity=String(bloom);
   heart.style.transform=`translate3d(-50%,${((1-bloom)*13).toFixed(1)}px,0) scale(${(.6+.4*bloom).toFixed(3)})`;
