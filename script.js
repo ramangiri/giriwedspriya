@@ -73,7 +73,7 @@ const chapterProgress=new Array(chapters.length).fill(-1);
 // position. Avoid overriding each chapter's existing illustration animation.
 const mobileStoryTextSelectors=[
   '.chapter-one-content .story-caption',
-  '.childhood-copy .margin-note',
+  null, // Chapter 2 uses the early, non-overlapping mobile text reveal.
   null, // Chapter 3: headline, house images and notes synchronize with the plane.
   '.paths-copy .display-title',
   null, // Chapter 5 gets its own plane-position-driven four-part reveal.
