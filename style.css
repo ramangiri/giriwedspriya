@@ -3866,3 +3866,22 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
 @media(prefers-reduced-motion:reduce){
   #chapter-9 .toby-paw-trail span{animation:none;opacity:.7}
 }
+
+
+/* Toby RSVP reminder — readable under the Fur Baby welcome. */
+#chapter-9 .toby-greeting .toby-rsvp-reminder{
+  font:600 clamp(13px,3.4vw,16px)/1.45 var(--sans);
+  color:#943b4c;
+  max-width:390px;
+  margin:12px auto 0;
+  text-align:center;
+  text-wrap:balance;
+}
+@media(max-width:760px){
+  #chapter-9 .toby-greeting .toby-rsvp-reminder{
+    font-size:clamp(13px,3.7vw,15px);
+    line-height:1.5;
+    max-width:320px;
+    margin-top:10px;
+  }
+}
