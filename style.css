@@ -2609,11 +2609,12 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   color:#73524b;
 }
 #chapter-9 .toby-greeting .toby-greeting-kicker {
-  font:700 clamp(10px,2.2vw,12px)/1.3 var(--sans);
+  font:700 clamp(12px,2.8vw,15px)/1.35 var(--sans);
   color:#9f3851;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  margin:0 auto 4px;
+  letter-spacing:.035em;
+  text-transform:none;
+  text-wrap:balance;
+  margin:0 auto 6px;
 }
 #chapter-9 .toby-greeting .toby-greeting-message {
   font:500 clamp(27px,6.4vw,37px)/1.04 var(--hand);
