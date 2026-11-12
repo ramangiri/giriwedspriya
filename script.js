@@ -47,12 +47,21 @@ const path = $('#trailDots');
 const maskLine = $('#trailReveal');
 const plane = $('#travellingPlane');
 const planeSvg = $('#trailSvg');
-// Keep the plane in a tiny fixed compositor layer on phones, separate from
-// the very tall SVG trail, which otherwise makes mobile browsers repaint it.
+const invitationMain = document.querySelector('.invitation-main');
+// iOS keeps the existing lightweight fixed plane. Android (including Samsung
+// Internet) uses a document-anchored plane, so native touch scrolling moves it
+// with the page even if the browser delays JavaScript animation frames.
 const useMobilePlane = mobileOptimized.matches;
+const isAndroidBrowser = /Android|SamsungBrowser/i.test(navigator.userAgent || '');
+const useScrollAnchoredPlane = useMobilePlane && isAndroidBrowser && !!invitationMain;
 if(useMobilePlane){
   plane.classList.add('mobile-plane');
-  document.body.appendChild(plane);
+  if(useScrollAnchoredPlane){
+    plane.classList.add('scroll-anchored-plane');
+    invitationMain.appendChild(plane);
+  }else{
+    document.body.appendChild(plane);
+  }
 }
 let mainTopOnPage=0;
 let mainLeftOnScreen=0;
@@ -337,7 +346,6 @@ function buildCalendar() {
 
 /** A single continuous SVG path across every chapter, not eight disconnected lines. */
 // One continuous path, beginning on the opened envelope and flowing into every chapter.
-const invitationMain = document.querySelector('.invitation-main');
 let trailSamples = [];
 
 function buildTrail() {
@@ -555,11 +563,9 @@ function updatePlane(scrollY) {
   // The traveling plane stays hidden during the video and the first three
   // title reveals. It appears AFTER the subtitle above the scroll cue.
   if(!pathLength || !introFinished || !introPlaneReady) { plane.style.opacity='0'; return null; }
-  if(reduceMotion) {
-    maskLine.style.strokeDashoffset='0';
-    plane.style.opacity='0';
-    return null;
-  }
+  // Reduced-motion guests still get a responsive, non-fluttering plane
+  // following their finger; CSS disables wing animation for accessibility.
+  if(reduceMotion) maskLine.style.strokeDashoffset='0';
   // After the post-video reveal the plane starts above the scroll caption.
   // When scrolling begins, the very same element flies into Chapter 1.
   const relativeScroll=scrollY-mainTopOnPage;
@@ -588,16 +594,17 @@ function updatePlane(scrollY) {
   const lower=trailSamples[Math.max(0,low-1)]||upper;
   const fraction=clamp((targetY-lower.y)/Math.max(.001,upper.y-lower.y));
   const length=lerp(lower.length,upper.length,fraction);
-  if(!mobileOptimized.matches)maskLine.style.strokeDashoffset=String(pathLength-length);
+  if(!mobileOptimized.matches && !reduceMotion)maskLine.style.strokeDashoffset=String(pathLength-length);
   const x=lerp(lower.x,upper.x,fraction);
   const y=lerp(lower.y,upper.y,fraction);
   const angleDelta=((upper.angle-lower.angle+540)%360)-180;
-  const degrees=lower.angle+angleDelta*fraction;
-  // The mobile plane is viewport-fixed: map the same trail point to screen
-  // coordinates, then move only its compositor transform at display refresh.
-  // Desktop retains the original absolute plane positioning.
-  const drawX=useMobilePlane?x+mainLeftOnScreen:x;
-  const drawY=useMobilePlane?y-relativeScroll:y;
+  const degrees=reduceMotion?0:lower.angle+angleDelta*fraction;
+  // Samsung/Android: coordinates are relative to invitationMain and the
+  // plane naturally scrolls with it (no fixed-position desynchronization).
+  // iOS: preserve the existing viewport-fixed optimized rendering.
+  // Desktop: keep the original path-relative absolute coordinates.
+  const drawX=useScrollAnchoredPlane?x:(useMobilePlane?x+mainLeftOnScreen:x);
+  const drawY=useScrollAnchoredPlane?y:(useMobilePlane?y-relativeScroll:y);
   plane.style.transform=`translate3d(${drawX.toFixed(1)}px,${drawY.toFixed(1)}px,0) translate(-50%,-50%) rotate(${degrees.toFixed(1)}deg)`;
   plane.style.opacity=targetY>=trailSamples[0].y-15 && targetY<trailSamples[trailSamples.length-1].y-110?'1':'0';
   return targetY;
@@ -734,6 +741,17 @@ function requestFrame(){
   requestAnimationFrame(update);
 }
 window.addEventListener('scroll',requestFrame,{passive:true});
+// Some Android browsers animate their address bar/visual viewport separately
+// from window scrolling, and may coalesce scroll events during a quick swipe.
+if(useScrollAnchoredPlane){
+  window.addEventListener('touchmove',requestFrame,{passive:true});
+  window.addEventListener('touchend',requestFrame,{passive:true});
+  window.addEventListener('scrollend',requestFrame,{passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('scroll',requestFrame,{passive:true});
+    window.visualViewport.addEventListener('resize',requestFrame,{passive:true});
+  }
+}
 let resizeDebounce=null,layoutWidth=window.innerWidth,layoutHeight=window.innerHeight;
 function scheduleTrailRebuild(force=false){
   requestFrame();
