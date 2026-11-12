@@ -440,12 +440,8 @@ function animateChapter(chapter, p) {
   const reducedP=reduceMotion ? 1 : p;
   switch(number) {
     case 1: {
-      const book=$('#bookObject');
-      $('.book-half.left',book).style.transform=`rotateY(${-ease(reducedP*1.6)*23}deg)`;
-      $('.book-half.right',book).style.transform=`rotateY(${ease(reducedP*1.6)*23}deg)`;
-      book.style.transform=`translateY(${lerp(20,-5,ease(reducedP))}px) scale(${lerp(.88,1.1,ease(reducedP))})`;
-      $('.pop-word',chapter).style.opacity=String(ease(reducedP*2.7));
-      $('.chapter-one-content h2',chapter).style.transform=`translateY(${lerp(35,0,ease(reducedP*1.7))}px)`;
+      // The letters-only G ♥ P monogram uses its own entrance animation.
+      // No removed book elements are accessed here.
       break;
     }
     case 2: {
@@ -598,6 +594,16 @@ function updatePlane(scrollY) {
 function update(now=performance.now()) {
   rafPending=false;
   const y=window.scrollY;
+  // Start the G ♥ P animation once page one approaches the visible screen.
+  // Keeping this scroll-triggered prevents it from finishing unseen
+  // while guests are still watching the envelope video.
+  const firstStory=chapters[0];
+  if(firstStory && !firstStory.classList.contains('monogram-played')){
+    const firstStoryTop=storyBook.offsetTop+firstStory.offsetTop;
+    if(y+window.innerHeight*.64>=firstStoryTop){
+      firstStory.classList.add('monogram-played');
+    }
+  }
   // The plane follows scroll into the story. The first screen's text was
   // already revealed in order after the video, independent of scrolling.
   const planeWorldY=updatePlane(y);
