@@ -445,12 +445,23 @@ function animateChapter(chapter, p) {
       break;
     }
     case 2: {
-      const f=ease(reducedP*2.0),g=ease((reducedP-.17)*2.4);
-      const img=$('.childhood-image',chapter),copy=$('.childhood-copy',chapter);
-      img.style.opacity=String(.2+f*.8);
-      img.style.transform=`translate(${lerp(-80,0,f)}px,${lerp(18,0,f)}px) rotate(${lerp(-4,0,f)}deg)`;
-      copy.style.opacity=String(.15+g*.85);
-      copy.style.transform=`translateX(${lerp(65,0,g)}px)`;
+      // On phones keep the illustration and its text in separate layout rows.
+      // The old 65px sideways slide and 15% opacity caused the paragraph to
+      // overlap the drawing and disappear off the right edge mid-scroll.
+      if(mobileOptimized.matches){
+        const img=$('.childhood-image',chapter),copy=$('.childhood-copy',chapter);
+        img.style.removeProperty('opacity');
+        img.style.removeProperty('transform');
+        copy.style.removeProperty('opacity');
+        copy.style.removeProperty('transform');
+      }else{
+        const f=ease(reducedP*2.0),g=ease((reducedP-.17)*2.4);
+        const img=$('.childhood-image',chapter),copy=$('.childhood-copy',chapter);
+        img.style.opacity=String(.2+f*.8);
+        img.style.transform=`translate(${lerp(-80,0,f)}px,${lerp(18,0,f)}px) rotate(${lerp(-4,0,f)}deg)`;
+        copy.style.opacity=String(.15+g*.85);
+        copy.style.transform=`translateX(${lerp(65,0,g)}px)`;
+      }
       break;
     }
     case 3: {
@@ -602,6 +613,16 @@ function update(now=performance.now()) {
     const firstStoryTop=storyBook.offsetTop+firstStory.offsetTop;
     if(y+window.innerHeight*.64>=firstStoryTop){
       firstStory.classList.add('monogram-played');
+    }
+  }
+  // Reveal the second story scene just before it reaches the viewport.
+  // This is a one-time entrance rather than an animation of the whole text
+  // block on every scroll frame, preventing mobile text/image overlap.
+  const twoHearts=chapters[1];
+  if(twoHearts && !twoHearts.classList.contains('two-hearts-ready')){
+    const twoHeartsTop=storyBook.offsetTop+twoHearts.offsetTop;
+    if(y+window.innerHeight*.86>=twoHeartsTop){
+      twoHearts.classList.add('two-hearts-ready');
     }
   }
   // The plane follows scroll into the story. The first screen's text was
