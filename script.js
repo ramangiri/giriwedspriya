@@ -149,7 +149,7 @@ function animateThreeMeeting(progress){
   heart.style.transform=`translate3d(-50%,${((1-bloom)*13).toFixed(1)}px,0) scale(${(.6+.4*bloom).toFixed(3)})`;
 }
 
-const journeySketchPaths=$('.path-sketch');
+const journeySketchPaths=$$('.path-sketch');
 const journeySketchLengths=journeySketchPaths.map(line=>line.getTotalLength());
 let toastTimeout;
 let introFinished = false;
