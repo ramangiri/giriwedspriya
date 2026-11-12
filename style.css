@@ -3804,3 +3804,65 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     will-change:auto;
   }
 }
+
+
+/* Toby's Fur Baby farewell: subtle paw-print trail and short heartfelt line.
+   Stay on the paper background, not over the approved Toby image or RSVP. */
+#chapter-9 .toby-greeting {
+  width:min(94%,440px);
+  margin:18px auto 0;
+}
+#chapter-9 .toby-greeting .toby-greeting-kicker {
+  font:700 clamp(13px,3vw,16px)/1.45 var(--sans);
+  color:#a02f49;
+  margin:0 auto 11px;
+  letter-spacing:.01em;
+  text-wrap:balance;
+}
+#chapter-9 .toby-greeting .toby-greeting-message {
+  font:500 clamp(23px,5.8vw,32px)/1.18 var(--hand);
+  color:#765047;
+  max-width:420px;
+  margin:0 auto 8px;
+  text-wrap:balance;
+}
+#chapter-9 .toby-greeting::after{display:none}
+#chapter-9 .toby-paw-trail {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(15px,4vw,24px);
+  height:29px;
+  margin:7px auto 0;
+  pointer-events:none;
+}
+#chapter-9 .toby-paw-trail span {
+  display:inline-block;
+  font-size:clamp(13px,3.5vw,17px);
+  line-height:1;
+  opacity:.65;
+  filter:grayscale(.4);
+  transform-origin:center;
+  animation:toby-paw-appear 2.5s ease-in-out infinite alternate;
+}
+#chapter-9 .toby-paw-trail span:nth-child(1){transform:rotate(-16deg);animation-delay:0s}
+#chapter-9 .toby-paw-trail span:nth-child(2){transform:rotate(10deg);animation-delay:.45s}
+#chapter-9 .toby-paw-trail span:nth-child(3){transform:rotate(-11deg);animation-delay:.9s}
+@keyframes toby-paw-appear{
+  from{opacity:.32}
+  to{opacity:.82}
+}
+@media(max-width:760px){
+  #chapter-9 .toby-greeting{
+    margin:17px auto 0;
+    padding:0 7px;
+  }
+  #chapter-9 .toby-greeting .toby-greeting-message{
+    font-size:clamp(22px,5.9vw,28px);
+    line-height:1.2;
+  }
+  #chapter-9 .toby-paw-trail{margin:6px auto 0}
+}
+@media(prefers-reduced-motion:reduce){
+  #chapter-9 .toby-paw-trail span{animation:none;opacity:.7}
+}
