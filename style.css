@@ -2885,48 +2885,27 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   filter:blur(7px);
   pointer-events:none;
 }
-#chapter-3 .three-characters {
+#chapter-3 .three-hand-join {
   position:absolute;
   z-index:3;
   inset:0;
+  max-width:630px;
+  margin-inline:auto;
+  display:grid;
+  place-items:center;
   pointer-events:none;
 }
-#chapter-3 .three-character {
-  position:absolute;
-  bottom:14px;
-  width:clamp(105px,24vw,150px);
-  margin:0;
-  text-align:center;
-  will-change:transform;
-}
-#chapter-3 .three-boy{left:4.5%}
-#chapter-3 .three-girl{right:4.5%}
-#chapter-3 .three-character svg {
+#chapter-3 .three-hand-join :is(img,video) {
+  grid-area:1 / 1;
   display:block;
   width:100%;
-  height:auto;
-  overflow:visible;
-  filter:drop-shadow(0 9px 8px #79584d21);
+  height:100%;
+  min-height:0;
+  object-fit:contain;
 }
-#chapter-3 .three-character figcaption {
-  margin:-2px 0 0;
-  font:600 clamp(19px,2.5vw,25px)/1.1 var(--hand);
-  color:#865953;
-  letter-spacing:.015em;
-}
-#chapter-3 .three-heart {
-  position:absolute;
-  z-index:4;
-  left:50%;
-  bottom:48%;
-  color:#bd3856;
-  font-size:clamp(32px,5vw,49px);
-  line-height:1;
-  opacity:0;
-  transform:translate3d(-50%,13px,0) scale(.6);
-  filter:drop-shadow(0 4px 8px #cd7f8652);
-  pointer-events:none;
-}
+#chapter-3 .three-hand-join video {visibility:hidden}
+#chapter-3 .three-hand-join video.is-ready {visibility:visible}
+#chapter-3 .three-hand-join:has(video.is-ready) img {visibility:hidden}
 #chapter-3 .three-tagline {
   position:relative;
   z-index:4;
@@ -2992,14 +2971,9 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     max-width:95vw;
   }
   #chapter-3 .three-scene{
-    width:min(470px,96vw);
-    height:clamp(257px,38svh,346px);
+    width:min(470px,100%);
+    height:clamp(210px,38svh,346px);
   }
-  #chapter-3 .three-character{
-    width:clamp(98px,26vw,119px);
-    bottom:11px;
-  }
-  #chapter-3 .three-heart{bottom:47%;font-size:38px}
   #chapter-3 .three-tagline{font-size:clamp(25px,6.7vw,31px)}
   #chapter-3 .three-journey{
     font-size:clamp(21px,5.6vw,26px);
@@ -3014,12 +2988,12 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   }
   #chapter-3 .headline-top{font-size:clamp(26px,7vw,34px)}
   #chapter-3 .three-scene{height:clamp(230px,36svh,282px)}
-  #chapter-3 .three-character{width:clamp(85px,24vw,108px)}
   #chapter-3 .three-tagline{font-size:clamp(22px,6vw,28px)}
   #chapter-3 .three-journey{font-size:clamp(19px,5.2vw,23px)}
 }
 @media(prefers-reduced-motion:reduce){
-  #chapter-3 .three-character {will-change:auto}
+  #chapter-3 .three-hand-join video.is-ready {visibility:hidden}
+  #chapter-3 .three-hand-join:has(video.is-ready) img {visibility:visible}
   body.mobile-plane-sync #chapter-3 .headline-top,
   body.mobile-plane-sync #chapter-3 .three-scene,
   body.mobile-plane-sync #chapter-3 .three-tagline,

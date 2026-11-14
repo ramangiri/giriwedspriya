@@ -137,29 +137,41 @@ if(useMobilePlane && !reduceMotion){
   });
 }
 
-/* Chapter 3: one smooth, scroll-driven meeting. Reuse the existing paper-plane
-   progress on phones and the normal chapter progress on desktop. */
+/* Keep the approved clip paused and seek with the same chapter/plane
+   progress. The settled still is also the no-JS/reduced-motion fallback. */
+const threeMeetingVideo=$('.three-hand-join video',chapterThree);
+let threeMeetingProgress=0;
+function syncThreeMeeting(){
+  if(!threeMeetingVideo || reduceMotion || threeMeetingVideo.seeking)return;
+  const duration=threeMeetingVideo.duration;
+  if(!Number.isFinite(duration) || duration<=0)return;
+  const target=threeMeetingProgress*Math.max(0,duration-1/24);
+  if(Math.abs(threeMeetingVideo.currentTime-target)>1/48){
+    threeMeetingVideo.currentTime=target;
+  }
+}
+if(threeMeetingVideo && !reduceMotion){
+  const startThreeMeeting=()=>{
+    threeMeetingVideo.muted=true;
+    threeMeetingVideo.addEventListener('loadedmetadata',syncThreeMeeting);
+    threeMeetingVideo.addEventListener('seeked',syncThreeMeeting);
+    threeMeetingVideo.addEventListener('loadeddata',()=>threeMeetingVideo.classList.add('is-ready'));
+    threeMeetingVideo.addEventListener('error',()=>threeMeetingVideo.classList.remove('is-ready'));
+    threeMeetingVideo.src=threeMeetingVideo.dataset.src;
+  };
+  if('IntersectionObserver' in window){
+    const observer=new IntersectionObserver(entries=>{
+      if(entries.some(entry=>entry.isIntersecting)){
+        observer.disconnect();
+        startThreeMeeting();
+      }
+    },{rootMargin:'700px 0px'});
+    observer.observe(chapterThree);
+  }else startThreeMeeting();
+}
 function animateThreeMeeting(progress){
-  const scene=$('.three-scene',chapterThree);
-  if(!scene)return;
-  const boy=$('.three-boy',scene),girl=$('.three-girl',scene),heart=$('.three-heart',scene);
-  if(!boy||!girl||!heart)return;
-  const walk=ease(Math.max(0,Math.min(1,progress)));
-  const sceneWidth=scene.clientWidth;
-  // Each character has its own responsive width. Calculate independent
-  // distances so their hands meet on narrow Samsung/iPhone screens too.
-  const boyWidth=boy.getBoundingClientRect().width;
-  const girlWidth=girl.getBoundingClientRect().width;
-  const initialInset=sceneWidth*.045;
-  const handOverlap=Math.min(18,sceneWidth*.045);
-  const boyTravel=Math.max(0,sceneWidth/2-boyWidth+handOverlap-initialInset);
-  const girlTravel=Math.max(0,sceneWidth/2-girlWidth+handOverlap-initialInset);
-  const bounce=reduceMotion?0:Math.sin(walk*Math.PI*5)*2.4*(1-walk);
-  boy.style.transform=`translate3d(${(boyTravel*walk).toFixed(1)}px,${bounce.toFixed(1)}px,0)`;
-  girl.style.transform=`translate3d(${(-girlTravel*walk).toFixed(1)}px,${(-bounce).toFixed(1)}px,0)`;
-  const bloom=ease((walk-.76)*4.2);
-  heart.style.opacity=String(bloom);
-  heart.style.transform=`translate3d(-50%,${((1-bloom)*13).toFixed(1)}px,0) scale(${(.6+.4*bloom).toFixed(3)})`;
+  threeMeetingProgress=Math.max(0,Math.min(1,progress));
+  syncThreeMeeting();
 }
 
 const journeySketchPaths=$$('.path-sketch');
@@ -489,7 +501,7 @@ function animateChapter(chapter, p) {
           const threshold=step===2?.30:step===3?.47:.64;
           piece.style.opacity=String(ease((reducedP-threshold)*6));
         });
-        animateThreeMeeting(ease((reducedP-.12)*2.25));
+        animateThreeMeeting((reducedP-.12)*2.25);
       }
       break;
     }
@@ -649,8 +661,8 @@ function update(now=performance.now()) {
       chapters[nextPlaneChapter].classList.add('plane-text-arrived');
       nextPlaneChapter++;
     }
-    // Chapter 3: as the same paper plane crosses the houses, the two cartoon
-    // characters walk toward each other; the heart and words follow in order.
+    // Chapter 3: as the paper plane crosses the houses, the couple joins hands.
+    // The original words still follow in order.
     const threeMetric=chapterMetrics[2];
     if(threeMetric){
       const flightThroughThree=(planeWorldY-threeMetric.top)/
