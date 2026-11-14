@@ -2796,8 +2796,7 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
 }
 
 
-/* Chapter 03 — faded homes and a paper-plane guided meeting.
-   Background house art is deliberately muted; characters and text tell the story. */
+/* Chapter 03: the houses sit behind the couple within the scroll-scrubbed clip. */
 #chapter-3 .stage-three {
   gap:clamp(8px,1.6svh,17px);
   padding:clamp(96px,12svh,132px) 15px 35px;
@@ -2813,68 +2812,15 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   text-wrap:balance;
 }
 #chapter-3 .three-scene {
+  --three-scene-height:clamp(310px,43svh,420px);
   position:relative;
   z-index:3;
   flex:none;
   width:min(650px,95vw);
-  height:clamp(310px,43svh,420px);
+  height:var(--three-scene-height);
   margin:0 auto;
   isolation:isolate;
 }
-#chapter-3 .three-scene .family-sketch.house-pair {
-  position:absolute;
-  z-index:0;
-  inset:0;
-  width:100%;
-  height:100%;
-  margin:0;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8%;
-  opacity:.18;
-  pointer-events:none;
-  user-select:none;
-  filter:saturate(.56) sepia(.12);
-  -webkit-mask-image:radial-gradient(ellipse 75% 71% at 50% 51%,#000 35%,transparent 100%);
-  mask-image:radial-gradient(ellipse 75% 71% at 50% 51%,#000 35%,transparent 100%);
-}
-#chapter-3 .three-scene .house-card,
-#chapter-3 .three-scene .house-card-priya {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:100%;
-  margin:0;
-  padding:0;
-  background:none;
-  border:0;
-  border-radius:0;
-  box-shadow:none;
-  overflow:visible;
-  transform:rotate(-3deg);
-}
-#chapter-3 .three-scene .house-card-priya{transform:rotate(3deg)}
-#chapter-3 .three-scene .house-card .house-image {
-  width:100%;
-  height:90%;
-  margin:0;
-  padding:0;
-  background:none;
-  border:0;
-  overflow:visible;
-}
-#chapter-3 .three-scene .house-card img {
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  filter:none;
-  transform:none;
-  scale:1;
-}
-#chapter-3 .three-scene .house-card figcaption,
-#chapter-3 .three-scene .houses-link {display:none}
 #chapter-3 .three-ground {
   position:absolute;
   z-index:1;
@@ -2888,19 +2834,25 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
 #chapter-3 .three-hand-join {
   position:absolute;
   z-index:3;
-  inset:0;
-  max-width:630px;
-  margin-inline:auto;
-  display:grid;
-  place-items:center;
+  top:50%;
+  left:50%;
+  width:min(100%,630px,calc(var(--three-scene-height) * 1.5));
+  aspect-ratio:3 / 2;
+  transform:translate(-50%,-50%);
   pointer-events:none;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent),
+    linear-gradient(to bottom,transparent,#000 1.5%,#000 99%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent),
+    linear-gradient(to bottom,transparent,#000 1.5%,#000 99%,transparent);
+  mask-composite:intersect;
 }
 #chapter-3 .three-hand-join :is(img,video) {
-  grid-area:1 / 1;
+  position:absolute;
+  inset:0;
   display:block;
   width:100%;
   height:100%;
-  min-height:0;
   object-fit:contain;
 }
 #chapter-3 .three-hand-join video {visibility:hidden}
@@ -2972,7 +2924,7 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
   }
   #chapter-3 .three-scene{
     width:min(470px,100%);
-    height:clamp(210px,38svh,346px);
+    --three-scene-height:clamp(210px,38svh,346px);
   }
   #chapter-3 .three-tagline{font-size:clamp(25px,6.7vw,31px)}
   #chapter-3 .three-journey{
@@ -2987,7 +2939,7 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     padding-bottom:18px;
   }
   #chapter-3 .headline-top{font-size:clamp(26px,7vw,34px)}
-  #chapter-3 .three-scene{height:clamp(230px,36svh,282px)}
+  #chapter-3 .three-scene{--three-scene-height:clamp(230px,36svh,282px)}
   #chapter-3 .three-tagline{font-size:clamp(22px,6vw,28px)}
   #chapter-3 .three-journey{font-size:clamp(19px,5.2vw,23px)}
 }
