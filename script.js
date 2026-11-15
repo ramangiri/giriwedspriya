@@ -101,7 +101,7 @@ let chapterSevenRevealStep=0;
 const chapterSevenRevealPoints=[.48,.75,.98];
 // Earlier checkpoints match the *visible* plane. By the time a new sticky
 // chapter takes the whole viewport, its headline and imagery have appeared.
-const chapterThreeRevealPoints=[.10,.31,.50,.74];
+const chapterThreeRevealPoints=[.10,.31,.50,.68];
 const chapterFiveRevealPoints=[.10,.30,.51,.71];
 if(useMobilePlane && !reduceMotion){
   chapters.forEach((chapter,i)=>{
@@ -141,13 +141,47 @@ if(useMobilePlane && !reduceMotion){
    progress. The settled still is also the no-JS/reduced-motion fallback. */
 const threeMeetingVideo=$('.three-hand-join video',chapterThree);
 let threeMeetingProgress=0;
+let threeMeetingEndingRequested=false;
+let threeMeetingEndingRevealed=false;
+let threeMeetingFallbackTimer=0;
+let threeMeetingUseStill=false;
+
+function finishThreeMeeting(useStill=false){
+  if(useStill){
+    threeMeetingUseStill=true;
+    threeMeetingVideo?.classList.remove('is-ready');
+  }
+  if(!threeMeetingEndingRequested)return;
+  window.clearTimeout(threeMeetingFallbackTimer);
+  threeMeetingEndingRequested=false;
+  threeMeetingEndingRevealed=true;
+  chapterThree.classList.add('plane-three-step-4');
+}
+
+function revealThreeMeetingEnding(){
+  if(threeMeetingEndingRequested || threeMeetingEndingRevealed)return;
+  threeMeetingEndingRequested=true;
+  if(!threeMeetingVideo || reduceMotion || threeMeetingUseStill){
+    finishThreeMeeting(true);
+    return;
+  }
+  // If playback/seek is delayed, switch to the identical settled pose rather
+  // than exposing the words before the hands join, or hiding them indefinitely.
+  threeMeetingFallbackTimer=window.setTimeout(()=>finishThreeMeeting(true),650);
+  syncThreeMeeting();
+}
+
 function syncThreeMeeting(){
-  if(!threeMeetingVideo || reduceMotion || threeMeetingVideo.seeking)return;
+  if(!threeMeetingVideo || reduceMotion || threeMeetingUseStill || threeMeetingVideo.seeking)return;
   const duration=threeMeetingVideo.duration;
   if(!Number.isFinite(duration) || duration<=0)return;
-  const target=threeMeetingProgress*Math.max(0,duration-1/24);
+  const lastFrame=Math.max(0,duration-1/24);
+  const target=threeMeetingProgress*lastFrame;
   if(Math.abs(threeMeetingVideo.currentTime-target)>1/48){
     threeMeetingVideo.currentTime=target;
+  }else if(threeMeetingEndingRequested && threeMeetingProgress===1 &&
+      threeMeetingVideo.readyState>=2 && threeMeetingVideo.classList.contains('is-ready')){
+    finishThreeMeeting();
   }
 }
 if(threeMeetingVideo && !reduceMotion){
@@ -155,8 +189,11 @@ if(threeMeetingVideo && !reduceMotion){
     threeMeetingVideo.muted=true;
     threeMeetingVideo.addEventListener('loadedmetadata',syncThreeMeeting);
     threeMeetingVideo.addEventListener('seeked',syncThreeMeeting);
-    threeMeetingVideo.addEventListener('loadeddata',()=>threeMeetingVideo.classList.add('is-ready'));
-    threeMeetingVideo.addEventListener('error',()=>threeMeetingVideo.classList.remove('is-ready'));
+    threeMeetingVideo.addEventListener('loadeddata',()=>{
+      if(!threeMeetingUseStill)threeMeetingVideo.classList.add('is-ready');
+      syncThreeMeeting();
+    });
+    threeMeetingVideo.addEventListener('error',()=>finishThreeMeeting(true));
     threeMeetingVideo.src=threeMeetingVideo.dataset.src;
   };
   if('IntersectionObserver' in window){
@@ -196,6 +233,8 @@ function goTo(id) {
    Only after the video finishes do words reveal one after another. */
 const opening = $('#opening');
 const openingViewport = $('.opening-viewport', opening);
+const openingPlanePrompt = $('#openingPlanePrompt');
+let openingPlaneGuide=.82;
 const openingTap = $('#openingTap');
 const openingSound = $('#openingSound');
 let openingStarted = false;
@@ -332,6 +371,8 @@ function fillEventDetails() {
   $('#receptionVenueText').innerHTML = escapeHTML(rec.venue) + '<br>' + escapeHTML(rec.locality);
   $('#weddingMap').href = mapURL(wed.mapQuery);
   $('#receptionMap').href = mapURL(rec.mapQuery);
+  const rsvpReceptionMap=$('#rsvpReceptionMap');
+  if(rsvpReceptionMap)rsvpReceptionMap.href=$('#receptionMap').href;
 }
 function escapeHTML(value) { return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 function mapURL(query) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query); }
@@ -376,7 +417,11 @@ function buildTrail() {
   const viewportHeight = openingViewport.offsetHeight;
   // Scale the same curved flight to the actual opening height. A shorter
   // mobile scene must not leave hardcoded 1.93-screen waypoints beyond its end.
-  const flightStart=viewportHeight*.82;
+  // Working from layout coordinates (not animated transforms) keeps the
+  // same plane above the raised cue on short screens, Safari and Android.
+  const cueTop=openingPlanePrompt?.offsetTop || viewportHeight*.92;
+  const flightStart=Math.min(viewportHeight*.82,cueTop-plane.offsetHeight*.67-8);
+  openingPlaneGuide=flightStart/Math.max(1,viewportHeight);
   const flightEnd=openingHeight-viewportHeight*.20;
   const flightY=(progress)=>lerp(flightStart,flightEnd,progress);
   const positions = [
@@ -590,7 +635,7 @@ function updatePlane(scrollY) {
   // Keep it near the scroll cue before scrolling; move smoothly into the
   // story on scroll. No second decorative plane or sudden jump.
   const viewportGuide=relativeScroll<=openingRunway
-    ? lerp(.82,.75,ease(openingProgress))
+    ? lerp(openingPlaneGuide,.75,ease(openingProgress))
     : lerp(.75,.68,ease(clamp((relativeScroll-openingRunway)/Math.max(1,window.innerHeight))));
   if(relativeScroll>12)plane.classList.remove('intro-plane-arriving');
   // Follow scrolling directly: the old sine-wave offset temporarily opposed
@@ -670,9 +715,15 @@ function update(now=performance.now()) {
       while(chapterThreeRevealStep<chapterThreeRevealPoints.length &&
             flightThroughThree>=chapterThreeRevealPoints[chapterThreeRevealStep]){
         chapterThreeRevealStep++;
-        chapterThree.classList.add('plane-three-step-'+chapterThreeRevealStep);
+        if(chapterThreeRevealStep<4)chapterThree.classList.add('plane-three-step-'+chapterThreeRevealStep);
       }
-      animateThreeMeeting((flightThroughThree-.15)/.59);
+      const atMeetingEnd=flightThroughThree>=chapterThreeRevealPoints[3];
+      if(!atMeetingEnd && threeMeetingEndingRequested){
+        window.clearTimeout(threeMeetingFallbackTimer);
+        threeMeetingEndingRequested=false;
+      }
+      animateThreeMeeting((flightThroughThree-.15)/(chapterThreeRevealPoints[3]-.15));
+      if(atMeetingEnd)revealThreeMeetingEnding();
     }
     // Chapter 5: the couple image and first sentence arrive together, then
     // the remaining sentences reveal earlier along the plane's flight.

@@ -3811,3 +3811,84 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
     margin-top:10px;
   }
 }
+
+/* Keep the intro cue above the fixed sponsorship badge and phone home bar.
+   The scroll plane is placed relative to this cue in buildTrail(). */
+@media(max-width:820px),(pointer:coarse),(max-height:550px){
+  #opening .opening-plane-prompt,
+  #opening.is-revealed .opening-plane-prompt{
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (max-height:550px){
+  #opening .opening-copy .opening-subtitle{
+    top: calc(60% - env(safe-area-inset-bottom, 0px) * .35);
+  }
+}
+@media (max-height:470px){
+  #opening .opening-copy .opening-subtitle{top: 54%}
+  .trail-overlay #travellingPlane,
+  body > #travellingPlane.mobile-plane,
+  .invitation-main > #travellingPlane.mobile-plane.scroll-anchored-plane{
+    width:42px;
+    height:42px;
+  }
+}
+@media (max-height:370px) and (orientation:landscape){
+  #opening .opening-copy .opening-names{top:37%;gap:5px;flex-direction:row;justify-content:center}
+  #opening .opening-copy .opening-names :is(.name-first,.name-and,.name-second){margin:0}
+  #opening .opening-copy .opening-subtitle{top:49%}
+}
+@media(max-width:820px),(pointer:coarse){
+  /* More scroll runway on the joined pose, without stopping native scroll. */
+  #chapter-3.chapter{
+    height: 185svh;
+    min-height: calc(800px + 20svh);
+  }
+}
+
+/* Two clear guest actions on one line. The native RSVP details still expands
+   below both buttons, keeping focus, keyboard support and form semantics. */
+.rsvp-actions{
+  --rsvp-action-gap:8px;
+  position:relative;
+  width:min(100%,390px);
+  margin:0 auto;
+}
+.rsvp-actions .rsvp-details > summary,
+.rsvp-actions .rsvp-directions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  width:calc((100% - var(--rsvp-action-gap)) / 2);
+  min-height:48px;
+  padding:8px 5px;
+  line-height:1;
+  white-space:nowrap;
+}
+.rsvp-actions .rsvp-details > summary{
+  margin-left:0;
+  margin-right:0;
+  font-size:14px;
+}
+.rsvp-actions .rsvp-details > summary:focus-visible{
+  outline:3px solid var(--red);
+  outline-offset:3px;
+}
+.rsvp-actions .rsvp-directions{
+  position:absolute;
+  top:0;
+  right:0;
+  border:1px solid #b47c82;
+  border-radius:999px;
+  color:#7e3446;
+  background:#fff6e9;
+  font:700 clamp(10px,3vw,13px)/1 var(--sans);
+  text-decoration:none;
+}
+.rsvp-actions .rsvp-directions svg{
+  width:15px;
+  height:15px;
+  flex:none;
+}

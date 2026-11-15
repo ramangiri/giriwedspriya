@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="style.css?v=20261114-chapter-three-homes">
+  <link rel="stylesheet" href="style.css?v=20261115-mobile-invitation">
 </head>
 <body class="intro-locked">
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -39,7 +39,7 @@
     <div class="chapter-status" aria-hidden="true"><span id="chapterName">OUR STORY</span><span class="status-separator">/</span><span id="chapterCounter">01 — 09</span></div>
     <div class="top-actions">
       <button type="button" id="musicToggle" aria-pressed="false" title="Play gentle instrumental music" aria-label="Turn background music on"><svg><use href="#icon-music"></use></svg><span class="sound-wave">●</span></button>
-      <button type="button" id="skipToInvite" class="skip-button">Skip to invite <span aria-hidden="true">↗</span></button>
+      <button type="button" id="skipToInvite" class="skip-button">Wedding details <span aria-hidden="true">↗</span></button>
     </div>
   </div>
   <div class="side-progress" aria-label="Story chapters" id="sideProgress">
@@ -306,8 +306,9 @@
             <section class="rsvp-section" id="rsvp" aria-label="RSVP for our wedding celebrations">
               <p class="rsvp-kicker">We would love to celebrate with you</p>
               <h3>Will you join us?</h3>
+              <div class="rsvp-actions">
               <details class="rsvp-details" id="rsvpDetails">
-                <summary class="rsvp-summary">RSVP · Let us know <span aria-hidden="true">＋</span></summary>
+                <summary class="rsvp-summary">RSVP <span aria-hidden="true">＋</span></summary>
                 <form id="rsvpForm" name="wedding-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
                   <input type="hidden" name="form-name" value="wedding-rsvp">
                   <p class="rsvp-honeypot" hidden><label>Please leave this blank <input name="bot-field"></label></p>
@@ -332,6 +333,8 @@
                   <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
                 </form>
               </details>
+              <a class="rsvp-directions" id="rsvpReceptionMap" href="#" target="_blank" rel="noopener noreferrer" aria-label="Get directions to the reception"><svg aria-hidden="true"><use href="#icon-map"></use></svg> Get directions <span aria-hidden="true">↗</span></a>
+              </div>
             </section>
             <div class="invitation-buttons">
               <button type="button" id="calendarDownload" class="action-pill primary"><svg aria-hidden="true"><use href="#icon-calendar"></use></svg> Add to calendar</button>
@@ -358,6 +361,6 @@
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <noscript><p class="noscript">This invitation uses JavaScript for the scroll animations. Please enable JavaScript to experience the story.</p></noscript>
-  <script src="script.js?v=20261114-chapter-three-hand-join" defer></script>
+  <script src="script.js?v=20261115-mobile-invitation" defer></script>
 </body>
 </html>
