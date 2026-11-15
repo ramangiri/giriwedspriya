@@ -3917,14 +3917,18 @@ body > #travellingPlane.mobile-plane.intro-plane-arriving svg {
 }
 @media(max-width:820px),(pointer:coarse){
   #opening .opening-gesture-scroll{display:none}
-  #opening .opening-gesture-swipe{display:inline-flex;--cue-bob:-5px}
+  #opening .opening-gesture-swipe{display:inline-flex}
 }
 @media(prefers-reduced-motion:no-preference){
-  #opening.is-revealed.intro-step-4 .opening-gesture > span{
-    animation:opening-gesture-bob 1.25s ease-in-out .45s 4;
+  #opening.is-revealed.intro-step-4 .opening-gesture{
+    animation:opening-gesture-bob 1.45s ease-in-out .55s 4;
   }
 }
 @keyframes opening-gesture-bob{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(var(--cue-bob,5px))}
+  50%{
+    transform:translateY(-5px);
+    color:#ffe5af;
+    text-shadow:0 2px 4px #250f0b,0 0 10px #ffe6b3,0 0 22px #d99645;
+  }
 }
